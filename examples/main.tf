@@ -11,7 +11,7 @@ provider "statsig" {}
 
 module "psl" {
   source  = "./gate"
-  gate_id = "a_gate"
+  gate_id = "a_gataae"
 }
 
 output "psl" {

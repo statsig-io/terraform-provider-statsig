@@ -21,5 +21,9 @@ output "all_gates" {
 
 # Only returns packer spiced latte
 output "gates" {
-  value = data.statsig_gates.all.gates
+  value = {
+    for gate in data.statsig_gates.all.gates :
+    gate.id => gate
+    if gate.id == var.gate_id
+  }
 }

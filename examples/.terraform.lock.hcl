@@ -5,6 +5,6 @@ provider "registry.terraform.io/statsig/statsig" {
   version     = "0.1.0"
   constraints = "0.1.0"
   hashes = [
-    "h1:ll4f189XMo9PZpd9PRO/3nuIzanseuaMftS1LK7ouBo=",
+    "h1:CIT1uWqQLlf+lTc2oCVXskVls1noEYjVMqJmw86CAYM=",
   ]
 }
