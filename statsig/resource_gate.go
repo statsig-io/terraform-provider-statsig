@@ -14,6 +14,13 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+type APIResponse struct {
+	StatusCode int
+	Message    string
+	Data       interface{}
+	Errors     interface{}
+}
+
 func resourceGate() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceCreateGate,
@@ -24,186 +31,71 @@ func resourceGate() *schema.Resource {
 	}
 }
 
-// region CreateContext
-
 func resourceCreateGate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	k := m.(string)
-	client := &http.Client{Timeout: 10 * time.Second}
-
-	var diags diag.Diagnostics
-
 	data, err := dataFromResource(d)
 
-	//return diag.Errorf("%v", string(data))
-
 	if err != nil {
 		return diag.FromErr(err)
 	}
+	res, errDiag := makeAPICall(m.(string), "/gates", "POST", data)
 
-	req, err := http.NewRequest("POST", "https://latest.api.statsig.com/console/v1/gates", bytes.NewBuffer(data))
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
-	req.Header.Set("statsig-api-key", k)
-	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
-
-	res, err := runRequest(client, req)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-	if res.StatusCode != 201 {
-		return diag.Errorf("%s, %v", res.Message, res.Errors)
-	}
-	if reflect.TypeOf(res.Data).Kind() != reflect.Map {
-		return diag.Errorf("invalid type returned from /gates")
-	}
-
-	gateData := res.Data.(map[string]interface{})
-	populateResourceFromResponse(d, gateData)
-
-	return diags
+	return handleGatesResponse(errDiag, res, d)
 }
-
-// endregion
-
-// region ReadContext
 
 func resourceReadGate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	k := m.(string)
-	client := &http.Client{Timeout: 10 * time.Second}
-
-	var diags diag.Diagnostics
-
-	//return diag.Errorf("Read")
-	url := fmt.Sprintf("https://api.statsig.com/console/v1/gates/%s", d.Get("id"))
-
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
-	req.Header.Set("statsig-api-key", k)
-
-	res, err := runRequest(client, req)
-
-	if err != nil {
-		return diag.FromErr(err)
-	}
-	if res.StatusCode != 200 {
-		return diag.Errorf("%s, %v", res.Message, res.Errors)
-	}
-	if reflect.TypeOf(res.Data).Kind() != reflect.Map {
-		return diag.Errorf("invalid type returned from /gates")
-	}
-
-	val := res.Data.(map[string]interface{})
-	populateResourceFromResponse(d, val)
-
-	return diags
+	e := fmt.Sprintf("/gates/%s", d.Get("id"))
+	res, errDiag := makeAPICall(m.(string), e, "GET", nil)
+	return handleGatesResponse(errDiag, res, d)
 }
-
-//endregion
-
-// region UpdateContext
 
 func resourceUpdateGate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	k := m.(string)
-	client := &http.Client{Timeout: 10 * time.Second}
-
-	var diags diag.Diagnostics
-
 	data, err := dataFromResource(d)
-
-	//return diag.Errorf("%v", string(data))
-
 	if err != nil {
 		return diag.FromErr(err)
 	}
 
-	url := fmt.Sprintf("https://api.statsig.com/console/v1/gates/%s", d.Get("id"))
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(data))
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	e := fmt.Sprintf("/gates/%s", d.Get("id"))
+	res, errDiag := makeAPICall(m.(string), e, "POST", data)
 
-	req.Header.Set("statsig-api-key", k)
-	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
-
-	res, err := runRequest(client, req)
-
-	if err != nil {
-		return diag.FromErr(err)
-	}
-	if res.StatusCode != 200 {
-		return diag.Errorf("%s, %v", res.Message, res.Errors)
-	}
-	if reflect.TypeOf(res.Data).Kind() != reflect.Map {
-		return diag.Errorf("invalid type returned from /gates")
-	}
-
-	gateData := res.Data.(map[string]interface{})
-	populateResourceFromResponse(d, gateData)
-
-	return diags
+	return handleGatesResponse(errDiag, res, d)
 }
-
-// endregion
-
-// region DeleteContext
 
 func resourceDeleteGate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	k := m.(string)
+	e := fmt.Sprintf("/gates/%s", d.Get("id"))
+	res, errDiag := makeAPICall(m.(string), e, "DELETE", nil)
+	return handleResponse(errDiag, res)
+}
+
+func makeAPICall(k string, e string, m string, b []byte) (*APIResponse, diag.Diagnostics) {
 	client := &http.Client{Timeout: 10 * time.Second}
+	url := fmt.Sprintf("https://latest.api.statsig.com/console/v1%s", e)
 
-	var diags diag.Diagnostics
+	req, err := http.NewRequest(m, url, bytes.NewBuffer(b))
 
-	//return diag.Errorf("Read")
-	url := fmt.Sprintf("https://api.statsig.com/console/v1/gates/%s", d.Get("id"))
-
-	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
-		return diag.FromErr(err)
+		return nil, diag.FromErr(err)
 	}
 
 	req.Header.Set("statsig-api-key", k)
-
-	res, err := runRequest(client, req)
-
-	if err != nil {
-		return diag.FromErr(err)
-	}
-	if res.StatusCode != 200 {
-		return diag.Errorf(res.Message)
+	if m == "POST" {
+		req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	}
 
-	return diags
-}
-
-// endregion
-
-type APIResponse struct {
-	StatusCode int
-	Message    string
-	Data       interface{}
-	Errors     interface{}
-}
-
-func runRequest(client *http.Client, req *http.Request) (*APIResponse, error) {
 	r, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return nil, diag.FromErr(err)
 	}
 	defer r.Body.Close()
 
 	response := make(map[string]interface{})
 	err = json.NewDecoder(r.Body).Decode(&response)
+
 	if err != nil {
-		return nil, err
+		return nil, diag.FromErr(err)
 	}
 
 	if response["message"] == nil {
-		return nil, errors.New("gates response is invalid")
+		return nil, diag.FromErr(errors.New("gates response is invalid"))
 	}
 
 	return &APIResponse{
@@ -211,7 +103,34 @@ func runRequest(client *http.Client, req *http.Request) (*APIResponse, error) {
 		Message:    response["message"].(string),
 		Data:       response["data"],
 		Errors:     response["errors"],
-	}, err
+	}, nil
+}
+
+func handleGatesResponse(e diag.Diagnostics, r *APIResponse, d *schema.ResourceData) diag.Diagnostics {
+	e = handleResponse(e, r)
+	if e != nil {
+		return e
+	}
+
+	if reflect.TypeOf(r.Data).Kind() != reflect.Map {
+		return diag.Errorf("invalid type returned from /gates")
+	}
+
+	gateData := r.Data.(map[string]interface{})
+	populateResourceFromResponse(d, gateData)
+
+	return nil
+}
+
+func handleResponse(e diag.Diagnostics, r *APIResponse) diag.Diagnostics {
+	if e != nil {
+		return e
+	}
+	if r.StatusCode != 201 && r.StatusCode != 200 {
+		return diag.Errorf("Status %v, Message: %s, Errors: %v", r.StatusCode, r.Message, r.Errors)
+	}
+
+	return nil
 }
 
 func dataFromResource(d *schema.ResourceData) ([]byte, error) {
@@ -222,14 +141,67 @@ func dataFromResource(d *schema.ResourceData) ([]byte, error) {
 		"idType":      d.Get("id_type"),
 	}
 
-	rules := d.Get("rules")
-	if rules != nil {
-		body["rules"] = rules
-	} else {
-		body["rules"] = []interface{}{}
-	}
+	body["rules"] = formatRules(d.Get("rules"), true)
+	body["devRules"] = formatRules(d.Get("dev_rules"), true)
+	body["stagingRules"] = formatRules(d.Get("staging_rules"), true)
 
 	return json.Marshal(body)
+}
+
+func formatRules(in interface{}, forApi bool) []map[string]interface{} {
+	if in == nil || reflect.TypeOf(in).Kind() != reflect.Slice {
+		return []map[string]interface{}{}
+	}
+
+	rules := in.([]interface{})
+	result := make([]map[string]interface{}, 0, len(rules))
+	for _, v := range rules {
+		val := v.(map[string]interface{})
+		if forApi {
+			result = append(result, map[string]interface{}{
+				"name":           val["name"],
+				"passPercentage": val["pass_percentage"],
+				"conditions":     formatConditions(val["conditions"], forApi),
+			})
+		} else {
+			result = append(result, map[string]interface{}{
+				"name":            val["name"],
+				"pass_percentage": val["passPercentage"],
+				"conditions":      formatConditions(val["conditions"], forApi),
+			})
+		}
+	}
+
+	return result
+}
+
+func formatConditions(in interface{}, forApi bool) []map[string]interface{} {
+	if in == nil || reflect.TypeOf(in).Kind() != reflect.Slice {
+		return []map[string]interface{}{}
+	}
+
+	conditions := in.([]interface{})
+	result := make([]map[string]interface{}, 0, len(conditions))
+	for _, v := range conditions {
+		val := v.(map[string]interface{})
+		if forApi {
+			result = append(result, map[string]interface{}{
+				"type":        val["type"],
+				"targetValue": val["target_value"],
+				"operator":    val["operator"],
+				"field":       val["field"],
+			})
+		} else {
+			result = append(result, map[string]interface{}{
+				"type":         val["type"],
+				"target_value": val["targetValue"],
+				"operator":     val["operator"],
+				"field":        val["field"],
+			})
+		}
+	}
+
+	return result
 }
 
 func populateResourceFromResponse(d *schema.ResourceData, r map[string]interface{}) {
@@ -238,7 +210,8 @@ func populateResourceFromResponse(d *schema.ResourceData, r map[string]interface
 	d.Set("last_modifier_name", r["lastModifierName"])
 	d.Set("last_modifier_id", r["lastModifierID"])
 	d.Set("checks_per_hour", r["checksPerHour"])
-	d.Set("rules", []interface{}{})
-
+	d.Set("rules", formatRules(r["rules"], false))
+	d.Set("dev_rules", formatRules(r["devRules"], false))
+	d.Set("staging_rules", formatRules(r["stagingRules"], false))
 	d.SetId(r["id"].(string))
 }

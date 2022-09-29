@@ -45,6 +45,20 @@ func gateSchema() map[string]*schema.Schema {
 				Schema: ruleSchema(),
 			},
 		},
+		"dev_rules": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Elem: &schema.Resource{
+				Schema: ruleSchema(),
+			},
+		},
+		"staging_rules": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Elem: &schema.Resource{
+				Schema: ruleSchema(),
+			},
+		},
 	}
 }
 

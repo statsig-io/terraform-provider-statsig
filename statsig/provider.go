@@ -11,14 +11,11 @@ import (
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	key := d.Get("key").(string)
 
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
-
 	if !strings.HasPrefix(key, "console-") {
 		return nil, diag.Errorf("Must provide a valid CONSOLE api key via the environment variable STATSIG_CONSOLE_KEY.")
 	}
 
-	return key, diags
+	return key, nil
 }
 
 func Provider() *schema.Provider {
@@ -33,9 +30,7 @@ func Provider() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"statsig_gate": resourceGate(),
 		},
-		DataSourcesMap: map[string]*schema.Resource{
-			//"statsig_gates": dataSourceGates(),
-		},
+		DataSourcesMap:       map[string]*schema.Resource{},
 		ConfigureContextFunc: providerConfigure,
 	}
 }
