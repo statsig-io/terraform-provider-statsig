@@ -7,13 +7,24 @@ terraform {
   }
 }
 
-provider "statsig" {}
+#provider "statsig" {}
 
-module "psl" {
-  source  = "./gate"
-  gate_id = "a_gate"
+resource "statsig_gate" "my_gate" {
+  name = "my_gate"
+  description = "This is my gate"
+  is_enabled = true
+  id_type = "userID"
 }
 
-output "psl" {
-  value = module.psl.gates
+#module "psl" {
+#  source  = "./gate"
+#  gate_id = "a_gate"
+#}
+
+#output "psl" {
+#  value = module.psl.gates
+#}
+
+output "my_gate_gate" {
+  value = statsig_gate.my_gate
 }

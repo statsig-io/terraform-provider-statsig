@@ -21,19 +21,20 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	return key, diags
 }
 
-// Provider -
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
-			"key": &schema.Schema{
+			"key": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"STATSIG_CONSOLE_KEY", "statsig_console_key"}, nil),
 			},
 		},
-		ResourcesMap: map[string]*schema.Resource{},
+		ResourcesMap: map[string]*schema.Resource{
+			"statsig_gate": resourceGate(),
+		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"statsig_gates": dataSourceGates(),
+			//"statsig_gates": dataSourceGates(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}

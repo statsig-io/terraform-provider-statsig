@@ -21,97 +21,19 @@ func dataSourceGates() *schema.Resource {
 				Type:     schema.TypeList,
 				Computed: true,
 				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"id": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"is_enabled": {
-							Type:     schema.TypeBool,
-							Computed: true,
-						},
-						"description": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"last_modifier_name": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"last_modifier_id": {
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"checks_per_hour": {
-							Type:     schema.TypeInt,
-							Computed: true,
-						},
-						"rules": rulesSchema(),
-					},
+					Schema: gateSchema(),
 				},
 			},
 		},
 	}
 }
 
-func rulesSchema() *schema.Schema {
-	return &schema.Schema{
-		Type:     schema.TypeList,
-		Computed: true,
-		Elem: &schema.Resource{
-			Schema: map[string]*schema.Schema{
-				"name": {
-					Type:     schema.TypeString,
-					Computed: true,
-				},
-				"pass_percentage": {
-					Type:     schema.TypeInt,
-					Computed: true,
-				},
-				"conditions": conditionsSchema(),
-			},
-		},
-	}
-}
-
-func conditionsSchema() *schema.Schema {
-	return &schema.Schema{
-		Type:     schema.TypeList,
-		Computed: true,
-		Elem: &schema.Resource{
-			Schema: map[string]*schema.Schema{
-				"type": {
-					Type:     schema.TypeString,
-					Computed: true,
-				},
-				"target_value": {
-					Type:     schema.TypeList,
-					Computed: true,
-					Optional: true,
-					Elem: &schema.Schema{
-						Type: schema.TypeString,
-					},
-				},
-				"operator": {
-					Type:     schema.TypeString,
-					Computed: true,
-					Optional: true,
-				},
-				"field": {
-					Type:     schema.TypeString,
-					Computed: true,
-					Optional: true,
-				},
-			},
-		},
-	}
-}
+// region ReadContext
 
 func dataSourceGatesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	k := m.(string)
 	client := &http.Client{Timeout: 10 * time.Second}
 
-	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
 	req, err := http.NewRequest("GET", "https://api.statsig.com/console/v1/gates", nil)
@@ -150,10 +72,10 @@ func dataSourceGatesRead(ctx context.Context, d *schema.ResourceData, m interfac
 		gate["last_modifier_id"] = val["lastModifierID"]
 		gate["checks_per_hour"] = val["checksPerHour"]
 
-		ruleData := val["rules"].([]interface{})
-		rules := rulesRead(ruleData)
-
-		gate["rules"] = rules
+		//ruleData := val["rules"].([]interface{})
+		//rules := rulesRead(ruleData)
+		//
+		//gate["rules"] = rules
 
 		gates = append(gates, gate)
 	}
@@ -217,3 +139,5 @@ func conditionsRead(i []interface{}) []map[string]interface{} {
 
 	return conditions
 }
+
+//endregion
