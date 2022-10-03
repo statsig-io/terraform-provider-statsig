@@ -9,7 +9,7 @@ import (
 )
 
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
-	key := d.Get("key").(string)
+	key := d.Get("console_api_key").(string)
 
 	if !strings.HasPrefix(key, "console-") {
 		return nil, diag.Errorf("Must provide a valid CONSOLE api key via the environment variable STATSIG_CONSOLE_KEY.")
@@ -21,10 +21,11 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
-			"key": {
+			"console_api_key": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				DefaultFunc: schema.MultiEnvDefaultFunc([]string{"STATSIG_CONSOLE_KEY", "statsig_console_key"}, nil),
+				Description: "A Statsig Console API Key",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
