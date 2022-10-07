@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"net/http"
 	"reflect"
+	"strconv"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
@@ -33,19 +34,15 @@ func resourceGate() *schema.Resource {
 
 func resourceCreateGate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	data, err := dataFromResource(d)
-
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	res, errDiag := makeAPICall(m.(string), "/gates", "POST", data)
-
-	return handleGatesResponse(errDiag, res, d)
+	return makeAPICallAndHandleResponse(m.(string), "/gates", "POST", data, d)
 }
 
 func resourceReadGate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	e := fmt.Sprintf("/gates/%s", d.Get("id"))
-	res, errDiag := makeAPICall(m.(string), e, "GET", nil)
-	return handleGatesResponse(errDiag, res, d)
+	return makeAPICallAndHandleResponse(m.(string), e, "GET", nil, d)
 }
 
 func resourceUpdateGate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -53,27 +50,35 @@ func resourceUpdateGate(ctx context.Context, d *schema.ResourceData, m interface
 	if err != nil {
 		return diag.FromErr(err)
 	}
-
 	e := fmt.Sprintf("/gates/%s", d.Get("id"))
-	res, errDiag := makeAPICall(m.(string), e, "POST", data)
-
-	return handleGatesResponse(errDiag, res, d)
+	return makeAPICallAndHandleResponse(m.(string), e, "POST", data, d)
 }
 
 func resourceDeleteGate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	e := fmt.Sprintf("/gates/%s", d.Get("id"))
-	res, errDiag := makeAPICall(m.(string), e, "DELETE", nil)
-	return handleResponse(errDiag, res)
+	diag := makeAPICallAndHandleResponse(m.(string), e, "DELETE", nil, nil)
+	if diag == nil {
+		d.SetId("")
+	}
+	return diag
 }
 
-func makeAPICall(k string, e string, m string, b []byte) (*APIResponse, diag.Diagnostics) {
+func makeAPICallAndHandleResponse(k string, e string, m string, b []byte, d *schema.ResourceData) diag.Diagnostics {
+	res, err := makeAPICall(k, e, m, b)
+	if err != nil {
+		return diag.FromErr(err)
+	}
+	return handleResponse(res, d)
+}
+
+func makeAPICall(k string, e string, m string, b []byte) (*APIResponse, error) {
 	client := &http.Client{Timeout: 10 * time.Second}
-	url := fmt.Sprintf("https://latest.api.statsig.com/console/v1%s", e)
+	url := fmt.Sprintf("https://api.statsig.com/console/v1%s", e)
 
 	req, err := http.NewRequest(m, url, bytes.NewBuffer(b))
 
 	if err != nil {
-		return nil, diag.FromErr(err)
+		return nil, err
 	}
 
 	req.Header.Set("statsig-api-key", k)
@@ -83,7 +88,7 @@ func makeAPICall(k string, e string, m string, b []byte) (*APIResponse, diag.Dia
 
 	r, err := client.Do(req)
 	if err != nil {
-		return nil, diag.FromErr(err)
+		return nil, err
 	}
 	defer r.Body.Close()
 
@@ -91,11 +96,11 @@ func makeAPICall(k string, e string, m string, b []byte) (*APIResponse, diag.Dia
 	err = json.NewDecoder(r.Body).Decode(&response)
 
 	if err != nil {
-		return nil, diag.FromErr(err)
+		return nil, err
 	}
 
 	if response["message"] == nil {
-		return nil, diag.FromErr(errors.New("gates response is invalid"))
+		return nil, errors.New("gates response is invalid")
 	}
 
 	return &APIResponse{
@@ -106,10 +111,13 @@ func makeAPICall(k string, e string, m string, b []byte) (*APIResponse, diag.Dia
 	}, nil
 }
 
-func handleGatesResponse(e diag.Diagnostics, r *APIResponse, d *schema.ResourceData) diag.Diagnostics {
-	e = handleResponse(e, r)
-	if e != nil {
-		return e
+func handleResponse(r *APIResponse, d *schema.ResourceData) diag.Diagnostics {
+	if r.StatusCode != 201 && r.StatusCode != 200 {
+		return diag.Errorf("Status %v, Message: %s, Errors: %v", r.StatusCode, r.Message, r.Errors)
+	}
+
+	if d == nil {
+		return nil
 	}
 
 	if reflect.TypeOf(r.Data).Kind() != reflect.Map {
@@ -118,17 +126,6 @@ func handleGatesResponse(e diag.Diagnostics, r *APIResponse, d *schema.ResourceD
 
 	gateData := r.Data.(map[string]interface{})
 	populateResourceFromResponse(d, gateData)
-
-	return nil
-}
-
-func handleResponse(e diag.Diagnostics, r *APIResponse) diag.Diagnostics {
-	if e != nil {
-		return e
-	}
-	if r.StatusCode != 201 && r.StatusCode != 200 {
-		return diag.Errorf("Status %v, Message: %s, Errors: %v", r.StatusCode, r.Message, r.Errors)
-	}
 
 	return nil
 }
@@ -193,15 +190,73 @@ func formatConditions(in interface{}, forApi bool) []map[string]interface{} {
 			})
 		} else {
 			result = append(result, map[string]interface{}{
-				"type":         val["type"],
-				"target_value": val["targetValue"],
-				"operator":     val["operator"],
-				"field":        val["field"],
+				"type":         formatConditionValue(val["type"]),
+				"target_value": formatTargetValue(val["targetValue"]),
+				"operator":     formatConditionValue(val["operator"]),
+				"field":        formatConditionValue(val["field"]),
 			})
 		}
 	}
 
 	return result
+}
+
+func formatConditionValue(v interface{}) interface{} {
+	if v == nil {
+		return ""
+	}
+	return v
+}
+
+func formatTargetValue(v interface{}) []string {
+	r := make([]string, 0)
+	if v == nil {
+		return r
+	}
+	t := reflect.TypeOf(v).Kind()
+	switch t {
+	case reflect.Array:
+		fallthrough
+	case reflect.Slice:
+		for _, i := range v.([]interface{}) {
+			r = append(r, toString(i))
+		}
+	default:
+		r = append(r, toString(v))
+	}
+
+	return r
+}
+
+func toString(i interface{}) string {
+	asInt, ok := i.(int64)
+	if ok {
+		return fmt.Sprintf("%d", asInt)
+	}
+
+	asFloat, ok := i.(float64)
+	if ok {
+		asInt := int(asFloat)
+		if asFloat == float64(asInt) {
+			return fmt.Sprintf("%d", asInt)
+		}
+		return strconv.FormatFloat(asFloat, 'G', -1, 64)
+	}
+
+	asBool, ok := i.(bool)
+	if ok {
+		if asBool {
+			return "true"
+		}
+		return "false"
+	}
+
+	asString, ok := i.(string)
+	if ok {
+		return asString
+	}
+
+	return ""
 }
 
 func populateResourceFromResponse(d *schema.ResourceData, r map[string]interface{}) {
@@ -213,5 +268,8 @@ func populateResourceFromResponse(d *schema.ResourceData, r map[string]interface
 	d.Set("rules", formatRules(r["rules"], false))
 	d.Set("dev_rules", formatRules(r["devRules"], false))
 	d.Set("staging_rules", formatRules(r["stagingRules"], false))
+
+	print(d.Get("staging_rules"))
+
 	d.SetId(r["id"].(string))
 }
