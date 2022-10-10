@@ -1,9 +1,9 @@
 TEST?=$$(go list ./... | grep -v 'vendor')
 HOSTNAME=registry.terraform.io
-NAMESPACE=statsig
+NAMESPACE=statsig-io
 NAME=statsig
 BINARY=terraform-provider-${NAME}
-VERSION=0.1.1
+VERSION=0.1.2
 OS_ARCH=darwin_arm64
 
 default: install
