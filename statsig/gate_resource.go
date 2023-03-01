@@ -1,56 +1,20 @@
 package statsig
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"reflect"
 	"strconv"
 )
 
 func resourceGate() *schema.Resource {
-	return &schema.Resource{
-		CreateContext: resourceCreateGate,
-		ReadContext:   resourceReadGate,
-		UpdateContext: resourceUpdateGate,
-		DeleteContext: resourceDeleteGate,
-		Schema:        gateSchema(),
-	}
-}
-
-func resourceCreateGate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	data, err := dataFromGateResource(d)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-
-	return makeAPICallAndPopulateResource(m.(string), "/gates", "POST", data, d, populateGateResourceFromResponse)
-}
-
-func resourceReadGate(ctx context.Context, rd *schema.ResourceData, m interface{}) diag.Diagnostics {
-	e := fmt.Sprintf("/gates/%s", rd.Get("id"))
-	return makeAPICallAndPopulateResource(m.(string), e, "GET", nil, rd, populateGateResourceFromResponse)
-}
-
-func resourceUpdateGate(ctx context.Context, rd *schema.ResourceData, m interface{}) diag.Diagnostics {
-	data, err := dataFromGateResource(rd)
-	if err != nil {
-		return diag.FromErr(err)
-	}
-	e := fmt.Sprintf("/gates/%s", rd.Get("id"))
-	return makeAPICallAndPopulateResource(m.(string), e, "POST", data, rd, populateGateResourceFromResponse)
-
-}
-
-func resourceDeleteGate(ctx context.Context, rd *schema.ResourceData, m interface{}) diag.Diagnostics {
-	e := fmt.Sprintf("/gates/%s", rd.Get("id"))
-	d := makeAPICallAndPopulateResource(m.(string), e, "DELETE", nil, nil, populateGateResourceFromResponse)
-	if d == nil {
-		rd.SetId("")
-	}
-	return d
+	return statsigResource{
+		endpoint:       "/gates",
+		schema:         gateSchema(),
+		toJsonData:     dataFromGateResource,
+		fromJsonObject: populateGateResourceFromResponse,
+	}.asTerraformResource()
 }
 
 func dataFromGateResource(rd *schema.ResourceData) ([]byte, error) {

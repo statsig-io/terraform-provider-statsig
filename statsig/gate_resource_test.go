@@ -59,7 +59,7 @@ func testAccCheckGateExists(n string) resource.TestCheckFunc {
 		}
 
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("no OrderID set")
+			return fmt.Errorf("no GateID set")
 		}
 
 		return nil
