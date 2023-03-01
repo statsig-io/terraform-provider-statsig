@@ -45,6 +45,7 @@ func makeAPICallAndPopulateResource(k string, e string, m string, b []byte, r *s
 
 func makeAPICall(k string, e string, m string, b []byte) (*APIResponse, error) {
 	client := &http.Client{Timeout: 10 * time.Second}
+
 	url := fmt.Sprintf("https://api.statsig.com/console/v1%s", e)
 
 	req, err := http.NewRequest(m, url, bytes.NewBuffer(b))
@@ -57,6 +58,9 @@ func makeAPICall(k string, e string, m string, b []byte) (*APIResponse, error) {
 	if m == "POST" {
 		req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	}
+
+	req.Header.Set("statsig-sdk-type", "terraform-provider")
+	req.Header.Set("statsig-sdk-version", "0.1.2")
 
 	r, err := client.Do(req)
 	if err != nil {
