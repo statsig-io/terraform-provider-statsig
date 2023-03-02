@@ -59,7 +59,7 @@ func testAccCheckGateExists(n string) resource.TestCheckFunc {
 		}
 
 		if rs.Primary.ID == "" {
-			return fmt.Errorf("no OrderID set")
+			return fmt.Errorf("no GateID set")
 		}
 
 		return nil
@@ -68,7 +68,7 @@ func testAccCheckGateExists(n string) resource.TestCheckFunc {
 
 const basicGate = `
 resource "statsig_gate" "my_gate" {
-   name        = "my_gate"
+  name        = "my_gate"
   description = "A short description of what this Gate is used for."
   is_enabled  = true
   id_type     = "userID"
