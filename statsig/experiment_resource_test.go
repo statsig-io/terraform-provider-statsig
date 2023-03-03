@@ -1,6 +1,7 @@
 package statsig
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -84,7 +85,8 @@ func verifyExperimentDestroyed(s *terraform.State) error {
 		k := testAccProvider.Meta().(string)
 
 		e := fmt.Sprintf("/experiments/%s", experimentID)
-		r, err := makeAPICall(k, e, "DELETE", nil)
+		ctx := context.Background()
+		r, err := makeAPICall(ctx, k, e, "DELETE", nil)
 
 		if err != nil {
 			return err
@@ -247,7 +249,9 @@ func getExperimentDataFromServer(eid string) (map[string]interface{}, error) {
 	}
 
 	endpoint := fmt.Sprintf("/experiments/%s", eid)
-	response, err := makeAPICall(sdkKey, endpoint, "GET", nil)
+
+	ctx := context.Background()
+	response, err := makeAPICall(ctx, sdkKey, endpoint, "GET", nil)
 
 	if err != nil {
 		return nil, err

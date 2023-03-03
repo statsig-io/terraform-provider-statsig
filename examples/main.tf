@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     statsig = {
-      version = "0.1.2"
+      version = "0.2.0"
       source  = "statsig-io/statsig"
     }
   }
@@ -9,16 +9,4 @@ terraform {
 
 module "gates" {
   source = "./gates"
-}
-
-output "gates" {
-  value = module.gates
-}
-
-module "experiments" {
-  source = "./experiments"
-}
-
-output "experiments" {
-  value = module.experiments
 }

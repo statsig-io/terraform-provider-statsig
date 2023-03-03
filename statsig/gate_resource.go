@@ -1,8 +1,10 @@
 package statsig
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"reflect"
 	"strconv"
@@ -17,7 +19,7 @@ func resourceGate() *schema.Resource {
 	}.asTerraformResource()
 }
 
-func dataFromGateResource(rd *schema.ResourceData) ([]byte, error) {
+func dataFromGateResource(ctx context.Context, rd *schema.ResourceData) ([]byte, error) {
 	body := map[string]interface{}{
 		"name":        rd.Get("name"),
 		"description": rd.Get("description"),
@@ -25,14 +27,14 @@ func dataFromGateResource(rd *schema.ResourceData) ([]byte, error) {
 		"idType":      rd.Get("id_type"),
 	}
 
-	body["rules"] = formatRules(rd.Get("rules"), true)
-	body["devRules"] = formatRules(rd.Get("dev_rules"), true)
-	body["stagingRules"] = formatRules(rd.Get("staging_rules"), true)
+	body["rules"] = formatRules(ctx, rd.Get("rules"), true)
+	body["devRules"] = formatRules(ctx, rd.Get("dev_rules"), true)
+	body["stagingRules"] = formatRules(ctx, rd.Get("staging_rules"), true)
 
 	return json.Marshal(body)
 }
 
-func formatRules(in interface{}, forApi bool) []map[string]interface{} {
+func formatRules(ctx context.Context, in interface{}, forApi bool) []map[string]interface{} {
 	if in == nil || reflect.TypeOf(in).Kind() != reflect.Slice {
 		return []map[string]interface{}{}
 	}
@@ -45,13 +47,13 @@ func formatRules(in interface{}, forApi bool) []map[string]interface{} {
 			result = append(result, map[string]interface{}{
 				"name":           val["name"],
 				"passPercentage": val["pass_percentage"],
-				"conditions":     formatConditions(val["conditions"], forApi),
+				"conditions":     formatConditions(ctx, val["conditions"], forApi),
 			})
 		} else {
 			result = append(result, map[string]interface{}{
 				"name":            val["name"],
 				"pass_percentage": val["passPercentage"],
-				"conditions":      formatConditions(val["conditions"], forApi),
+				"conditions":      formatConditions(ctx, val["conditions"], forApi),
 			})
 		}
 	}
@@ -59,14 +61,17 @@ func formatRules(in interface{}, forApi bool) []map[string]interface{} {
 	return result
 }
 
-func formatConditions(in interface{}, forApi bool) []map[string]interface{} {
+func formatConditions(ctx context.Context, in interface{}, forApi bool) []map[string]interface{} {
 	if in == nil || reflect.TypeOf(in).Kind() != reflect.Slice {
 		return []map[string]interface{}{}
 	}
 
 	conditions := in.([]interface{})
 	result := make([]map[string]interface{}, 0, len(conditions))
-	for _, v := range conditions {
+
+	tflog.Debug(ctx, fmt.Sprintf("Processing Condtions. For API %t. Conditions %s", forApi, arrayToJsonString(conditions)))
+
+	for index, v := range conditions {
 		val := v.(map[string]interface{})
 		if forApi {
 			result = append(result, map[string]interface{}{
@@ -76,30 +81,44 @@ func formatConditions(in interface{}, forApi bool) []map[string]interface{} {
 				"field":       val["field"],
 			})
 		} else {
-			result = append(result, map[string]interface{}{
-				"type":         formatConditionValue(val["type"]),
-				"target_value": formatTargetValue(val["targetValue"]),
-				"operator":     formatConditionValue(val["operator"]),
-				"field":        formatConditionValue(val["field"]),
-			})
+			condition := map[string]interface{}{
+				"index": index,
+				"type":  formatConditionTypeField(val["type"]),
+			}
+
+			maybeAddConditionValue(val["operator"], "operator", &condition)
+			maybeAddConditionValue(val["field"], "field", &condition)
+
+			maybeAddTargetValue(val["targetValue"], "target_value", &condition)
+
+			result = append(result, condition)
 		}
 	}
 
 	return result
 }
 
-func formatConditionValue(v interface{}) interface{} {
+func formatConditionTypeField(v interface{}) interface{} {
 	if v == nil {
 		return ""
 	}
 	return v
 }
 
-func formatTargetValue(v interface{}) []string {
-	r := make([]string, 0)
+func maybeAddConditionValue(v interface{}, key string, condition *map[string]interface{}) {
 	if v == nil {
-		return r
+		return
 	}
+
+	(*condition)[key] = v
+}
+
+func maybeAddTargetValue(v interface{}, key string, condition *map[string]interface{}) {
+	if v == nil {
+		return
+	}
+
+	r := make([]string, 0)
 	t := reflect.TypeOf(v).Kind()
 	switch t {
 	case reflect.Array:
@@ -112,7 +131,7 @@ func formatTargetValue(v interface{}) []string {
 		r = append(r, toString(v))
 	}
 
-	return r
+	(*condition)[key] = r
 }
 
 func toString(i interface{}) string {
@@ -146,15 +165,15 @@ func toString(i interface{}) string {
 	return ""
 }
 
-func populateGateResourceFromResponse(rd *schema.ResourceData, r map[string]interface{}) {
+func populateGateResourceFromResponse(ctx context.Context, rd *schema.ResourceData, r map[string]interface{}) {
 	rd.Set("description", r["description"])
 	rd.Set("is_enabled", r["isEnabled"])
 	rd.Set("last_modifier_name", r["lastModifierName"])
 	rd.Set("last_modifier_id", r["lastModifierID"])
 	rd.Set("checks_per_hour", r["checksPerHour"])
-	rd.Set("rules", formatRules(r["rules"], false))
-	rd.Set("dev_rules", formatRules(r["devRules"], false))
-	rd.Set("staging_rules", formatRules(r["stagingRules"], false))
+	rd.Set("rules", formatRules(ctx, r["rules"], false))
+	rd.Set("dev_rules", formatRules(ctx, r["devRules"], false))
+	rd.Set("staging_rules", formatRules(ctx, r["stagingRules"], false))
 
 	rd.SetId(r["id"].(string))
 }

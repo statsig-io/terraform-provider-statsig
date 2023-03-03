@@ -65,6 +65,10 @@ func gateSchema() map[string]*schema.Schema {
 
 func ruleSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"index": {
+			Type:     schema.TypeInt,
+			Computed: true,
+		},
 		"name": {
 			Type:     schema.TypeString,
 			Required: true,
@@ -86,6 +90,10 @@ func ruleSchema() map[string]*schema.Schema {
 
 func conditionSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
+		"index": {
+			Type:     schema.TypeInt,
+			Computed: true,
+		},
 		"type": {
 			Type:     schema.TypeString,
 			Required: true,
