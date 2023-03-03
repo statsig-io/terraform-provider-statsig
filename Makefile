@@ -2,10 +2,13 @@ HOSTNAME=registry.terraform.io
 NAMESPACE=statsig-io
 NAME=statsig
 BINARY=terraform-provider-${NAME}
-VERSION=0.1.2
 OS_ARCH=darwin_arm64
+VERSION=`cat statsig/version`
 
 default: install
+
+version:
+	echo ${VERSION}
 
 build:
 	go build -o ${BINARY}

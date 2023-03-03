@@ -23,14 +23,6 @@ func experimentSchema() map[string]*schema.Schema {
 			Type:     schema.TypeInt,
 			Computed: true,
 		},
-		"status": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
-		"launched_group_id": {
-			Type:     schema.TypeString,
-			Computed: true,
-		},
 		"name": {
 			Type:     schema.TypeString,
 			Required: true,
@@ -59,6 +51,7 @@ func experimentSchema() map[string]*schema.Schema {
 		"primary_metrics_json": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Default:  "[]",
 		},
 		"primary_metric_tags": {
 			Type:     schema.TypeList,
@@ -71,6 +64,7 @@ func experimentSchema() map[string]*schema.Schema {
 		"secondary_metrics_json": {
 			Type:     schema.TypeString,
 			Optional: true,
+			Default:  "[]",
 		},
 		"secondary_metric_tags": {
 			Type:     schema.TypeList,
@@ -88,8 +82,9 @@ func experimentSchema() map[string]*schema.Schema {
 			},
 		},
 		"allocation": {
-			Type:     schema.TypeFloat,
-			Required: true,
+			Type:             schema.TypeFloat,
+			Required:         true,
+			ValidateDiagFunc: validation.ToDiagFunc(validation.FloatBetween(0, 100)),
 		},
 		"targeting_gate_id": {
 			Type:     schema.TypeString,
@@ -102,7 +97,7 @@ func experimentSchema() map[string]*schema.Schema {
 			ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"80", "90", "95", "98", "99"}, true)),
 		},
 		"bonferroni_correction": {
-			Type:     schema.TypeString,
+			Type:     schema.TypeBool,
 			Optional: true,
 			Default:  false,
 		},
@@ -119,6 +114,16 @@ func experimentSchema() map[string]*schema.Schema {
 				ValidateDiagFunc: validation.ToDiagFunc(validation.StringIsNotEmpty),
 			},
 		},
+		"status": {
+			Type:             schema.TypeString,
+			Optional:         true,
+			Default:          "setup",
+			ValidateDiagFunc: validation.ToDiagFunc(validation.StringInSlice([]string{"setup", "active", "decision_made", "abandoned"}, true)),
+		},
+		"launched_group_id": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
 	}
 }
 
@@ -133,8 +138,9 @@ func groupsSchema() map[string]*schema.Schema {
 			Computed: true,
 		},
 		"size": {
-			Type:     schema.TypeInt,
-			Required: true,
+			Type:             schema.TypeFloat,
+			Required:         true,
+			ValidateDiagFunc: validation.ToDiagFunc(validation.FloatBetween(0, 100)),
 		},
 		"parameter_values_json": {
 			Type:     schema.TypeString,
