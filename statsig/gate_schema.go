@@ -70,8 +70,9 @@ func ruleSchema() map[string]*schema.Schema {
 			Required: true,
 		},
 		"pass_percentage": {
-			Type:     schema.TypeInt,
-			Required: true,
+			Type:             schema.TypeInt,
+			Required:         true,
+			ValidateDiagFunc: validation.ToDiagFunc(validation.IntBetween(0, 100)),
 		},
 		"conditions": {
 			Type:     schema.TypeList,

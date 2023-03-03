@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"net/http"
+	"os"
 	"reflect"
 	"time"
 )
@@ -55,12 +56,12 @@ func makeAPICall(k string, e string, m string, b []byte) (*APIResponse, error) {
 	}
 
 	req.Header.Set("statsig-api-key", k)
-	if m == "POST" {
+	if m == "POST" || m == "PATCH" {
 		req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	}
 
 	req.Header.Set("statsig-sdk-type", "terraform-provider")
-	req.Header.Set("statsig-sdk-version", "0.1.2")
+	req.Header.Set("statsig-sdk-version", getVersion())
 
 	r, err := client.Do(req)
 	if err != nil {
@@ -85,4 +86,15 @@ func makeAPICall(k string, e string, m string, b []byte) (*APIResponse, error) {
 		Data:       response["data"],
 		Errors:     response["errors"],
 	}, nil
+}
+
+func getVersion() string {
+	versionBytes, err := os.ReadFile("version")
+	version := "unknown"
+
+	if err == nil && versionBytes != nil {
+		version = string(versionBytes)
+	}
+
+	return version
 }

@@ -4,43 +4,77 @@ import (
 	"errors"
 	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccExperimentBasic(t *testing.T) {
-	basicExperiment, _ := os.ReadFile("basic_experiment.tf")
+func TestAccExperimentFull(t *testing.T) {
+	fullExperiment, _ := os.ReadFile("test_resources/experiment_full.tf")
 
 	key := "statsig_experiment.my_experiment"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
 		ProviderFactories: testAccProviderFactories,
-		CheckDestroy:      testAccCheckExperimentDestroy,
+		CheckDestroy:      verifyExperimentDestroyed,
 		Steps: []resource.TestStep{
 			{
-				Config: string(basicExperiment),
+				Config: string(fullExperiment),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckExperimentExists(key),
-
-					// Test Group
-					resource.TestCheckResourceAttr(key, "groups.0.name", "Test Group"),
-					resource.TestCheckResourceAttr(key, "groups.0.size", "50"),
-					resource.TestCheckResourceAttr(key, "groups.0.parameter_values_json", "{\"a_bool\":true,\"a_string\":\"test_string\"}"),
-
-					// Control Group
-					resource.TestCheckResourceAttr(key, "groups.1.name", "Control Group"),
-					resource.TestCheckResourceAttr(key, "groups.1.size", "50"),
-					resource.TestCheckResourceAttr(key, "groups.1.parameter_values_json", "{\"a_bool\":false,\"a_string\":\"control_string\"}"),
+					verifyFullExperimentSetup(t, key),
 				),
 			},
 		},
 	})
 }
 
-func testAccCheckExperimentDestroy(s *terraform.State) error {
+func TestAccExperimentUpdating(t *testing.T) {
+	basicExperiment, _ := os.ReadFile("test_resources/experiment_basic.tf")
+	activeExperiment, _ := os.ReadFile("test_resources/experiment_active.tf")
+	shippedExperiment, _ := os.ReadFile("test_resources/experiment_decision_made.tf")
+
+	key := "statsig_experiment.my_experiment"
+
+	var groupIDToLaunch string
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:          func() { testAccPreCheck(t) },
+		ProviderFactories: testAccProviderFactories,
+		CheckDestroy:      verifyExperimentDestroyed,
+		Steps: []resource.TestStep{
+			{
+				Config: string(basicExperiment),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(key, "id", "my_experiment"),
+					resource.TestCheckResourceAttr(key, "status", "setup"),
+					extractGroupID(key, &groupIDToLaunch),
+				),
+			},
+			{
+				Config: string(activeExperiment),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(key, "id", "my_experiment"),
+					resource.TestCheckResourceAttr(key, "status", "active"),
+					extractGroupID(key, &groupIDToLaunch),
+				),
+			},
+			{
+				PreConfig: func() {
+					os.Setenv("TF_VAR_launched_group_id", groupIDToLaunch)
+				},
+				Config: string(shippedExperiment),
+				Check: resource.ComposeTestCheckFunc(
+					verifyShippedExperimentSetup(t, key, &groupIDToLaunch),
+				),
+			},
+		},
+	})
+}
+
+func verifyExperimentDestroyed(s *terraform.State) error {
 	for _, rs := range s.RootModule().Resources {
 		if rs.Type != "statsig_experiment" {
 			continue
@@ -65,39 +99,160 @@ func testAccCheckExperimentDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckExperimentExists(n string) resource.TestCheckFunc {
+func extractGroupID(name string, out *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[n]
+		rs, _ := s.RootModule().Resources[name]
+		*out = rs.Primary.Attributes["groups.0.id"]
 
-		if !ok {
-			return fmt.Errorf("not found: %s", n)
-		}
+		return nil
+	}
+}
 
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("no ExperimentID set")
-		}
-
-		sdkKey, ok := os.LookupEnv("statsig_console_key")
-
-		e := fmt.Sprintf("/experiments/%s", rs.Primary.ID)
-		r, err := makeAPICall(sdkKey, e, "GET", nil)
-
+func verifyShippedExperimentSetup(t *testing.T, name string, launchedGroupID *string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, _ := s.RootModule().Resources[name]
+		remote, err := getExperimentDataFromServer(rs.Primary.ID)
+		local := rs.Primary.Attributes
 		if err != nil {
 			return err
 		}
 
-		data := r.Data.(map[string]interface{})
-		groups := data["groups"].([]interface{})
-		if len(groups) != 2 {
-			return fmt.Errorf("invalid group size")
-		}
+		assert.Equal(t, "my_experiment", remote["id"])
+		assert.Equal(t, "my_experiment", local["id"])
 
-		aGroup := groups[0].(map[string]interface{})
-		paramValues := aGroup["parameterValues"].(map[string]interface{})
-		if paramValues["a_bool"] == nil || paramValues["a_string"] == nil {
-			return fmt.Errorf("invalid experiment group")
-		}
+		assert.Equal(t, 0.0, remote["allocation"])
+		assert.Equal(t, "0", local["allocation"])
+
+		assert.Equal(t, "decision_made", remote["status"])
+		assert.Equal(t, "decision_made", local["status"])
+
+		assert.Equal(t, *launchedGroupID, remote["launchedGroupID"])
+		assert.Equal(t, *launchedGroupID, local["launched_group_id"])
 
 		return nil
 	}
+}
+
+func verifyFullExperimentSetup(t *testing.T, name string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, _ := s.RootModule().Resources[name]
+		remote, err := getExperimentDataFromServer(rs.Primary.ID)
+		local := rs.Primary.Attributes
+		if err != nil {
+			return err
+		}
+
+		assert.Equal(t, "my_experiment", remote["id"])
+		assert.Equal(t, "my_experiment", local["id"])
+
+		assert.Equal(t, "my_experiment", local["name"])
+
+		assert.Equal(t, "A short description of what we are experimenting on.", local["description"])
+		assert.Equal(t, "A short description of what we are experimenting on.", remote["description"])
+
+		assert.Equal(t, "userID", local["id_type"])
+		assert.Equal(t, "userID", remote["idType"])
+
+		assert.Equal(t, "12.3", local["allocation"])
+		assert.Equal(t, 12.3, remote["allocation"])
+
+		assert.Equal(t, "setup", local["status"])
+		assert.Equal(t, "setup", remote["status"])
+
+		assert.Equal(t, "80", local["default_confidence_interval"])
+		assert.Equal(t, "80", remote["defaultConfidenceInterval"])
+
+		assert.Equal(t, "true", local["bonferroni_correction"])
+		assert.Equal(t, true, remote["bonferroniCorrection"])
+
+		assert.Equal(t, "10", local["duration"])
+		assert.Equal(t, 10.0, remote["duration"])
+
+		assert.Equal(t, "a_layer", local["layer_id"])
+		assert.Equal(t, "a_layer", remote["layerID"])
+
+		assert.Equal(t, "targeting_gate", local["targeting_gate_id"])
+		assert.Equal(t, "targeting_gate", remote["targetingGateID"])
+
+		assert.Equal(t, "", local["launched_group_id"])
+		assert.Equal(t, nil, remote["launchedGroupID"])
+
+		assert.Equal(t, "test-tag-a", local["tags.0"])
+		assert.Equal(t, "test-tag-b", local["tags.1"])
+		assert.Equal(t, []interface{}{"test-tag-a", "test-tag-b"}, remote["tags"])
+
+		assert.Equal(t, "test-tag-a", local["primary_metric_tags.0"])
+		assert.Equal(t, []interface{}{"test-tag-a"}, remote["primaryMetricTags"])
+
+		assert.Equal(t, "test-tag-b", local["secondary_metric_tags.0"])
+		assert.Equal(t, []interface{}{"test-tag-b"}, remote["secondaryMetricTags"])
+
+		primary := jsonStringToArray(local["primary_metrics_json"])[0].(map[string]interface{})
+		assert.Equal(t, "user", primary["type"])
+		assert.Equal(t, "d1_retention_rate", primary["name"])
+
+		secondary := jsonStringToArray(local["secondary_metrics_json"])[0].(map[string]interface{})
+		assert.Equal(t, "user", secondary["type"])
+		assert.Equal(t, "new_dau", secondary["name"])
+
+		groups := remote["groups"].([]interface{})
+		assert.Equal(t, 3, len(groups))
+
+		checkA, checkB, checkControl := false, false, false
+
+		for index, elem := range groups {
+			group := elem.(map[string]interface{})
+			switch group["name"] {
+			case "Test A":
+				checkA = true
+				assert.Equal(t, 33.3, group["size"])
+				assert.Equal(t, "33.3", local[fmt.Sprintf("groups.%d.size", index)])
+
+				params := jsonStringToMap(local[fmt.Sprintf("groups.%d.parameter_values_json", index)])
+				assert.Equal(t, "test_a", params["a_string"])
+				break
+
+			case "Test B":
+				checkB = true
+				assert.Equal(t, 33.3, group["size"])
+				assert.Equal(t, "33.3", local[fmt.Sprintf("groups.%d.size", index)])
+
+				params := jsonStringToMap(local[fmt.Sprintf("groups.%d.parameter_values_json", index)])
+				assert.Equal(t, "test_b", params["a_string"])
+				break
+
+			case "Control":
+				checkControl = true
+				assert.Equal(t, 33.4, group["size"])
+				assert.Equal(t, "33.4", local[fmt.Sprintf("groups.%d.size", index)])
+
+				params := jsonStringToMap(local[fmt.Sprintf("groups.%d.parameter_values_json", index)])
+				assert.Equal(t, "control", params["a_string"])
+				break
+			}
+		}
+
+		assert.True(t, checkA)
+		assert.True(t, checkB)
+		assert.True(t, checkControl)
+
+		return nil
+	}
+}
+
+func getExperimentDataFromServer(eid string) (map[string]interface{}, error) {
+	sdkKey, ok := os.LookupEnv("statsig_console_key")
+	if !ok {
+		return nil, fmt.Errorf("no sdk key found")
+	}
+
+	endpoint := fmt.Sprintf("/experiments/%s", eid)
+	response, err := makeAPICall(sdkKey, endpoint, "GET", nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	data := response.Data.(map[string]interface{})
+	return data, nil
 }

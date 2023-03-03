@@ -34,7 +34,7 @@ func (b statsigResource) resourceUpdate(ctx context.Context, rd *schema.Resource
 		return diag.FromErr(err)
 	}
 	e := fmt.Sprintf("%s/%s", b.endpoint, rd.Get("id"))
-	return makeAPICallAndPopulateResource(m.(string), e, "POST", data, rd, b.fromJsonObject)
+	return makeAPICallAndPopulateResource(m.(string), e, "PATCH", data, rd, b.fromJsonObject)
 }
 
 func (b statsigResource) resourceDelete(ctx context.Context, rd *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -53,5 +53,8 @@ func (b statsigResource) asTerraformResource() *schema.Resource {
 		UpdateContext: b.resourceUpdate,
 		DeleteContext: b.resourceDelete,
 		Schema:        b.schema,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 	}
 }
