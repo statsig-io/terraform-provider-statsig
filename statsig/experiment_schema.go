@@ -76,7 +76,7 @@ func experimentSchema() map[string]*schema.Schema {
 		},
 		"groups": {
 			Type:     schema.TypeList,
-			Required: true,
+			Optional: true,
 			Elem: &schema.Resource{
 				Schema: groupsSchema(),
 			},

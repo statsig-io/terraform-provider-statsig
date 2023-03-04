@@ -1,6 +1,7 @@
 package statsig
 
 import (
+	"context"
 	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"reflect"
@@ -15,7 +16,7 @@ func resourceExperiment() *schema.Resource {
 	}.asTerraformResource()
 }
 
-func dataFromExperimentResource(rd *schema.ResourceData) ([]byte, error) {
+func dataFromExperimentResource(ctx context.Context, rd *schema.ResourceData) ([]byte, error) {
 	body := map[string]interface{}{
 		"name":                      rd.Get("name"),
 		"description":               rd.Get("description"),
@@ -41,7 +42,7 @@ func dataFromExperimentResource(rd *schema.ResourceData) ([]byte, error) {
 	return json.Marshal(body)
 }
 
-func populateExperimentResourceFromResponse(rd *schema.ResourceData, r map[string]interface{}) {
+func populateExperimentResourceFromResponse(ctx context.Context, rd *schema.ResourceData, r map[string]interface{}) {
 	rd.Set("description", r["description"])
 	rd.Set("id_type", r["idType"])
 	rd.Set("name", r["id"])

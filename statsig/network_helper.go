@@ -2,9 +2,11 @@ package statsig
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"net/http"
@@ -20,8 +22,8 @@ type APIResponse struct {
 	Errors     interface{}
 }
 
-func makeAPICallAndPopulateResource(k string, e string, m string, b []byte, r *schema.ResourceData, f func(r *schema.ResourceData, d map[string]interface{})) diag.Diagnostics {
-	res, err := makeAPICall(k, e, m, b)
+func makeAPICallAndPopulateResource(ctx context.Context, k string, e string, m string, b []byte, r *schema.ResourceData, f func(ctx context.Context, r *schema.ResourceData, d map[string]interface{})) diag.Diagnostics {
+	res, err := makeAPICall(ctx, k, e, m, b)
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -39,15 +41,16 @@ func makeAPICallAndPopulateResource(k string, e string, m string, b []byte, r *s
 	}
 
 	data := res.Data.(map[string]interface{})
-	f(r, data)
+	f(ctx, r, data)
 
 	return nil
 }
 
-func makeAPICall(k string, e string, m string, b []byte) (*APIResponse, error) {
+func makeAPICall(ctx context.Context, k string, e string, m string, b []byte) (*APIResponse, error) {
 	client := &http.Client{Timeout: 10 * time.Second}
 
 	url := fmt.Sprintf("https://api.statsig.com/console/v1%s", e)
+	tflog.Debug(ctx, fmt.Sprintf("Making Request to %s", url))
 
 	req, err := http.NewRequest(m, url, bytes.NewBuffer(b))
 
@@ -72,12 +75,14 @@ func makeAPICall(k string, e string, m string, b []byte) (*APIResponse, error) {
 	response := make(map[string]interface{})
 	err = json.NewDecoder(r.Body).Decode(&response)
 
+	tflog.Debug(ctx, fmt.Sprintf("Received Response %s", mapToJsonString(response)))
+
 	if err != nil {
 		return nil, err
 	}
 
 	if response["message"] == nil {
-		return nil, errors.New("gates response is invalid")
+		return nil, errors.New("invalid response")
 	}
 
 	return &APIResponse{

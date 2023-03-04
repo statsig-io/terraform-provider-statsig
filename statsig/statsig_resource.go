@@ -10,36 +10,36 @@ import (
 type statsigResource struct {
 	endpoint       string
 	schema         map[string]*schema.Schema
-	fromJsonObject func(rd *schema.ResourceData, r map[string]interface{})
-	toJsonData     func(rd *schema.ResourceData) ([]byte, error)
+	fromJsonObject func(ctx context.Context, rd *schema.ResourceData, r map[string]interface{})
+	toJsonData     func(ctx context.Context, rd *schema.ResourceData) ([]byte, error)
 }
 
 func (b statsigResource) resourceCreate(ctx context.Context, rd *schema.ResourceData, m interface{}) diag.Diagnostics {
-	data, err := b.toJsonData(rd)
+	data, err := b.toJsonData(ctx, rd)
 	if err != nil {
 		return diag.FromErr(err)
 	}
-	result := makeAPICallAndPopulateResource(m.(string), b.endpoint, "POST", data, rd, b.fromJsonObject)
+	result := makeAPICallAndPopulateResource(ctx, m.(string), b.endpoint, "POST", data, rd, b.fromJsonObject)
 	return result
 }
 
 func (b statsigResource) resourceRead(ctx context.Context, rd *schema.ResourceData, m interface{}) diag.Diagnostics {
 	e := fmt.Sprintf("%s/%s", b.endpoint, rd.Get("id"))
-	return makeAPICallAndPopulateResource(m.(string), e, "GET", nil, rd, b.fromJsonObject)
+	return makeAPICallAndPopulateResource(ctx, m.(string), e, "GET", nil, rd, b.fromJsonObject)
 }
 
 func (b statsigResource) resourceUpdate(ctx context.Context, rd *schema.ResourceData, m interface{}) diag.Diagnostics {
-	data, err := dataFromExperimentResource(rd)
+	data, err := b.toJsonData(ctx, rd)
 	if err != nil {
 		return diag.FromErr(err)
 	}
 	e := fmt.Sprintf("%s/%s", b.endpoint, rd.Get("id"))
-	return makeAPICallAndPopulateResource(m.(string), e, "PATCH", data, rd, b.fromJsonObject)
+	return makeAPICallAndPopulateResource(ctx, m.(string), e, "PATCH", data, rd, b.fromJsonObject)
 }
 
 func (b statsigResource) resourceDelete(ctx context.Context, rd *schema.ResourceData, m interface{}) diag.Diagnostics {
 	e := fmt.Sprintf("%s/%s", b.endpoint, rd.Get("id"))
-	d := makeAPICallAndPopulateResource(m.(string), e, "DELETE", nil, nil, b.fromJsonObject)
+	d := makeAPICallAndPopulateResource(ctx, m.(string), e, "DELETE", nil, nil, b.fromJsonObject)
 	if d == nil {
 		rd.SetId("")
 	}
