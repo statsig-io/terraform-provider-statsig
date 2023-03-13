@@ -33,3 +33,7 @@ install: build
 
 testacc: install
 	TF_ACC=1 go test -v ./... -timeout 120m
+
+sweep:
+	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."
+	TF_ACC=1 go test $(TEST) -v ./... -sweep=all

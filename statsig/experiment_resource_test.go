@@ -12,6 +12,23 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+func init() {
+	resource.AddTestSweepers("experiment_resource", &resource.Sweeper{
+		Name: "experiment_resource",
+		F: func(region string) error {
+
+			for _, s := range []string{"my_experiment", "simple_experiment"} {
+				_, err := deleteExperiment(s)
+				if err != nil {
+					return err
+				}
+			}
+
+			return nil
+		},
+	})
+}
+
 func TestAccExperimentFull(t *testing.T) {
 	fullExperiment, _ := os.ReadFile("test_resources/experiment_full.tf")
 
@@ -82,11 +99,8 @@ func verifyExperimentDestroyed(s *terraform.State) error {
 		}
 
 		experimentID := rs.Primary.ID
-		k := testAccProvider.Meta().(string)
 
-		e := fmt.Sprintf("/experiments/%s", experimentID)
-		ctx := context.Background()
-		r, err := makeAPICall(ctx, k, e, "DELETE", nil)
+		r, err := deleteExperiment(experimentID)
 
 		if err != nil {
 			return err
@@ -99,6 +113,17 @@ func verifyExperimentDestroyed(s *terraform.State) error {
 	}
 
 	return nil
+}
+
+func deleteExperiment(name string) (*APIResponse, error) {
+	k, ok := os.LookupEnv("statsig_console_key")
+	if !ok {
+		panic("statsig_console_key env var not provided")
+	}
+
+	e := fmt.Sprintf("/experiments/%s", name)
+	ctx := context.Background()
+	return makeAPICall(ctx, k, e, "DELETE", nil)
 }
 
 func extractGroupID(name string, out *string) resource.TestCheckFunc {
