@@ -12,6 +12,23 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
+func init() {
+	resource.AddTestSweepers("gate_resource", &resource.Sweeper{
+		Name: "gate_resource",
+		F: func(region string) error {
+
+			for _, s := range []string{"my_gate", "simple_gate_a", "simple_gate_b"} {
+				_, err := deleteGate(s)
+				if err != nil {
+					return err
+				}
+			}
+
+			return nil
+		},
+	})
+}
+
 func TestAccGateFull(t *testing.T) {
 	fullGate, _ := os.ReadFile("test_resources/gate_full.tf")
 
@@ -50,12 +67,7 @@ func testAccCheckGateDestroy(s *terraform.State) error {
 		}
 
 		gateID := rs.Primary.ID
-		k := testAccProvider.Meta().(string)
-
-		ctx := context.Background()
-
-		e := fmt.Sprintf("/gates/%s", gateID)
-		r, err := makeAPICall(ctx, k, e, "DELETE", nil)
+		r, err := deleteGate(gateID)
 
 		if err != nil {
 			return err
@@ -68,6 +80,17 @@ func testAccCheckGateDestroy(s *terraform.State) error {
 	}
 
 	return nil
+}
+
+func deleteGate(name string) (*APIResponse, error) {
+	k, ok := os.LookupEnv("statsig_console_key")
+	if !ok {
+		panic("statsig_console_key env var not provided")
+	}
+
+	e := fmt.Sprintf("/gates/%s", name)
+	ctx := context.Background()
+	return makeAPICall(ctx, k, e, "DELETE", nil)
 }
 
 func verifyFullGateOutput(t *testing.T) resource.TestCheckFunc {
