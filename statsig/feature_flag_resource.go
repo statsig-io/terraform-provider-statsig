@@ -4,22 +4,23 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"reflect"
 	"strconv"
+
+	"github.com/hashicorp/terraform-plugin-log/tflog"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func resourceGate() *schema.Resource {
+func resourceFeatureFlag(flagType string) *schema.Resource {
 	return statsigResource{
-		endpoint:       "/gates",
-		schema:         gateSchema(),
-		toJsonData:     dataFromGateResource,
-		fromJsonObject: populateGateResourceFromResponse,
+		endpoint:       fmt.Sprintf("/%s", flagType),
+		schema:         featureFlagSchema(),
+		toJsonData:     dataFromFeatureFlagResource,
+		fromJsonObject: populateFeatureFlagResourceFromResponse,
 	}.asTerraformResource()
 }
 
-func dataFromGateResource(ctx context.Context, rd *schema.ResourceData) ([]byte, error) {
+func dataFromFeatureFlagResource(ctx context.Context, rd *schema.ResourceData) ([]byte, error) {
 	body := map[string]interface{}{
 		"name":        rd.Get("name"),
 		"description": rd.Get("description"),
@@ -165,7 +166,7 @@ func toString(i interface{}) string {
 	return ""
 }
 
-func populateGateResourceFromResponse(ctx context.Context, rd *schema.ResourceData, r map[string]interface{}) {
+func populateFeatureFlagResourceFromResponse(ctx context.Context, rd *schema.ResourceData, r map[string]interface{}) {
 	rd.Set("description", r["description"])
 	rd.Set("is_enabled", r["isEnabled"])
 	rd.Set("last_modifier_name", r["lastModifierName"])
