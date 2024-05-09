@@ -29,8 +29,9 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"statsig_gate":       resourceGate(),
-			"statsig_experiment": resourceExperiment(),
+			"statsig_gate":           resourceFeatureFlag("gates"),
+			"statsig_experiment":     resourceExperiment(),
+			"statsig_dynamic_config": resourceFeatureFlag("dynamic_configs"),
 		},
 		DataSourcesMap:       map[string]*schema.Resource{},
 		ConfigureContextFunc: providerConfigure,

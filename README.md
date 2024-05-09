@@ -2,7 +2,7 @@
 
 The Statsig Terrafrom Provider allows you to configure your gates with Terraform. This is achieved by leveraging the Console API. If there is something you need to perform that isn't supported by the Terraform Provider, checkout the [Console API](https://docs.statsig.com/console-api/introduction).
 
-It is hosted on the Terraform registry at https://registry.terraform.io/providers/statsig-io/statsig
+It is hosted on the Terraform registry at <https://registry.terraform.io/providers/statsig-io/statsig>
 
 ## Gates
 
@@ -10,7 +10,7 @@ You can create a .tf file (Terraform File) to configure how your gate works. All
 
 Requiring the Statsig provider. (You will need to change the version).
 
-```go
+```terraform
 terraform {
   required_providers {
     statsig = {
@@ -23,7 +23,7 @@ terraform {
 
 Creating a basic gate resource
 
-```go
+```terraform
 resource "statsig_gate" "my_gate" {
   name        = "my_gate"
   description = "A short description of what this Gate is used for."
