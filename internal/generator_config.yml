@@ -1,0 +1,25 @@
+
+provider:
+  name: statsig
+
+resources:
+  keys:
+    read:
+      path: /console/v1/keys/:id
+      method: GET
+    create:
+      path: /console/v1/keys
+      method: POST
+    update:
+      path: /console/v1/keys/:id
+      method: PATCH
+    delete:
+      path: /console/v1/keys/:id
+      method: DELETE
+    schema:
+      ignores:
+        - message
+        - data
+      attributes:
+        aliases:
+          id: key

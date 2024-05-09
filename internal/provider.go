@@ -77,5 +77,7 @@ func (p *StatsigProvider) DataSources(ctx context.Context) []func() datasource.D
 }
 
 func (p *StatsigProvider) Resources(ctx context.Context) []func() resource.Resource {
-	return []func() resource.Resource{}
+	return []func() resource.Resource{
+		NewKeysResource,
+	}
 }
