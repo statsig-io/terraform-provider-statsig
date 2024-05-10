@@ -3,8 +3,9 @@ package statsig
 import (
 	"context"
 	"encoding/json"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"reflect"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceExperiment() *schema.Resource {

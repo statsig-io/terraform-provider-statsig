@@ -4,10 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/stretchr/testify/assert"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -17,7 +18,7 @@ func init() {
 		Name: "experiment_resource",
 		F: func(region string) error {
 
-			for _, s := range []string{"my_experiment", "simple_experiment"} {
+			for _, s := range []string{"my_experiment", "simple_experiment", "full_experiment"} {
 				_, err := deleteExperiment(s)
 				if err != nil {
 					return err
@@ -32,7 +33,7 @@ func init() {
 func TestAccExperimentFull(t *testing.T) {
 	fullExperiment, _ := os.ReadFile("test_resources/experiment_full.tf")
 
-	key := "statsig_experiment.my_experiment"
+	key := "statsig_experiment.full_experiment"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:          func() { testAccPreCheck(t) },
@@ -169,10 +170,10 @@ func verifyFullExperimentSetup(t *testing.T, name string) resource.TestCheckFunc
 			return err
 		}
 
-		assert.Equal(t, "my_experiment", remote["id"])
-		assert.Equal(t, "my_experiment", local["id"])
+		assert.Equal(t, "full_experiment", remote["id"])
+		assert.Equal(t, "full_experiment", local["id"])
 
-		assert.Equal(t, "my_experiment", local["name"])
+		assert.Equal(t, "full_experiment", local["name"])
 
 		assert.Equal(t, "A short description of what we are experimenting on.", local["description"])
 		assert.Equal(t, "A short description of what we are experimenting on.", remote["description"])

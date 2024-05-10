@@ -46,20 +46,6 @@ func gateSchema() map[string]*schema.Schema {
 				Schema: ruleSchema(),
 			},
 		},
-		"dev_rules": {
-			Type:     schema.TypeList,
-			Optional: true,
-			Elem: &schema.Resource{
-				Schema: ruleSchema(),
-			},
-		},
-		"staging_rules": {
-			Type:     schema.TypeList,
-			Optional: true,
-			Elem: &schema.Resource{
-				Schema: ruleSchema(),
-			},
-		},
 	}
 }
 
@@ -77,6 +63,14 @@ func ruleSchema() map[string]*schema.Schema {
 			Type:             schema.TypeInt,
 			Required:         true,
 			ValidateDiagFunc: validation.ToDiagFunc(validation.IntBetween(0, 100)),
+		},
+		"environments": {
+			Type:     schema.TypeList,
+			Optional: true,
+			Elem: &schema.Schema{
+				Type:             schema.TypeString,
+				ValidateDiagFunc: validation.ToDiagFunc(validation.StringIsNotEmpty),
+			},
 		},
 		"conditions": {
 			Type:     schema.TypeList,

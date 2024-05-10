@@ -6,6 +6,7 @@ resource "statsig_gate" "my_gate" {
   rules {
     name            = "All Conditions"
     pass_percentage = 10
+    environments = ["production"]
     conditions {
       type = "public"
     }
@@ -89,12 +90,13 @@ resource "statsig_gate" "my_gate" {
       operator     = "any"
     }
   }
-  dev_rules {
-    name            = "All Conditions"
+  rules {
+    name            = "Development Conditions"
     pass_percentage = 10
     conditions {
       type = "public"
     }
+    environments = ["development"]
   }
 }
 

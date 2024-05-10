@@ -1,5 +1,5 @@
-resource "statsig_experiment" "my_experiment" {
-  name        = "my_experiment"
+resource "statsig_experiment" "full_experiment" {
+  name        = "full_experiment"
   description = "A short description of what we are experimenting on."
   id_type     = "userID"
   allocation  = 12.3

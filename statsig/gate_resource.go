@@ -4,10 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"reflect"
 	"strconv"
+
+	"github.com/hashicorp/terraform-plugin-log/tflog"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 func resourceGate() *schema.Resource {
@@ -28,8 +29,6 @@ func dataFromGateResource(ctx context.Context, rd *schema.ResourceData) ([]byte,
 	}
 
 	body["rules"] = formatRules(ctx, rd.Get("rules"), true)
-	body["devRules"] = formatRules(ctx, rd.Get("dev_rules"), true)
-	body["stagingRules"] = formatRules(ctx, rd.Get("staging_rules"), true)
 
 	return json.Marshal(body)
 }
@@ -47,12 +46,14 @@ func formatRules(ctx context.Context, in interface{}, forApi bool) []map[string]
 			result = append(result, map[string]interface{}{
 				"name":           val["name"],
 				"passPercentage": val["pass_percentage"],
+				"environments":   val["environments"],
 				"conditions":     formatConditions(ctx, val["conditions"], forApi),
 			})
 		} else {
 			result = append(result, map[string]interface{}{
 				"name":            val["name"],
 				"pass_percentage": val["passPercentage"],
+				"environments":    val["environments"],
 				"conditions":      formatConditions(ctx, val["conditions"], forApi),
 			})
 		}
@@ -172,8 +173,6 @@ func populateGateResourceFromResponse(ctx context.Context, rd *schema.ResourceDa
 	rd.Set("last_modifier_id", r["lastModifierID"])
 	rd.Set("checks_per_hour", r["checksPerHour"])
 	rd.Set("rules", formatRules(ctx, r["rules"], false))
-	rd.Set("dev_rules", formatRules(ctx, r["devRules"], false))
-	rd.Set("staging_rules", formatRules(ctx, r["stagingRules"], false))
 
 	rd.SetId(r["id"].(string))
 }

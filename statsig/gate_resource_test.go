@@ -4,10 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/stretchr/testify/assert"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -99,7 +100,19 @@ func verifyFullGateOutput(t *testing.T) resource.TestCheckFunc {
 		rs, _ := s.RootModule().Resources["statsig_gate.my_gate"]
 		local := rs.Primary.Attributes
 
-		conditions := o.Value.(map[string]interface{})["rules"].([]interface{})[0].(map[string]interface{})["conditions"].([]interface{})
+		rules := o.Value.(map[string]interface{})["rules"].([]interface{})
+		mainRule := rules[0].(map[string]interface{})
+		devRule := rules[1].(map[string]interface{})
+
+		assert.Equal(t, "All Conditions", mainRule["name"])
+		assert.Equal(t, "10", fmt.Sprint(mainRule["pass_percentage"]))
+
+		assert.Equal(t, "Development Conditions", devRule["name"])
+		assert.Equal(t, "10", fmt.Sprint(devRule["pass_percentage"]))
+		assert.Equal(t, "development", devRule["environments"].([]interface{})[0])
+
+		conditions := mainRule["conditions"].([]interface{})
+		devConditions := devRule["conditions"].([]interface{})
 
 		assert.Equal(t, "public", conditions[0].(map[string]interface{})["type"])
 		assert.Equal(t, "user_id", conditions[1].(map[string]interface{})["type"])
@@ -118,6 +131,7 @@ func verifyFullGateOutput(t *testing.T) resource.TestCheckFunc {
 		assert.Equal(t, "passes_segment", conditions[14].(map[string]interface{})["type"])
 		assert.Equal(t, "fails_segment", conditions[15].(map[string]interface{})["type"])
 		assert.Equal(t, "ip_address", conditions[16].(map[string]interface{})["type"])
+		assert.Equal(t, "public", devConditions[0].(map[string]interface{})["type"])
 
 		for index, elem := range conditions {
 			condition := elem.(map[string]interface{})
