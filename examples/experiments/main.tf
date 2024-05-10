@@ -7,7 +7,7 @@ terraform {
   }
 }
 
-resource "statsig_experiment" simple {
+resource "statsig_experiment" "simple" {
   name        = "simple_experiment"
   description = "A short description of what this Experiment is used for."
   id_type     = "userID"

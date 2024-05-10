@@ -6,12 +6,12 @@ resource "statsig_gate" "my_gate" {
   rules {
     name            = "All Conditions"
     pass_percentage = 10
-    environments = ["production"]
+    environments    = ["production"]
     conditions {
       type = "public"
     }
     conditions {
-      type         = "user_id"
+      type = "user_id"
       target_value = [
         "1", "2"
       ]

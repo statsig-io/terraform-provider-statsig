@@ -19,7 +19,7 @@ resource "statsig_gate" "full" {
       type = "public"
     }
     conditions {
-      type         = "user_id"
+      type = "user_id"
       target_value = [
         "1", "2"
       ]

@@ -50,7 +50,7 @@ func makeAPICallAndPopulateResource(ctx context.Context, k string, e string, m s
 func makeAPICall(ctx context.Context, k string, e string, m string, b []byte) (*APIResponse, error) {
 	client := &http.Client{Timeout: 10 * time.Second}
 
-	url := fmt.Sprintf("https://api.statsig.com/console/v1%s", e)
+	url := fmt.Sprintf("https://latest.api.statsig.com/console/v1%s", e)
 	tflog.Debug(ctx, fmt.Sprintf("Making Request to %s", url))
 
 	req, err := http.NewRequest(m, url, bytes.NewBuffer(b))

@@ -23,7 +23,11 @@ func New() provider.Provider {
 type StatsigProvider struct{}
 
 type StatsigProviderModel struct {
-	APIKey types.String `tfsdk:"console_api_key"`
+	apiKey types.String `tfsdk:"console_api_key"`
+}
+
+type StatsigResourceData struct {
+	transport *transport
 }
 
 func (p *StatsigProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
@@ -50,12 +54,14 @@ func (p *StatsigProvider) Configure(ctx context.Context, req provider.ConfigureR
 	var data StatsigProviderModel
 
 	// Read configuration data into model
-	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+	// TODO: figure out how to mute this for acceptance tests which must provide this via env variable
+	// resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
+	req.Config.Get(ctx, &data)
 
 	// Check configuration data, which should take precedence over
 	// environment variable data, if found.
-	if data.APIKey.ValueString() != "" {
-		apiKey = data.APIKey.ValueString()
+	if data.apiKey.ValueString() != "" {
+		apiKey = data.apiKey.ValueString()
 	}
 
 	if apiKey == "" {
@@ -65,6 +71,10 @@ func (p *StatsigProvider) Configure(ctx context.Context, req provider.ConfigureR
 				"the STATSIG_CONSOLE_KEY environment variable or provider "+
 				"configuration block console_api_key attribute.",
 		)
+	}
+
+	resp.ResourceData = &StatsigResourceData{
+		transport: newTransport(ctx, apiKey),
 	}
 }
 

@@ -2,6 +2,7 @@ package tests
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	new "terraform-provider-statsig/internal"
@@ -13,6 +14,29 @@ import (
 	"github.com/hashicorp/terraform-plugin-mux/tf6muxserver"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 )
+
+type TestSteps struct {
+	steps []resource.TestStep
+}
+
+func (t *TestSteps) Append(in ...[]resource.TestStep) {
+	for _, test := range in {
+		if test == nil {
+			continue
+		}
+
+		t.steps = append(t.steps, test...)
+	}
+}
+
+func BuildTestSteps(t *testing.T) []resource.TestStep {
+	testSteps := TestSteps{
+		steps: make([]resource.TestStep, 0),
+	}
+	testSteps.Append(TestAccServerKey(t), TestAccClientKey(t), TestAccConsoleKey(t))
+	// testSteps.Append(TestAccServerKey(t))
+	return testSteps.steps
+}
 
 func TestMuxServer(t *testing.T) {
 	resource.Test(t, resource.TestCase{
@@ -48,6 +72,14 @@ func TestMuxServer(t *testing.T) {
 				return muxServer.ProviderServer(), nil
 			},
 		},
-		Steps: []resource.TestStep{}, // TODO: migrate tests for resources still using old provider
+		PreCheck: func() { testAccPreCheck(t) },
+		Steps:    BuildTestSteps(t), // TODO: migrate tests for resources still using old provider
 	})
+}
+
+func testAccPreCheck(t *testing.T) {
+	_, ok := os.LookupEnv("statsig_console_key")
+	if !ok {
+		t.Fatal("statsig_console_key env var not provided")
+	}
 }

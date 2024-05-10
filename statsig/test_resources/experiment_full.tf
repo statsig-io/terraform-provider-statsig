@@ -6,7 +6,7 @@ resource "statsig_experiment" "full_experiment" {
   status      = "setup"
   hypothesis  = "Move some metrics"
   layer_id    = "a_layer"
-  tags        = [
+  tags = [
     "test-tag-a",
     "test-tag-b"
   ]
