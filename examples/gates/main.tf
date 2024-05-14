@@ -98,12 +98,13 @@ resource "statsig_gate" "full" {
       operator     = "any"
     }
   }
-  dev_rules {
-    name            = "All Conditions"
+  rules {
+    name            = "Dev Conditions"
     pass_percentage = 10
     conditions {
       type = "public"
     }
+    environments = ["development"]
   }
 }
 
