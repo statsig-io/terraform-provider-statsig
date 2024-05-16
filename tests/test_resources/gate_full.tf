@@ -8,7 +8,8 @@ resource "statsig_gate" "my_gate" {
     pass_percentage = 10
     environments    = ["production"]
     conditions {
-      type = "public"
+      type         = "public"
+      target_value = []
     }
     conditions {
       type = "user_id"
@@ -94,7 +95,8 @@ resource "statsig_gate" "my_gate" {
     name            = "Development Conditions"
     pass_percentage = 10
     conditions {
-      type = "public"
+      type         = "public"
+      target_value = []
     }
     environments = ["development"]
   }

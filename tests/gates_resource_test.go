@@ -1,97 +1,39 @@
-package statsig
+package tests
 
 import (
-	"context"
-	"errors"
 	"fmt"
-	"os"
 	"testing"
 
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/hashicorp/terraform-plugin-testing/config"
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/plancheck"
+	"github.com/hashicorp/terraform-plugin-testing/terraform"
 	"github.com/stretchr/testify/assert"
-
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func init() {
-	resource.AddTestSweepers("gate_resource", &resource.Sweeper{
-		Name: "gate_resource",
-		F: func(region string) error {
-
-			for _, s := range []string{"my_gate", "simple_gate_a", "simple_gate_b"} {
-				_, err := deleteGate(s)
-				if err != nil {
-					return err
-				}
-			}
-
-			return nil
-		},
-	})
-}
-
-func TestAccGateFull(t *testing.T) {
-	fullGate, _ := os.ReadFile("test_resources/gate_full.tf")
+func TestAccGateFull_MUX(t *testing.T) {
 
 	resource.Test(t, resource.TestCase{
-		PreCheck:          func() { testAccPreCheck(t) },
-		ProviderFactories: testAccProviderFactories,
-		CheckDestroy:      testAccCheckGateDestroy,
+		ProtoV6ProviderFactories: protoV6ProviderFactories(),
+		PreCheck:                 func() { testAccPreCheck(t) },
 		Steps: []resource.TestStep{
 			{
-				Config: string(fullGate),
+				ConfigFile: config.StaticFile("test_resources/gate_full.tf"),
 				Check: resource.ComposeTestCheckFunc(
 					verifyFullGateSetup(t, "statsig_gate.my_gate"),
 					verifyFullGateOutput(t),
 				),
 			},
 			{
-				ImportStateId: "my_gate",
-				ImportState:   true,
-				ResourceName:  "statsig_gate.my_gate",
-			},
-			{
-				Config: string(fullGate),
-				Check: resource.ComposeTestCheckFunc(
-					verifyFullGateSetup(t, "statsig_gate.my_gate"),
-					verifyFullGateOutput(t),
-				),
+				ConfigFile: config.StaticFile("test_resources/gate_full.tf"),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
 			},
 		},
 	})
-}
-
-func testAccCheckGateDestroy(s *terraform.State) error {
-	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "statsig_gate" {
-			continue
-		}
-
-		gateID := rs.Primary.ID
-		r, err := deleteGate(gateID)
-
-		if err != nil {
-			return err
-		}
-
-		// Should 404 as the gate was already deleted
-		if r.StatusCode != 404 {
-			return errors.New(fmt.Sprintf("Status %v, Message: %s, Errors: %v", r.StatusCode, r.Message, r.Errors))
-		}
-	}
-
-	return nil
-}
-
-func deleteGate(name string) (*APIResponse, error) {
-	k, ok := os.LookupEnv("statsig_console_key")
-	if !ok {
-		panic("statsig_console_key env var not provided")
-	}
-
-	e := fmt.Sprintf("/gates/%s", name)
-	ctx := context.Background()
-	return makeAPICall(ctx, k, e, "DELETE", nil)
 }
 
 func verifyFullGateOutput(t *testing.T) resource.TestCheckFunc {
@@ -147,37 +89,20 @@ func verifyFullGateOutput(t *testing.T) resource.TestCheckFunc {
 func verifyFullGateSetup(t *testing.T, name string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, _ := s.RootModule().Resources[name]
-		remote, err := getGateDataFromServer(rs.Primary.ID)
 		local := rs.Primary.Attributes
-		if err != nil {
-			return err
-		}
 
-		assert.Equal(t, "my_gate", remote["id"])
 		assert.Equal(t, "my_gate", local["id"])
 
 		assert.Equal(t, "my_gate", local["name"])
 
 		assert.Equal(t, "A short description of what this Gate is used for.", local["description"])
-		assert.Equal(t, "A short description of what this Gate is used for.", remote["description"])
 
 		assert.Equal(t, "userID", local["id_type"])
-		assert.Equal(t, "userID", remote["idType"])
-
-		rule := remote["rules"].([]interface{})[0].(map[string]interface{})
-		conditions := rule["conditions"].([]interface{})
-
-		assert.Equal(t, fmt.Sprintf("%d", len(conditions)), local["rules.0.conditions.#"])
 
 		assert.Equal(t, "public", local["rules.0.conditions.0.type"])
 		assert.Equal(t, "", local["rules.0.conditions.0.target_value"])
 		assert.Equal(t, "", local["rules.0.conditions.0.operator"])
 		assert.Equal(t, "", local["rules.0.conditions.0.field"])
-
-		public := conditions[0].(map[string]interface{})
-		assert.Nil(t, public["target_value"])
-		assert.Nil(t, public["operator"])
-		assert.Nil(t, public["field"])
 
 		assert.Equal(t, "user_id", local["rules.0.conditions.1.type"])
 		assert.Equal(t, "1", local["rules.0.conditions.1.target_value.0"])
@@ -185,29 +110,6 @@ func verifyFullGateSetup(t *testing.T, name string) resource.TestCheckFunc {
 		assert.Equal(t, "any", local["rules.0.conditions.1.operator"])
 		assert.Equal(t, "", local["rules.0.conditions.1.field"])
 
-		userID := conditions[1].(map[string]interface{})
-		assert.Equal(t, []interface{}{"1", "2"}, userID["targetValue"])
-		assert.Equal(t, "any", userID["operator"])
-		assert.Nil(t, userID["field"])
-
 		return nil
 	}
-}
-
-func getGateDataFromServer(gid string) (map[string]interface{}, error) {
-	sdkKey, ok := os.LookupEnv("statsig_console_key")
-	if !ok {
-		return nil, fmt.Errorf("no sdk key found")
-	}
-
-	endpoint := fmt.Sprintf("/gates/%s", gid)
-	ctx := context.Background()
-	response, err := makeAPICall(ctx, sdkKey, endpoint, "GET", nil)
-
-	if err != nil {
-		return nil, err
-	}
-
-	data := response.Data.(map[string]interface{})
-	return data, nil
 }

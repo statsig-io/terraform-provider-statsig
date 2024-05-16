@@ -11,10 +11,10 @@ import (
 
 type gateClient struct {
 	endpoint  string
-	transport *transport
+	transport *Transport
 }
 
-func newGateClient(transport *transport) *gateClient {
+func newGateClient(transport *Transport) *gateClient {
 	return &gateClient{
 		endpoint:  "gates",
 		transport: transport,
@@ -28,7 +28,7 @@ func (c *gateClient) read(ctx context.Context, gate *resource_gate.GateModel) di
 
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data models.GateAPIModel
-		res, err := c.transport.get(c.endpoint, gate.Id.ValueString(), &data)
+		res, err := c.transport.Get(c.endpoint, gate.Id.ValueString(), &data)
 		models.GateFromAPIModel(ctx, diags, gate, data)
 		return res, err
 	})
@@ -37,7 +37,7 @@ func (c *gateClient) read(ctx context.Context, gate *resource_gate.GateModel) di
 func (c *gateClient) create(ctx context.Context, gate *resource_gate.GateModel) diag.Diagnostics {
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data models.GateAPIModel
-		res, err := c.transport.post(c.endpoint, models.GateToAPIModel(ctx, gate), &data)
+		res, err := c.transport.Post(c.endpoint, models.GateToAPIModel(ctx, gate), &data)
 		models.GateFromAPIModel(ctx, diags, gate, data)
 		return res, err
 	})
@@ -50,7 +50,7 @@ func (c *gateClient) update(ctx context.Context, gate *resource_gate.GateModel) 
 
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data models.GateAPIModel
-		res, err := c.transport.patch(c.endpoint, gate.Id.ValueString(), models.GateToAPIModel(ctx, gate), &data)
+		res, err := c.transport.Patch(c.endpoint, gate.Id.ValueString(), models.GateToAPIModel(ctx, gate), &data)
 		models.GateFromAPIModel(ctx, diags, gate, data)
 		return res, err
 	})
@@ -63,6 +63,6 @@ func (c *gateClient) delete(_ context.Context, gate *resource_gate.GateModel) di
 
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data models.GateAPIModel
-		return c.transport.delete(c.endpoint, gate.Id.ValueString(), &data)
+		return c.transport.Delete(c.endpoint, gate.Id.ValueString(), &data)
 	})
 }

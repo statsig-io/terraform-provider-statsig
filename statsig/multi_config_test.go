@@ -1,10 +1,14 @@
 package statsig
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
-	"github.com/stretchr/testify/assert"
+	"context"
+	"errors"
+	"fmt"
 	"os"
 	"testing"
+
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
+	"github.com/stretchr/testify/assert"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
@@ -51,4 +55,37 @@ func verifyMultiConfigSetup(t *testing.T) resource.TestCheckFunc {
 
 		return nil
 	}
+}
+
+func testAccCheckGateDestroy(s *terraform.State) error {
+	for _, rs := range s.RootModule().Resources {
+		if rs.Type != "statsig_gate" {
+			continue
+		}
+
+		gateID := rs.Primary.ID
+		r, err := deleteGate(gateID)
+
+		if err != nil {
+			return err
+		}
+
+		// Should 404 as the gate was already deleted
+		if r.StatusCode != 404 {
+			return errors.New(fmt.Sprintf("Status %v, Message: %s, Errors: %v", r.StatusCode, r.Message, r.Errors))
+		}
+	}
+
+	return nil
+}
+
+func deleteGate(name string) (*APIResponse, error) {
+	k, ok := os.LookupEnv("statsig_console_key")
+	if !ok {
+		panic("statsig_console_key env var not provided")
+	}
+
+	e := fmt.Sprintf("/gates/%s", name)
+	ctx := context.Background()
+	return makeAPICall(ctx, k, e, "DELETE", nil)
 }

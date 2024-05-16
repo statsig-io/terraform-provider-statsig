@@ -27,7 +27,7 @@ type StatsigProviderModel struct {
 }
 
 type StatsigResourceData struct {
-	transport *transport
+	transport *Transport
 }
 
 func (p *StatsigProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
@@ -74,7 +74,7 @@ func (p *StatsigProvider) Configure(ctx context.Context, req provider.ConfigureR
 	}
 
 	resp.ResourceData = &StatsigResourceData{
-		transport: newTransport(ctx, apiKey),
+		transport: NewTransport(ctx, apiKey),
 	}
 }
 

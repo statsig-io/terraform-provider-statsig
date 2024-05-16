@@ -1,25 +1,12 @@
 package tests
 
 import (
-	"errors"
 	"os"
 	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-	"github.com/hashicorp/terraform-plugin-testing/terraform"
 )
-
-func getImportStateIDFunc(name string, key *string) resource.ImportStateIdFunc {
-	return func(s *terraform.State) (string, error) {
-		resource, ok := s.RootModule().Resources[name]
-		if !ok || resource == nil {
-			return "", errors.New("Resource not found")
-		}
-		*key = resource.Primary.Attributes["key"]
-		return *key, nil
-	}
-}
 
 func TestAccServerKey(t *testing.T) {
 	serverKey, _ := os.ReadFile("test_resources/key_server.tf")
@@ -47,7 +34,7 @@ func TestAccServerKey(t *testing.T) {
 			},
 			RefreshNoopPlanCheck(),
 			{
-				ImportStateIdFunc: getImportStateIDFunc(name, &key),
+				ImportStateIdFunc: getImportStateIDFunc(name, "key", &key),
 				ImportState:       true,
 				ResourceName:      name,
 			},
@@ -99,7 +86,7 @@ func TestAccClientKey(t *testing.T) {
 			},
 			RefreshNoopPlanCheck(),
 			{
-				ImportStateIdFunc: getImportStateIDFunc(name, &key),
+				ImportStateIdFunc: getImportStateIDFunc(name, "key", &key),
 				ImportState:       true,
 				ResourceName:      name,
 			},
@@ -149,7 +136,7 @@ func TestAccConsoleKey(t *testing.T) {
 			},
 			RefreshNoopPlanCheck(),
 			{
-				ImportStateIdFunc: getImportStateIDFunc(name, &key),
+				ImportStateIdFunc: getImportStateIDFunc(name, "key", &key),
 				ImportState:       true,
 				ResourceName:      name,
 			},
