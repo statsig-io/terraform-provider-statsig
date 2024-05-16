@@ -25,8 +25,8 @@ type KeysAPIInputModel struct {
 	Description           string   `json:"description"`
 	Environments          []string `json:"environments"`
 	Scopes                []string `json:"scopes"`
-	SecondaryTargetAppIds []string `json:"secondary_target_app_ids"`
-	TargetAppId           string   `json:"target_app_id"`
+	SecondaryTargetAppIds []string `json:"secondaryTargetAppIDs,omitempty"`
+	TargetAppId           string   `json:"targetAppID,omitempty"`
 	Type                  string   `json:"type"`
 }
 
