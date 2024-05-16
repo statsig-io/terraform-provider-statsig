@@ -23,3 +23,24 @@ resources:
       attributes:
         aliases:
           id: key
+
+  gate:
+    read:
+      path: /console/v1/gates/:id
+      method: GET
+    create:
+      path: /console/v1/gates
+      method: POST
+    update:
+      path: /console/v1/gates/:id
+      method: PATCH
+    delete:
+      path: /console/v1/gates/:id
+      method: DELETE
+    schema:
+      ignores:
+        - message
+        - data
+      attributes:
+        aliases:
+          id: name
