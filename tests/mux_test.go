@@ -34,7 +34,6 @@ func BuildTestSteps(t *testing.T) []resource.TestStep {
 		steps: make([]resource.TestStep, 0),
 	}
 	testSteps.Append(TestAccServerKey(t), TestAccClientKey(t), TestAccConsoleKey(t))
-	// testSteps.Append(TestAccServerKey(t))
 	return testSteps.steps
 }
 

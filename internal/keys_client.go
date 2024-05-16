@@ -96,13 +96,12 @@ func (c *keysClient) update(ctx context.Context, key *resource_keys.KeysModel) d
 	})
 }
 
-func (c *keysClient) delete(ctx context.Context, key *resource_keys.KeysModel) diag.Diagnostics {
+func (c *keysClient) delete(_ context.Context, key *resource_keys.KeysModel) diag.Diagnostics {
 	if key.Key.IsUnknown() {
 		key.Key = types.StringNull()
 	}
 
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
-		var data KeysAPIOutputModel
-		return c.transport.delete(c.endpoint, key.Key.ValueString(), toAPIInputModel(ctx, key), &data)
+		return c.transport.delete(c.endpoint, key.Key.ValueString(), nil)
 	})
 }

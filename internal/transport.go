@@ -51,8 +51,8 @@ func (t *transport) patch(endpoint string, id string, body interface{}, resp int
 	return t.doRequest("PATCH", fmt.Sprintf("%s/%s", endpoint, id), body, resp)
 }
 
-func (t *transport) delete(endpoint string, id string, body interface{}, resp interface{}) (*APIResponse, error) {
-	return t.doRequest("DELETE", fmt.Sprintf("%s/%s", endpoint, id), body, resp)
+func (t *transport) delete(endpoint string, id string, resp interface{}) (*APIResponse, error) {
+	return t.doRequest("DELETE", fmt.Sprintf("%s/%s", endpoint, id), nil, resp)
 }
 
 func (t *transport) doRequest(method, endpoint string, body interface{}, resp interface{}) (*APIResponse, error) {
@@ -70,7 +70,9 @@ func (t *transport) doRequest(method, endpoint string, body interface{}, resp in
 	defer r.Body.Close()
 
 	var response Response
-	response.Data = resp
+	if resp != nil {
+		response.Data = resp
+	}
 	err = json.NewDecoder(r.Body).Decode(&response)
 
 	if err != nil {
