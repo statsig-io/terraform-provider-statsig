@@ -163,17 +163,10 @@
             }
           },
           "targetApps": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "tags": {
             "type": "array",
@@ -345,17 +338,10 @@
             }
           },
           "targetApps": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "holdoutIDs": {
             "type": "array",
@@ -749,17 +735,10 @@
                   }
                 },
                 "targetApps": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    }
-                  ]
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "holdoutIDs": {
                   "type": "array",
@@ -1105,17 +1084,10 @@
             "type": "string"
           },
           "targetApps": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "required": [
@@ -1197,17 +1169,10 @@
                 }
               },
               "targetApps": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                ]
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
               },
               "holdoutIDs": {
                 "type": "array",
@@ -1243,41 +1208,11 @@
                       ]
                     },
                     "defaultValue": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "number"
-                        },
-                        {
-                          "type": "boolean"
-                        },
-                        {
-                          "type": "object",
-                          "additionalProperties": {}
-                        },
-                        {
-                          "type": "array",
-                          "items": {
-                            "anyOf": [
-                              {
-                                "type": "string"
-                              },
-                              {
-                                "type": "number"
-                              },
-                              {
-                                "type": "boolean"
-                              },
-                              {
-                                "type": "object",
-                                "additionalProperties": {}
-                              }
-                            ]
-                          }
-                        }
-                      ]
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": {}
+                      }
                     }
                   },
                   "required": [
@@ -1386,17 +1321,10 @@
                   }
                 },
                 "targetApps": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    }
-                  ]
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "holdoutIDs": {
                   "type": "array",
@@ -1432,41 +1360,11 @@
                         ]
                       },
                       "defaultValue": {
-                        "anyOf": [
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          },
-                          {
-                            "type": "boolean"
-                          },
-                          {
-                            "type": "object",
-                            "additionalProperties": {}
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "anyOf": [
-                                {
-                                  "type": "string"
-                                },
-                                {
-                                  "type": "number"
-                                },
-                                {
-                                  "type": "boolean"
-                                },
-                                {
-                                  "type": "object",
-                                  "additionalProperties": {}
-                                }
-                              ]
-                            }
-                          }
-                        ]
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "additionalProperties": {}
+                        }
                       }
                     },
                     "required": [
@@ -1517,32 +1415,10 @@
               "type": "object",
               "properties": {
                 "targetValue": {
-                  "anyOf": [
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "number"
-                      }
-                    },
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "null"
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "operator": {
                   "type": "string"
@@ -1650,32 +1526,10 @@
                     "type": "object",
                     "properties": {
                       "targetValue": {
-                        "anyOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          },
-                          {
-                            "type": "null"
-                          },
-                          {
-                            "type": "null"
-                          }
-                        ]
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
                       },
                       "operator": {
                         "type": "string"
@@ -1796,17 +1650,10 @@
             ]
           },
           "targetApps": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "team": {
             "type": [
@@ -1850,32 +1697,10 @@
                     "type": "object",
                     "properties": {
                       "targetValue": {
-                        "anyOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          },
-                          {
-                            "type": "null"
-                          },
-                          {
-                            "type": "null"
-                          }
-                        ]
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
                       },
                       "operator": {
                         "type": "string"
@@ -1996,17 +1821,10 @@
             ]
           },
           "targetApps": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "team": {
             "type": [
@@ -2099,17 +1917,10 @@
                 }
               },
               "targetApps": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    }
-                  }
-                ]
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
               },
               "holdoutIDs": {
                 "type": "array",
@@ -2145,32 +1956,10 @@
                         "type": "object",
                         "properties": {
                           "targetValue": {
-                            "anyOf": [
-                              {
-                                "type": "array",
-                                "items": {
-                                  "type": "string"
-                                }
-                              },
-                              {
-                                "type": "array",
-                                "items": {
-                                  "type": "number"
-                                }
-                              },
-                              {
-                                "type": "string"
-                              },
-                              {
-                                "type": "number"
-                              },
-                              {
-                                "type": "null"
-                              },
-                              {
-                                "type": "null"
-                              }
-                            ]
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
                           },
                           "operator": {
                             "type": "string"
@@ -2365,17 +2154,10 @@
                   }
                 },
                 "targetApps": {
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    }
-                  ]
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 },
                 "holdoutIDs": {
                   "type": "array",
@@ -2411,32 +2193,10 @@
                           "type": "object",
                           "properties": {
                             "targetValue": {
-                              "anyOf": [
-                                {
-                                  "type": "array",
-                                  "items": {
-                                    "type": "string"
-                                  }
-                                },
-                                {
-                                  "type": "array",
-                                  "items": {
-                                    "type": "number"
-                                  }
-                                },
-                                {
-                                  "type": "string"
-                                },
-                                {
-                                  "type": "number"
-                                },
-                                {
-                                  "type": "null"
-                                },
-                                {
-                                  "type": "null"
-                                }
-                              ]
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
                             },
                             "operator": {
                               "type": "string"
@@ -3194,32 +2954,10 @@
                     "type": "object",
                     "properties": {
                       "targetValue": {
-                        "anyOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          },
-                          {
-                            "type": "null"
-                          },
-                          {
-                            "type": "null"
-                          }
-                        ]
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
                       },
                       "operator": {
                         "type": "string"
@@ -3309,17 +3047,10 @@
             "type": "string"
           },
           "targetApps": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "creatorID": {
             "type": [
@@ -3488,32 +3219,10 @@
                     "type": "object",
                     "properties": {
                       "targetValue": {
-                        "anyOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          },
-                          {
-                            "type": "null"
-                          },
-                          {
-                            "type": "null"
-                          }
-                        ]
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
                       },
                       "operator": {
                         "type": "string"
@@ -3603,17 +3312,10 @@
             "type": "string"
           },
           "targetApps": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "creatorID": {
             "type": [
@@ -3842,17 +3544,10 @@
             }
           },
           "targetApps": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "holdoutIDs": {
             "type": "array",
@@ -3923,32 +3618,10 @@
                     "type": "object",
                     "properties": {
                       "targetValue": {
-                        "anyOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          },
-                          {
-                            "type": "null"
-                          },
-                          {
-                            "type": "null"
-                          }
-                        ]
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
                       },
                       "operator": {
                         "type": "string"
@@ -4922,17 +4595,10 @@
                     }
                   },
                   "targetApps": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    ]
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   },
                   "tags": {
                     "type": "array",
@@ -5215,17 +4881,10 @@
                           }
                         },
                         "targetApps": {
-                          "anyOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "array",
-                              "items": {
-                                "type": "string"
-                              }
-                            }
-                          ]
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
                         },
                         "holdoutIDs": {
                           "type": "array",
@@ -5641,17 +5300,10 @@
           },
           {
             "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             },
             "required": false,
             "name": "status",
@@ -6460,32 +6112,10 @@
                             "type": "object",
                             "properties": {
                               "targetValue": {
-                                "anyOf": [
-                                  {
-                                    "type": "array",
-                                    "items": {
-                                      "type": "string"
-                                    }
-                                  },
-                                  {
-                                    "type": "array",
-                                    "items": {
-                                      "type": "number"
-                                    }
-                                  },
-                                  {
-                                    "type": "string"
-                                  },
-                                  {
-                                    "type": "number"
-                                  },
-                                  {
-                                    "type": "null"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
-                                ]
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
                               },
                               "operator": {
                                 "type": "string"
@@ -6575,17 +6205,10 @@
                     "type": "string"
                   },
                   "targetApps": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    ]
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   },
                   "creatorID": {
                     "type": [
@@ -6692,32 +6315,10 @@
                             "type": "object",
                             "properties": {
                               "targetValue": {
-                                "anyOf": [
-                                  {
-                                    "type": "array",
-                                    "items": {
-                                      "type": "string"
-                                    }
-                                  },
-                                  {
-                                    "type": "array",
-                                    "items": {
-                                      "type": "number"
-                                    }
-                                  },
-                                  {
-                                    "type": "string"
-                                  },
-                                  {
-                                    "type": "number"
-                                  },
-                                  {
-                                    "type": "null"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
-                                ]
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
                               },
                               "operator": {
                                 "type": "string"
@@ -6807,17 +6408,10 @@
                     "type": "string"
                   },
                   "targetApps": {
-                    "anyOf": [
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      }
-                    ]
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
                   },
                   "creatorID": {
                     "type": [
@@ -7056,32 +6650,10 @@
                       "type": "object",
                       "properties": {
                         "targetValue": {
-                          "anyOf": [
-                            {
-                              "type": "array",
-                              "items": {
-                                "type": "string"
-                              }
-                            },
-                            {
-                              "type": "array",
-                              "items": {
-                                "type": "number"
-                              }
-                            },
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "number"
-                            },
-                            {
-                              "type": "null"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
                         },
                         "operator": {
                           "type": "string"
