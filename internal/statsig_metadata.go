@@ -8,6 +8,6 @@ type statsigMetadata struct {
 func getStatsigMetadata() statsigMetadata {
 	return statsigMetadata{
 		SDKType:    "terraform-provider",
-		SDKVersion: "0.2.0",
+		SDKVersion: "1.0.0",
 	}
 }
