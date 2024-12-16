@@ -35,6 +35,9 @@ resource "statsig_experiment" "simple_experiment" {
     size                  = 50
     parameter_values_json = jsonencode({ "a_string" : "control" })
   }
+  lifecycle {
+    ignore_changes = ["secondary_metrics_json"] # Automatically attached core tag
+  }
 }
 
 output "gates" {

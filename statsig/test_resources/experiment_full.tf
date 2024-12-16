@@ -48,4 +48,11 @@ resource "statsig_experiment" "full_experiment" {
   duration                    = 10
   launched_group_id           = ""
   targeting_gate_id           = "targeting_gate"
+  lifecycle {
+    ignore_changes = [
+      "primary_metric_tags", # Metric tags cannot actually be assigned. Associated metrics are exploded from the tags and set on primaryMetrics/secondaryMetrics
+      "secondary_metric_tags",
+      "secondary_metrics_json", # Automatically attached core tag
+    ]
+  }
 }

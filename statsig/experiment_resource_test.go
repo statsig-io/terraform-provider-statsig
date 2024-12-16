@@ -148,8 +148,8 @@ func verifyShippedExperimentSetup(t *testing.T, name string, launchedGroupID *st
 		assert.Equal(t, "my_experiment", remote["id"])
 		assert.Equal(t, "my_experiment", local["id"])
 
-		assert.Equal(t, 0.0, remote["allocation"])
-		assert.Equal(t, "0", local["allocation"])
+		assert.Equal(t, 100.0, remote["allocation"])
+		assert.Equal(t, "100", local["allocation"])
 
 		assert.Equal(t, "decision_made", remote["status"])
 		assert.Equal(t, "decision_made", local["status"])
@@ -209,17 +209,21 @@ func verifyFullExperimentSetup(t *testing.T, name string) resource.TestCheckFunc
 		assert.Equal(t, "test-tag-b", local["tags.1"])
 		assert.Equal(t, []interface{}{"test-tag-a", "test-tag-b"}, remote["tags"])
 
-		assert.Equal(t, "test-tag-a", local["primary_metric_tags.0"])
-		assert.Equal(t, []interface{}{"test-tag-a"}, remote["primaryMetricTags"])
+		assert.Equal(t, "0", local["primary_metric_tags.#"])
+		assert.Equal(t, []interface{}{}, remote["primaryMetricTags"])
 
-		assert.Equal(t, "test-tag-b", local["secondary_metric_tags.0"])
-		assert.Equal(t, []interface{}{"test-tag-b"}, remote["secondaryMetricTags"])
+		assert.Equal(t, "0", local["secondary_metric_tags.#"])
+		assert.Equal(t, []interface{}{}, remote["secondaryMetricTags"])
 
 		primary := jsonStringToArray(local["primary_metrics_json"])[0].(map[string]interface{})
 		assert.Equal(t, "user", primary["type"])
 		assert.Equal(t, "d1_retention_rate", primary["name"])
 
-		secondary := jsonStringToArray(local["secondary_metrics_json"])[0].(map[string]interface{})
+		core := jsonStringToArray(local["secondary_metrics_json"])[0].(map[string]interface{})
+		assert.Equal(t, "user", core["type"])
+		assert.Equal(t, "dau", core["name"])
+
+		secondary := jsonStringToArray(local["secondary_metrics_json"])[1].(map[string]interface{})
 		assert.Equal(t, "user", secondary["type"])
 		assert.Equal(t, "new_dau", secondary["name"])
 
