@@ -44,3 +44,24 @@ resources:
       attributes:
         aliases:
           id: name
+
+  experiment:
+    read:
+      path: /console/v1/experiments/{id}
+      method: GET
+    create:
+      path: /console/v1/experiments
+      method: POST
+    update:
+      path: /console/v1/experiments/{id}
+      method: PATCH
+    delete:
+      path: /console/v1/experiments/{id}
+      method: DELETE
+    schema:
+      ignores:
+        - message
+        - data
+      attributes:
+        aliases:
+          id: name
