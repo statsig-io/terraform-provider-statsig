@@ -4,6 +4,661 @@
 	},
 	"resources": [
 		{
+			"name": "experiment",
+			"schema": {
+				"attributes": [
+					{
+						"name": "allocation",
+						"float64": {
+							"computed_optional_required": "computed_optional",
+							"description": "Percent of layer allocated to this experiment"
+						}
+					},
+					{
+						"name": "allocation_duration",
+						"int64": {
+							"computed_optional_required": "computed_optional",
+							"description": "Warehouse Native Only - Allocation duration in days",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+											}
+										],
+										"schema_definition": "int64validator.AtLeast(1)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "analysis_end_time",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Warehouse Native only - end time for analysis only experiments"
+						}
+					},
+					{
+						"name": "analytics_type",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The mode of analysis for the experiment, e.g frequentist, bayesian, sprt",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.OneOf(\n\"frequentist\",\n\"bayesian\",\n\"sprt\",\n)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "assignment_source_experiment_name",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Name of the source experiment for assignment"
+						}
+					},
+					{
+						"name": "assignment_source_name",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Source name of the assignment"
+						}
+					},
+					{
+						"name": "benjamini_hochberg_per_metric",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Is Benjamini-Hochberg procedure applied per metric?"
+						}
+					},
+					{
+						"name": "benjamini_hochberg_per_variant",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Is Benjamini-Hochberg procedure applied per variant?"
+						}
+					},
+					{
+						"name": "benjamini_primary_metrics_only",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Is Benjamini-Hochberg procedure applied for primary metrics only?"
+						}
+					},
+					{
+						"name": "bonferroni_correction",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Is Bonferroni correction applied per variant?"
+						}
+					},
+					{
+						"name": "bonferroni_correction_per_metric",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Is Bonferroni correction applied per metric?"
+						}
+					},
+					{
+						"name": "cohort_wait_until_end_to_include",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Warehouse Native Only - Whether to filter to units whose experiment cohort analysis duration is complete, if cohortedAnalysisDuration exists"
+						}
+					},
+					{
+						"name": "cohorted_analysis_duration",
+						"int64": {
+							"computed_optional_required": "computed_optional",
+							"description": "Warehouse Native Only - Cohorted analysis duration in days",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+											}
+										],
+										"schema_definition": "int64validator.AtLeast(1)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "cohorted_metrics_mature_after_end",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Warehouse Native Only - Allow cohort metrics to mature after experiment end"
+						}
+					},
+					{
+						"name": "control_group_id",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Optional control group ID"
+						}
+					},
+					{
+						"name": "creator_email",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The email of the creator of this experiment"
+						}
+					},
+					{
+						"name": "creator_id",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The Statsig ID of the creator of this experiment"
+						}
+					},
+					{
+						"name": "default_confidence_interval",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Default error margin used for results",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.OneOf(\n\"80\",\n\"90\",\n\"95\",\n\"98\",\n\"99\",\n)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "description",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "A description of the new experiment",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.LengthAtMost(1000)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "duration",
+						"int64": {
+							"computed_optional_required": "computed_optional",
+							"description": "How long the experiment is expected to last in days",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+											}
+										],
+										"schema_definition": "int64validator.AtLeast(1)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "fixed_analysis_duration",
+						"int64": {
+							"computed_optional_required": "computed_optional",
+							"description": "Fixed analysis duration in days",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+											}
+										],
+										"schema_definition": "int64validator.AtLeast(1)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "groups",
+						"list_nested": {
+							"computed_optional_required": "computed_optional",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "description",
+										"string": {
+											"computed_optional_required": "computed_optional"
+										}
+									},
+									{
+										"name": "disabled",
+										"bool": {
+											"computed_optional_required": "computed_optional"
+										}
+									},
+									{
+										"name": "foreign_group_id",
+										"string": {
+											"computed_optional_required": "computed_optional"
+										}
+									},
+									{
+										"name": "id",
+										"string": {
+											"computed_optional_required": "computed_optional"
+										}
+									},
+									{
+										"name": "name",
+										"string": {
+											"computed_optional_required": "required"
+										}
+									},
+									{
+										"name": "parameter_values",
+										"map": {
+											"computed_optional_required": "required",
+											"element_type": {
+												"string": {}
+											}
+										}
+									},
+									{
+										"name": "size",
+										"float64": {
+											"computed_optional_required": "required"
+										}
+									}
+								]
+							},
+							"description": "The test groups for your experiment"
+						}
+					},
+					{
+						"name": "hypothesis",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "A statement that will be tested by this experiment"
+						}
+					},
+					{
+						"name": "id",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.LengthBetween(3, 100)"
+									}
+								},
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "regexp"
+											},
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.RegexMatches(regexp.MustCompile(\"^[a-zA-Z0-9_-]*$\"), \"\")"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "id_type",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The idType the experiment will be performed on"
+						}
+					},
+					{
+						"name": "is_analysis_only",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "For Warehouse Native"
+						}
+					},
+					{
+						"name": "launched_group_id",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "ID of the launched group, null otherwise"
+						}
+					},
+					{
+						"name": "layer_id",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Which layer to place the experiment into."
+						}
+					},
+					{
+						"name": "links",
+						"list_nested": {
+							"computed_optional_required": "computed_optional",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "title",
+										"string": {
+											"computed_optional_required": "computed_optional",
+											"description": "The title of the link"
+										}
+									},
+									{
+										"name": "url",
+										"string": {
+											"computed_optional_required": "required",
+											"description": "The URL of the link"
+										}
+									}
+								]
+							},
+							"description": "Links to relevant documentation or resources"
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "The name of the new experiment",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.LengthBetween(3, 100)"
+									}
+								},
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "regexp"
+											},
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.RegexMatches(regexp.MustCompile(\"^[a-zA-Z0-9_\\\\- ]*$\"), \"\")"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "primary_metric_tags",
+						"list": {
+							"computed_optional_required": "computed_optional",
+							"element_type": {
+								"string": {}
+							},
+							"description": "Primary metric tags for the experiment"
+						}
+					},
+					{
+						"name": "primary_metrics",
+						"list_nested": {
+							"computed_optional_required": "computed_optional",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "direction",
+										"string": {
+											"computed_optional_required": "computed_optional",
+											"validators": [
+												{
+													"custom": {
+														"imports": [
+															{
+																"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+															}
+														],
+														"schema_definition": "stringvalidator.OneOf(\n\"increase\",\n\"decrease\",\n)"
+													}
+												}
+											]
+										}
+									},
+									{
+										"name": "hypothesized_value",
+										"float64": {
+											"computed_optional_required": "computed_optional"
+										}
+									},
+									{
+										"name": "name",
+										"string": {
+											"computed_optional_required": "computed_optional"
+										}
+									},
+									{
+										"name": "type",
+										"string": {
+											"computed_optional_required": "computed_optional"
+										}
+									}
+								]
+							},
+							"description": "Main metrics needed to evaluate your hypothesis"
+						}
+					},
+					{
+						"name": "scheduled_reload_hour",
+						"int64": {
+							"computed_optional_required": "computed_optional",
+							"description": "Warehouse Native only - UTC hour at which to run scheduled pulse loads",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+											}
+										],
+										"schema_definition": "int64validator.Between(0, 23)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "scheduled_reload_type",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Warehouse Native only - reload type for scheduled reloads",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.OneOf(\n\"full\",\n\"incremental\",\n)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "secondary_idtype",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The secondary ID type for the experiment used in WHN for ID resolution"
+						}
+					},
+					{
+						"name": "secondary_metric_tags",
+						"list": {
+							"computed_optional_required": "computed_optional",
+							"element_type": {
+								"string": {}
+							},
+							"description": "Secondary metric tags for the experiment"
+						}
+					},
+					{
+						"name": "secondary_metrics",
+						"list_nested": {
+							"computed_optional_required": "computed_optional",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "direction",
+										"string": {
+											"computed_optional_required": "computed_optional",
+											"validators": [
+												{
+													"custom": {
+														"imports": [
+															{
+																"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+															}
+														],
+														"schema_definition": "stringvalidator.OneOf(\n\"increase\",\n\"decrease\",\n)"
+													}
+												}
+											]
+										}
+									},
+									{
+										"name": "hypothesized_value",
+										"float64": {
+											"computed_optional_required": "computed_optional"
+										}
+									},
+									{
+										"name": "name",
+										"string": {
+											"computed_optional_required": "computed_optional"
+										}
+									},
+									{
+										"name": "type",
+										"string": {
+											"computed_optional_required": "computed_optional"
+										}
+									}
+								]
+							},
+							"description": "Additional metrics to monitor that might impact the analysis or final decision of the experiment"
+						}
+					},
+					{
+						"name": "sequential_testing",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Apply sequential testing?"
+						}
+					},
+					{
+						"name": "status",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The current status of the experiment",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.OneOf(\n\"active\",\n\"setup\",\n\"decision_made\",\n\"abandoned\",\n\"archived\",\n\"experiment_stopped\",\n\"assignment_stopped\",\n)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "tags",
+						"list": {
+							"computed_optional_required": "computed_optional",
+							"element_type": {
+								"string": {}
+							},
+							"description": "Tags associated with the experiment"
+						}
+					},
+					{
+						"name": "target_apps",
+						"list": {
+							"computed_optional_required": "computed_optional",
+							"element_type": {
+								"string": {}
+							},
+							"description": "Target apps assigned to this experiment"
+						}
+					},
+					{
+						"name": "target_exposures",
+						"int64": {
+							"computed_optional_required": "computed_optional",
+							"description": "Target exposures for the experiment",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+											}
+										],
+										"schema_definition": "int64validator.AtLeast(1)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "targeting_gate_id",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Restrict your experiment to users passing the selected feature gate"
+						}
+					},
+					{
+						"name": "team",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Enterprise only"
+						}
+					}
+				]
+			}
+		},
+		{
 			"name": "gate",
 			"schema": {
 				"attributes": [
