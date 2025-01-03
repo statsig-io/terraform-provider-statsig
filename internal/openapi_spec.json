@@ -1065,17 +1065,10 @@
               }
             },
             "schema": {
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -1441,17 +1434,10 @@
               }
             },
             "schema": {
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -4023,17 +4009,10 @@
               }
             },
             "schema": {
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -5197,17 +5176,10 @@
               }
             },
             "schema": {
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -5248,27 +5220,15 @@
             "in": "query",
             "description": "Filter by pass rate of the gates, as determined by a sampling of overall true/false values returned: 0, 100, or INBETWEEN (pass rate greater than zero but less than 100)",
             "schema": {
-              "oneOf": [
-                {
-                  "type": "string",
-                  "enum": [
-                    "0",
-                    "100",
-                    "INBETWEEN"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string",
-                    "enum": [
-                      "0",
-                      "100",
-                      "INBETWEEN"
-                    ]
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "0",
+                  "100",
+                  "INBETWEEN"
+                ]
+              }
             }
           },
           {
@@ -5277,27 +5237,15 @@
             "in": "query",
             "description": "Filter by rollout rate of the gates: 0 (all rules are set to pass 0%), 100 (all rules pass 100% including an \"everyone\" catch all rule), or INBETWEEN (at least one rule has a pass rate greater than 0 but less than 100)",
             "schema": {
-              "oneOf": [
-                {
-                  "type": "string",
-                  "enum": [
-                    "0",
-                    "100",
-                    "INBETWEEN"
-                  ]
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string",
-                    "enum": [
-                      "0",
-                      "100",
-                      "INBETWEEN"
-                    ]
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "0",
+                  "100",
+                  "INBETWEEN"
+                ]
+              }
             }
           },
           {
@@ -5337,17 +5285,10 @@
               }
             },
             "schema": {
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -8357,17 +8298,10 @@
             "in": "query",
             "description": "The current status of the experiment",
             "schema": {
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -8407,17 +8341,10 @@
               }
             },
             "schema": {
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -19279,17 +19206,10 @@
               }
             },
             "schema": {
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -21916,17 +21836,10 @@
             "in": "query",
             "description": "Filter metrics based on a given tagID, found on /tags endpoint. Can be a single string or an array of strings.",
             "schema": {
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -22549,17 +22462,10 @@
             "in": "query",
             "description": "The current status of the experiment",
             "schema": {
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -22599,17 +22505,10 @@
               }
             },
             "schema": {
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              ]
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -31408,18 +31307,11 @@
             "required": false,
             "in": "query",
             "schema": {
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "maxItems": 25
-                }
-              ]
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 25
             }
           },
           {
@@ -31427,18 +31319,11 @@
             "required": false,
             "in": "query",
             "schema": {
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "maxItems": 25
-                }
-              ]
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 25
             }
           },
           {
@@ -31446,18 +31331,11 @@
             "required": false,
             "in": "query",
             "schema": {
-              "oneOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "maxItems": 25
-                }
-              ]
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 25
             }
           },
           {
@@ -33400,17 +33278,10 @@
             ]
           },
           "targetApps": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "holdoutIDs": {
             "type": "array",
@@ -33454,26 +33325,10 @@
                     "type": "object",
                     "properties": {
                       "targetValue": {
-                        "oneOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          }
-                        ],
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
                         "nullable": true
                       },
                       "operator": {
@@ -33539,7 +33394,7 @@
                 },
                 "returnValue": {
                   "type": "object",
-                  "additionalProperties": {}
+                  "additionalProperties": true
                 },
                 "returnValueJson5": {
                   "type": "string"
@@ -33555,7 +33410,7 @@
           },
           "defaultValue": {
             "type": "object",
-            "additionalProperties": {},
+            "additionalProperties": true,
             "description": "The fallback JSON object when no rules are triggered"
           },
           "defaultValueJson5": {
@@ -33652,26 +33507,10 @@
                     "type": "object",
                     "properties": {
                       "targetValue": {
-                        "oneOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          }
-                        ],
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
                         "nullable": true
                       },
                       "operator": {
@@ -33737,7 +33576,7 @@
                 },
                 "returnValue": {
                   "type": "object",
-                  "additionalProperties": {}
+                  "additionalProperties": true
                 },
                 "returnValueJson5": {
                   "type": "string"
@@ -33753,7 +33592,7 @@
           },
           "defaultValue": {
             "type": "object",
-            "additionalProperties": {},
+            "additionalProperties": true,
             "description": "The fallback JSON object when no rules are triggered"
           },
           "defaultValueJson5": {
@@ -33823,17 +33662,10 @@
             "description": "`schema` except with Json5 comments. Optional and should parse to same json as `schema`."
           },
           "targetApps": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "team": {
             "type": "string",
@@ -33892,26 +33724,10 @@
                     "type": "object",
                     "properties": {
                       "targetValue": {
-                        "oneOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          }
-                        ],
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
                         "nullable": true
                       },
                       "operator": {
@@ -33977,7 +33793,7 @@
                 },
                 "returnValue": {
                   "type": "object",
-                  "additionalProperties": {}
+                  "additionalProperties": true
                 },
                 "returnValueJson5": {
                   "type": "string"
@@ -33993,7 +33809,7 @@
           },
           "defaultValue": {
             "type": "object",
-            "additionalProperties": {},
+            "additionalProperties": true,
             "description": "The fallback JSON object when no rules are triggered"
           },
           "defaultValueJson5": {
@@ -34066,17 +33882,10 @@
             "description": "`schema` except with Json5 comments. Optional and should parse to same json as `schema`."
           },
           "targetApps": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "team": {
             "type": "string",
@@ -34120,26 +33929,10 @@
                     "type": "object",
                     "properties": {
                       "targetValue": {
-                        "oneOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          }
-                        ],
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
                         "nullable": true
                       },
                       "operator": {
@@ -34205,7 +33998,7 @@
                 },
                 "returnValue": {
                   "type": "object",
-                  "additionalProperties": {}
+                  "additionalProperties": true
                 },
                 "returnValueJson5": {
                   "type": "string"
@@ -34221,7 +34014,7 @@
           },
           "defaultValue": {
             "type": "object",
-            "additionalProperties": {},
+            "additionalProperties": true,
             "description": "The fallback JSON object when no rules are triggered"
           },
           "defaultValueJson5": {
@@ -34294,17 +34087,10 @@
             "description": "`schema` except with Json5 comments. Optional and should parse to same json as `schema`."
           },
           "targetApps": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "team": {
             "type": "string",
@@ -34337,26 +34123,10 @@
               "type": "object",
               "properties": {
                 "targetValue": {
-                  "oneOf": [
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "number"
-                      }
-                    },
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "number"
-                    }
-                  ],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
                   "nullable": true
                 },
                 "operator": {
@@ -34423,7 +34193,7 @@
           },
           "returnValue": {
             "type": "object",
-            "additionalProperties": {},
+            "additionalProperties": true,
             "description": "The return value of the rule."
           }
         },
@@ -34466,26 +34236,10 @@
               "type": "object",
               "properties": {
                 "targetValue": {
-                  "oneOf": [
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "number"
-                      }
-                    },
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "number"
-                    }
-                  ],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
                   "nullable": true
                 },
                 "operator": {
@@ -34551,7 +34305,7 @@
           },
           "returnValue": {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": true
           },
           "returnValueJson5": {
             "type": "string"
@@ -34588,26 +34342,10 @@
                     "type": "object",
                     "properties": {
                       "targetValue": {
-                        "oneOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          }
-                        ],
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
                         "nullable": true
                       },
                       "operator": {
@@ -34673,7 +34411,7 @@
                 },
                 "returnValue": {
                   "type": "object",
-                  "additionalProperties": {}
+                  "additionalProperties": true
                 },
                 "returnValueJson5": {
                   "type": "string"
@@ -34718,26 +34456,10 @@
                     "type": "object",
                     "properties": {
                       "targetValue": {
-                        "oneOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          }
-                        ],
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
                         "nullable": true
                       },
                       "operator": {
@@ -34804,7 +34526,7 @@
                 },
                 "returnValue": {
                   "type": "object",
-                  "additionalProperties": {},
+                  "additionalProperties": true,
                   "description": "The return value of the rule."
                 }
               },
@@ -35257,17 +34979,10 @@
             }
           },
           "targetApps": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "holdoutIDs": {
             "type": "array",
@@ -35374,26 +35089,10 @@
                     "type": "object",
                     "properties": {
                       "targetValue": {
-                        "oneOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          }
-                        ],
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
                         "nullable": true
                       },
                       "operator": {
@@ -35460,7 +35159,7 @@
                 },
                 "returnValue": {
                   "type": "object",
-                  "additionalProperties": {},
+                  "additionalProperties": true,
                   "description": "The return value of the rule."
                 }
               },
@@ -35596,26 +35295,10 @@
                     "type": "object",
                     "properties": {
                       "targetValue": {
-                        "oneOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          }
-                        ],
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
                         "nullable": true
                       },
                       "operator": {
@@ -35682,7 +35365,7 @@
                 },
                 "returnValue": {
                   "type": "object",
-                  "additionalProperties": {},
+                  "additionalProperties": true,
                   "description": "The return value of the rule."
                 }
               },
@@ -35710,17 +35393,10 @@
             "type": "string"
           },
           "targetApps": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "creatorID": {
             "type": "string",
@@ -35934,26 +35610,10 @@
                     "type": "object",
                     "properties": {
                       "targetValue": {
-                        "oneOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          }
-                        ],
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
                         "nullable": true
                       },
                       "operator": {
@@ -36020,7 +35680,7 @@
                 },
                 "returnValue": {
                   "type": "object",
-                  "additionalProperties": {},
+                  "additionalProperties": true,
                   "description": "The return value of the rule."
                 }
               },
@@ -36048,17 +35708,10 @@
             "type": "string"
           },
           "targetApps": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "creatorID": {
             "type": "string",
@@ -36130,26 +35783,10 @@
                     "type": "object",
                     "properties": {
                       "targetValue": {
-                        "oneOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          }
-                        ],
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
                         "nullable": true
                       },
                       "operator": {
@@ -36216,7 +35853,7 @@
                 },
                 "returnValue": {
                   "type": "object",
-                  "additionalProperties": {},
+                  "additionalProperties": true,
                   "description": "The return value of the rule."
                 }
               },
@@ -36244,17 +35881,10 @@
             "type": "string"
           },
           "targetApps": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ]
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           "creatorID": {
             "type": "string",
@@ -36552,26 +36182,10 @@
               "type": "object",
               "properties": {
                 "targetValue": {
-                  "oneOf": [
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    },
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "number"
-                      }
-                    },
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "number"
-                    }
-                  ],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
                   "nullable": true
                 },
                 "operator": {
@@ -36638,7 +36252,7 @@
           },
           "returnValue": {
             "type": "object",
-            "additionalProperties": {},
+            "additionalProperties": true,
             "description": "The return value of the rule."
           }
         },
@@ -36673,26 +36287,10 @@
                     "type": "object",
                     "properties": {
                       "targetValue": {
-                        "oneOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          }
-                        ],
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
                         "nullable": true
                       },
                       "operator": {
@@ -36759,7 +36357,7 @@
                 },
                 "returnValue": {
                   "type": "object",
-                  "additionalProperties": {},
+                  "additionalProperties": true,
                   "description": "The return value of the rule."
                 }
               },
@@ -36877,17 +36475,10 @@
             }
           },
           "targetApps": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "description": "Target apps assigned to this experiment"
           },
           "holdoutIDs": {
@@ -36955,7 +36546,9 @@
                 },
                 "parameterValues": {
                   "type": "object",
-                  "additionalProperties": {}
+                  "additionalProperties": {
+                    "type": "string"
+                  }
                 },
                 "disabled": {
                   "type": "boolean"
@@ -37495,7 +37088,9 @@
                 },
                 "parameterValues": {
                   "type": "object",
-                  "additionalProperties": {}
+                  "additionalProperties": {
+                    "type": "string"
+                  }
                 },
                 "disabled": {
                   "type": "boolean"
@@ -37598,17 +37193,10 @@
             "description": "Additional metrics to monitor that might impact the analysis or final decision of the experiment"
           },
           "targetApps": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "description": "Target apps assigned to this experiment"
           },
           "tags": {
@@ -37858,7 +37446,9 @@
                 },
                 "parameterValues": {
                   "type": "object",
-                  "additionalProperties": {}
+                  "additionalProperties": {
+                    "type": "string"
+                  }
                 },
                 "disabled": {
                   "type": "boolean"
@@ -37961,17 +37551,10 @@
             "description": "Additional metrics to monitor that might impact the analysis or final decision of the experiment"
           },
           "targetApps": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "description": "Target apps assigned to this experiment"
           },
           "tags": {
@@ -38196,7 +37779,9 @@
                 },
                 "parameterValues": {
                   "type": "object",
-                  "additionalProperties": {}
+                  "additionalProperties": {
+                    "type": "string"
+                  }
                 },
                 "disabled": {
                   "type": "boolean"
@@ -38299,17 +37884,10 @@
             "description": "Additional metrics to monitor that might impact the analysis or final decision of the experiment"
           },
           "targetApps": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "description": "Target apps assigned to this experiment"
           },
           "tags": {
@@ -39636,26 +39214,10 @@
                     "type": "object",
                     "properties": {
                       "targetValue": {
-                        "oneOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          }
-                        ],
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
                         "nullable": true
                       },
                       "operator": {
@@ -39722,7 +39284,7 @@
                 },
                 "returnValue": {
                   "type": "object",
-                  "additionalProperties": {},
+                  "additionalProperties": true,
                   "description": "The return value of the rule."
                 }
               },
@@ -39916,26 +39478,10 @@
                     "type": "object",
                     "properties": {
                       "targetValue": {
-                        "oneOf": [
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          {
-                            "type": "array",
-                            "items": {
-                              "type": "number"
-                            }
-                          },
-                          {
-                            "type": "string"
-                          },
-                          {
-                            "type": "number"
-                          }
-                        ],
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
                         "nullable": true
                       },
                       "operator": {
@@ -39992,7 +39538,7 @@
                 },
                 "returnValue": {
                   "type": "object",
-                  "additionalProperties": {},
+                  "additionalProperties": true,
                   "description": "The return value of the rule."
                 }
               },
@@ -40108,26 +39654,10 @@
                 "type": "object",
                 "properties": {
                   "targetValue": {
-                    "oneOf": [
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        }
-                      },
-                      {
-                        "type": "array",
-                        "items": {
-                          "type": "number"
-                        }
-                      },
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "type": "number"
-                      }
-                    ],
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
                     "nullable": true
                   },
                   "operator": {
@@ -40184,7 +39714,7 @@
             },
             "returnValue": {
               "type": "object",
-              "additionalProperties": {},
+              "additionalProperties": true,
               "description": "The return value of the rule."
             }
           },
@@ -41956,17 +41486,10 @@
             "description": "Optional tags for categorization."
           },
           "targetApps": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "description": "List of target applications that this layer is intended for."
           },
           "holdoutIDs": {
@@ -42022,7 +41545,7 @@
                     },
                     {
                       "type": "object",
-                      "additionalProperties": {}
+                      "additionalProperties": true
                     },
                     {
                       "type": "array",
@@ -42039,7 +41562,7 @@
                           },
                           {
                             "type": "object",
-                            "additionalProperties": {}
+                            "additionalProperties": true
                           }
                         ]
                       }
@@ -42093,17 +41616,10 @@
             "description": "The type of ID used for this layer, essential for validation in services."
           },
           "targetApps": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "description": "List of target applications that this layer is associated with."
           },
           "team": {
@@ -42157,7 +41673,7 @@
                     },
                     {
                       "type": "object",
-                      "additionalProperties": {}
+                      "additionalProperties": true
                     },
                     {
                       "type": "array",
@@ -42174,7 +41690,7 @@
                           },
                           {
                             "type": "object",
-                            "additionalProperties": {}
+                            "additionalProperties": true
                           }
                         ]
                       }
@@ -42192,17 +41708,10 @@
             "description": "An array of parameters associated with the layer, each defining specific attributes."
           },
           "targetApps": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "description": "List of target applications that this layer is intended for."
           }
         }
@@ -42248,7 +41757,7 @@
                     },
                     {
                       "type": "object",
-                      "additionalProperties": {}
+                      "additionalProperties": true
                     },
                     {
                       "type": "array",
@@ -42265,7 +41774,7 @@
                           },
                           {
                             "type": "object",
-                            "additionalProperties": {}
+                            "additionalProperties": true
                           }
                         ]
                       }
@@ -42283,17 +41792,10 @@
             "description": "An array of parameters associated with the layer, each defining specific attributes."
           },
           "targetApps": {
-            "oneOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              }
-            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "description": "List of target applications that this layer is intended for."
           }
         },
@@ -42635,17 +42137,10 @@
             "example": "increase"
           },
           "tags": {
-            "oneOf": [
-              {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              {
-                "type": "string"
-              }
-            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "description": "Tags associated with the metric for categorization and searchability.",
             "example": [
               "tag1",
