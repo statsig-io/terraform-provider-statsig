@@ -5,16 +5,16 @@ provider:
 resources:
   keys:
     read:
-      path: /console/v1/keys/:id
+      path: /console/v1/keys/{id}
       method: GET
     create:
       path: /console/v1/keys
       method: POST
     update:
-      path: /console/v1/keys/:id
+      path: /console/v1/keys/{id}
       method: PATCH
     delete:
-      path: /console/v1/keys/:id
+      path: /console/v1/keys/{id}
       method: DELETE
     schema:
       ignores:
@@ -26,16 +26,16 @@ resources:
 
   gate:
     read:
-      path: /console/v1/gates/:id
+      path: /console/v1/gates/{id}
       method: GET
     create:
       path: /console/v1/gates
       method: POST
     update:
-      path: /console/v1/gates/:id
+      path: /console/v1/gates/{id}
       method: PATCH
     delete:
-      path: /console/v1/gates/:id
+      path: /console/v1/gates/{id}
       method: DELETE
     schema:
       ignores:
