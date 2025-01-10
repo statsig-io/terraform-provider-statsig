@@ -30,14 +30,10 @@ func TestAccServerKey(t *testing.T) {
 					resource.TestCheckResourceAttr(name, "scopes.#", "0"),
 					resource.TestCheckNoResourceAttr(name, "target_app_id"),
 					resource.TestCheckResourceAttr(name, "secondary_target_app_ids.#", "0"),
+					testAccExtractResourceAttr(name, "key", &key),
 				),
 			},
 			RefreshNoopPlanCheck(),
-			{
-				ImportStateIdFunc: getImportStateIDFunc(name, "key", &key),
-				ImportState:       true,
-				ResourceName:      name,
-			},
 			{
 				PreConfig: func() {
 					os.Setenv("TF_VAR_key", key)
@@ -82,14 +78,10 @@ func TestAccClientKey(t *testing.T) {
 					resource.TestCheckResourceAttr(name, "scopes.0", "client_download_config_specs"),
 					resource.TestCheckNoResourceAttr(name, "target_app_id"),
 					resource.TestCheckResourceAttr(name, "secondary_target_app_ids.#", "0"),
+					testAccExtractResourceAttr(name, "key", &key),
 				),
 			},
 			RefreshNoopPlanCheck(),
-			{
-				ImportStateIdFunc: getImportStateIDFunc(name, "key", &key),
-				ImportState:       true,
-				ResourceName:      name,
-			},
 			{
 				PreConfig: func() {
 					os.Setenv("TF_VAR_key", key)
@@ -132,14 +124,10 @@ func TestAccConsoleKey(t *testing.T) {
 					resource.TestCheckResourceAttr(name, "scopes.0", "omni_read_only"),
 					resource.TestCheckNoResourceAttr(name, "target_app_id"),
 					resource.TestCheckResourceAttr(name, "secondary_target_app_ids.#", "0"),
+					testAccExtractResourceAttr(name, "key", &key),
 				),
 			},
 			RefreshNoopPlanCheck(),
-			{
-				ImportStateIdFunc: getImportStateIDFunc(name, "key", &key),
-				ImportState:       true,
-				ResourceName:      name,
-			},
 			{
 				PreConfig: func() {
 					os.Setenv("TF_VAR_key", key)

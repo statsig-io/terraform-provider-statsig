@@ -59,13 +59,13 @@ func testAccPreCheck(t *testing.T) {
 	}
 }
 
-func getImportStateIDFunc(name string, attr string, res *string) resource.ImportStateIdFunc {
-	return func(s *terraform.State) (string, error) {
+func testAccExtractResourceAttr(name string, attr string, res *string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
 		resource, ok := s.RootModule().Resources[name]
 		if !ok || resource == nil {
-			return "", errors.New("Resource not found")
+			return errors.New("Resource not found")
 		}
 		*res = resource.Primary.Attributes[attr]
-		return *res, nil
+		return nil
 	}
 }

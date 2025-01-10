@@ -3,6 +3,7 @@ variable "launched_group_id" {
 }
 
 resource "statsig_experiment" "my_experiment" {
+  id                = "my_experiment"
   name              = "my_experiment"
   description       = "A short description of what we are experimenting on."
   id_type           = "userID"
