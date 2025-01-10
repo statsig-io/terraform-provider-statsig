@@ -90,5 +90,6 @@ func (p *StatsigProvider) Resources(ctx context.Context) []func() resource.Resou
 	return []func() resource.Resource{
 		NewKeysResource,
 		NewGateResource,
+		NewExperimentResource,
 	}
 }
