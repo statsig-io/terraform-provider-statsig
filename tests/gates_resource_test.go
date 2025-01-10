@@ -12,7 +12,6 @@ import (
 )
 
 func TestAccGateFull_MUX(t *testing.T) {
-
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: protoV6ProviderFactories(),
 		PreCheck:                 func() { testAccPreCheck(t) },
@@ -39,8 +38,6 @@ func TestAccGateFull_MUX(t *testing.T) {
 func verifyFullGateOutput(t *testing.T) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		o, _ := s.RootModule().Outputs["my_gate"]
-		rs, _ := s.RootModule().Resources["statsig_gate.my_gate"]
-		local := rs.Primary.Attributes
 
 		rules := o.Value.(map[string]interface{})["rules"].([]interface{})
 		mainRule := rules[0].(map[string]interface{})
@@ -74,13 +71,6 @@ func verifyFullGateOutput(t *testing.T) resource.TestCheckFunc {
 		assert.Equal(t, "fails_segment", conditions[15].(map[string]interface{})["type"])
 		assert.Equal(t, "ip_address", conditions[16].(map[string]interface{})["type"])
 		assert.Equal(t, "public", devConditions[0].(map[string]interface{})["type"])
-
-		for index, elem := range conditions {
-			condition := elem.(map[string]interface{})
-
-			assert.Equal(t, fmt.Sprint(index), fmt.Sprintf("%s", condition["index"]))
-			assert.Equal(t, fmt.Sprint(index), local[fmt.Sprintf("rules.0.conditions.%d.index", index)])
-		}
 
 		return nil
 	}

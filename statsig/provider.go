@@ -29,7 +29,6 @@ func Provider() *schema.Provider {
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"statsig_gate":       resourceGate(),
 			"statsig_experiment": resourceExperiment(),
 		},
 		DataSourcesMap:       map[string]*schema.Resource{},
