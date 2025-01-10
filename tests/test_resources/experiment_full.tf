@@ -10,49 +10,47 @@ resource "statsig_experiment" "full_experiment" {
     "test-tag-a",
     "test-tag-b"
   ]
-  primary_metrics_json = jsonencode([
+  primary_metrics = [
     {
-      name : "d1_retention_rate",
-      type : "user"
+      name = "d1_retention_rate"
+      type = "user"
     }
-  ])
-  primary_metric_tags = [
-    "test-tag-a"
   ]
-  secondary_metrics_json = jsonencode([
+  secondary_metrics = [
     {
-      name : "new_dau",
-      type : "user"
+      name = "dau"
+      type = "user"
+    },
+    {
+      name = "new_dau"
+      type = "user"
     }
-  ])
-  secondary_metric_tags = [
-    "test-tag-b"
   ]
-  groups {
-    name                  = "Test A"
-    size                  = 33.3
-    parameter_values_json = jsonencode({ "a_string" : "test_a" })
-  }
-  groups {
-    name                  = "Test B"
-    size                  = 33.3
-    parameter_values_json = jsonencode({ "a_string" : "test_b" })
-  }
-  groups {
-    name                  = "Control"
-    size                  = 33.4
-    parameter_values_json = jsonencode({ "a_string" : "control" })
-  }
+  groups = [
+    {
+      name             = "Test A"
+      size             = 33.3
+      parameter_values = { a_string = "test_a", a_bool = true }
+    },
+    {
+      name             = "Test B"
+      size             = 33.3
+      parameter_values = { a_string = "test_b" }
+    },
+    {
+      name             = "Control"
+      size             = 33.4
+      parameter_values = { a_string = "control" }
+    }
+  ]
   default_confidence_interval = "80"
   bonferroni_correction       = true
   duration                    = 10
-  launched_group_id           = ""
   targeting_gate_id           = "targeting_gate"
   lifecycle {
     ignore_changes = [
       "primary_metric_tags", # Metric tags cannot actually be assigned. Associated metrics are exploded from the tags and set on primaryMetrics/secondaryMetrics
       "secondary_metric_tags",
-      "secondary_metrics_json", # Automatically attached core tag
     ]
   }
 }

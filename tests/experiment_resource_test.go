@@ -1,7 +1,6 @@
 package tests
 
 import (
-	"encoding/json"
 	"os"
 	"testing"
 
@@ -66,14 +65,14 @@ func TestAccExperimentUpdating_MUX(t *testing.T) {
 				},
 				ConfigFile: config.StaticFile("test_resources/experiment_decision_made.tf"),
 				Check: resource.ComposeTestCheckFunc(
-					verifyShippedExperimentSetup(t, key, &groupIDToLaunch),
+					verifyShippedExperimentSetup(t, key, groupIDToLaunch),
 				),
 			},
 		},
 	})
 }
 
-func verifyShippedExperimentSetup(t *testing.T, name string, launchedGroupID *string) resource.TestCheckFunc {
+func verifyShippedExperimentSetup(t *testing.T, name string, launchedGroupID string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, _ := s.RootModule().Resources[name]
 		local := rs.Primary.Attributes
@@ -84,7 +83,7 @@ func verifyShippedExperimentSetup(t *testing.T, name string, launchedGroupID *st
 
 		assert.Equal(t, "decision_made", local["status"])
 
-		assert.Equal(t, *launchedGroupID, local["launched_group_id"])
+		assert.Equal(t, launchedGroupID, local["launched_group_id"])
 
 		return nil
 	}
@@ -126,65 +125,27 @@ func verifyFullExperimentSetup(t *testing.T, name string) resource.TestCheckFunc
 
 		assert.Equal(t, "0", local["secondary_metric_tags.#"])
 
-		primary := jsonStringToArray(local["primary_metrics_json"])[0].(map[string]interface{})
-		assert.Equal(t, "user", primary["type"])
-		assert.Equal(t, "d1_retention_rate", primary["name"])
+		assert.Equal(t, "user", local["primary_metrics.0.type"])
+		assert.Equal(t, "d1_retention_rate", local["primary_metrics.0.name"])
 
-		core := jsonStringToArray(local["secondary_metrics_json"])[0].(map[string]interface{})
-		assert.Equal(t, "user", core["type"])
-		assert.Equal(t, "dau", core["name"])
+		assert.Equal(t, "user", local["secondary_metrics.0.type"])
+		assert.Equal(t, "dau", local["secondary_metrics.0.name"])
 
-		secondary := jsonStringToArray(local["secondary_metrics_json"])[1].(map[string]interface{})
-		assert.Equal(t, "user", secondary["type"])
-		assert.Equal(t, "new_dau", secondary["name"])
+		assert.Equal(t, "user", local["secondary_metrics.1.type"])
+		assert.Equal(t, "new_dau", local["secondary_metrics.1.name"])
 
 		assert.Equal(t, "Test A", local["groups.0.name"])
 		assert.Equal(t, "33.3", local["groups.0.size"])
-		params := jsonStringToMap(local["groups.0.parameter_values_json"])
-		assert.Equal(t, "test_a", params["a_string"])
+		assert.Equal(t, "test_a", local["groups.0.parameter_values.a_string"])
 
 		assert.Equal(t, "Test B", local["groups.1.name"])
 		assert.Equal(t, "33.3", local["groups.1.size"])
-		params = jsonStringToMap(local["groups.1.parameter_values_json"])
-		assert.Equal(t, "test_b", params["a_string"])
+		assert.Equal(t, "test_b", local["groups.1.parameter_values.a_string"])
 
 		assert.Equal(t, "Control", local["groups.2.name"])
 		assert.Equal(t, "33.4", local["groups.2.size"])
-		params = jsonStringToMap(local["groups.2.parameter_values_json"])
-		assert.Equal(t, "control", params["a_string"])
+		assert.Equal(t, "control", local["groups.2.parameter_values.a_string"])
 
 		return nil
 	}
-}
-
-func jsonStringToMap(in interface{}) map[string]interface{} {
-	result := map[string]interface{}{}
-
-	value, ok := in.(string)
-	if !ok {
-		return result
-	}
-
-	err := json.Unmarshal([]byte(value), &result)
-	if err != nil {
-		return map[string]interface{}{}
-	}
-
-	return result
-}
-
-func jsonStringToArray(in interface{}) []interface{} {
-	var result []interface{}
-
-	value, ok := in.(string)
-	if !ok {
-		return result
-	}
-
-	err := json.Unmarshal([]byte(value), &result)
-	if err != nil {
-		return []interface{}{}
-	}
-
-	return result
 }

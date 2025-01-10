@@ -4,17 +4,16 @@ resource "statsig_experiment" "my_experiment" {
   id_type     = "userID"
   allocation  = 20
   status      = "active"
-  groups {
-    name                  = "Test Group"
-    size                  = 50
-    parameter_values_json = jsonencode({ "a_string" : "test_string", "a_bool" : true })
-  }
-  groups {
-    name                  = "Control Group"
-    size                  = 50
-    parameter_values_json = jsonencode({ "a_string" : "control_string", "a_bool" : false })
-  }
-  lifecycle {
-    ignore_changes = ["secondary_metrics_json"] # Automatically attached core tag
-  }
+  groups = [
+    {
+      name             = "Test Group"
+      size             = 50
+      parameter_values = { "a_string" : "test_string", "a_bool" : true }
+    },
+    {
+      name             = "Control Group"
+      size             = 50
+      parameter_values = { "a_string" : "control_string", "a_bool" : false }
+    }
+  ]
 }
