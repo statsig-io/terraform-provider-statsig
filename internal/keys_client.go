@@ -14,7 +14,7 @@ type keysClient struct {
 	transport *Transport
 }
 
-func newKeysCient(transport *Transport) *keysClient {
+func newKeysClient(transport *Transport) *keysClient {
 	return &keysClient{
 		endpoint:  "keys",
 		transport: transport,

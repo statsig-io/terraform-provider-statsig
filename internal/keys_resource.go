@@ -40,7 +40,7 @@ func (r *keysResource) Configure(ctx context.Context, req resource.ConfigureRequ
 	}
 
 	r.data = data
-	r.client = newKeysCient(data.transport)
+	r.client = newKeysClient(data.transport)
 }
 
 func (r *keysResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
