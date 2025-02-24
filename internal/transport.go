@@ -77,6 +77,8 @@ func (t *Transport) doRequest(method, endpoint string, body interface{}, resp in
 		return nil, err
 	}
 
+	jsonResponse, _ := json.Marshal(response.Data)
+	fmt.Printf("%s response %+v\n", method, string(jsonResponse))
 	return &APIResponse{
 		StatusCode: r.StatusCode,
 		Response:   response,
