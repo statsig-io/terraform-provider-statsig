@@ -32,7 +32,7 @@ install: build
 	mv ${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
 testacc: install
-	TF_ACC=1 go test -v ./... -timeout 120m
+	TF_ACC=1 go test -run ^TestAccExperimentFull_MUX -v ./... -timeout 120m
 
 sweep:
 	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."

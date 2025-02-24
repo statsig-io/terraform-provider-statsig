@@ -50,6 +50,7 @@ func KeysResourceSchema(ctx context.Context) schema.Schema {
 						"SERVER",
 						"CLIENT",
 						"CONSOLE",
+						"SCIM",
 					),
 				},
 			},

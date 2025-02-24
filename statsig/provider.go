@@ -28,10 +28,7 @@ func Provider() *schema.Provider {
 				Description: "A Statsig Console API Key",
 			},
 		},
-		ResourcesMap: map[string]*schema.Resource{
-			"statsig_gate":       resourceGate(),
-			"statsig_experiment": resourceExperiment(),
-		},
+		ResourcesMap:         map[string]*schema.Resource{},
 		DataSourcesMap:       map[string]*schema.Resource{},
 		ConfigureContextFunc: providerConfigure,
 	}

@@ -5,16 +5,16 @@ provider:
 resources:
   keys:
     read:
-      path: /console/v1/keys/:id
+      path: /console/v1/keys/{id}
       method: GET
     create:
       path: /console/v1/keys
       method: POST
     update:
-      path: /console/v1/keys/:id
+      path: /console/v1/keys/{id}
       method: PATCH
     delete:
-      path: /console/v1/keys/:id
+      path: /console/v1/keys/{id}
       method: DELETE
     schema:
       ignores:
@@ -23,3 +23,45 @@ resources:
       attributes:
         aliases:
           id: key
+
+  gate:
+    read:
+      path: /console/v1/gates/{id}
+      method: GET
+    create:
+      path: /console/v1/gates
+      method: POST
+    update:
+      path: /console/v1/gates/{id}
+      method: PATCH
+    delete:
+      path: /console/v1/gates/{id}
+      method: DELETE
+    schema:
+      ignores:
+        - message
+        - data
+      attributes:
+        aliases:
+          id: name
+
+  experiment:
+    read:
+      path: /console/v1/experiments/{id}
+      method: GET
+    create:
+      path: /console/v1/experiments
+      method: POST
+    update:
+      path: /console/v1/experiments/{id}
+      method: PATCH
+    delete:
+      path: /console/v1/experiments/{id}
+      method: DELETE
+    schema:
+      ignores:
+        - message
+        - data
+      attributes:
+        aliases:
+          id: name
