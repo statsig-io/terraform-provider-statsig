@@ -15,34 +15,38 @@ import (
 
 // API data model for GateModel (NOTE: see if we can get Terraform to also codegen this from OpenAPI)
 type GateAPIModel struct {
-	Id           string         `json:"id,omitempty"`   // (Name)
-	Name         string         `json:"name,omitempty"` // (Display name)
-	IdType       string         `json:"idType,omitempty"`
-	Description  string         `json:"description"`
-	IsEnabled    bool           `json:"isEnabled"`
-	Rules        []RuleAPIModel `json:"rules"`
-	Tags         []string       `json:"tags,omitempty"`
-	Type         string         `json:"type,omitempty"`
-	TargetApps   []string       `json:"targetApps,omitempty"`
-	CreatorId    string         `json:"creatorID,omitempty"`
-	CreatorEmail string         `json:"creatorEmail,omitempty"`
-	Team         string         `json:"team,omitempty"`
+	Id                 string                     `json:"id,omitempty"`   // (Name)
+	Name               string                     `json:"name,omitempty"` // (Display name)
+	IdType             string                     `json:"idType,omitempty"`
+	Description        string                     `json:"description"`
+	IsEnabled          bool                       `json:"isEnabled"`
+	MeasureMetricLifts *bool                      `json:"measureMetricLifts,omitempty"`
+	MonitoringMetrics  []MonitoringMetricAPIModel `json:"monitoringMetrics,omitempty"`
+	Rules              []RuleAPIModel             `json:"rules"`
+	Tags               []string                   `json:"tags,omitempty"`
+	Type               string                     `json:"type,omitempty"`
+	TargetApps         []string                   `json:"targetApps,omitempty"`
+	CreatorId          string                     `json:"creatorID,omitempty"`
+	CreatorEmail       string                     `json:"creatorEmail,omitempty"`
+	Team               string                     `json:"team,omitempty"`
 }
 
 func GateToAPIModel(ctx context.Context, gate *resource_gate.GateModel) GateAPIModel {
 	return GateAPIModel{
-		Id:           gate.Id.ValueString(),
-		Name:         gate.Name.ValueString(),
-		IdType:       gate.IdType.ValueString(),
-		Description:  gate.Description.ValueString(),
-		IsEnabled:    gate.IsEnabled.ValueBool(),
-		Rules:        RulesToAPIModel(ctx, gate.Rules),
-		Tags:         StringSliceFromListValue(ctx, gate.Tags),
-		Type:         gate.Type.ValueString(),
-		TargetApps:   StringSliceFromListValue(ctx, gate.TargetApps),
-		CreatorId:    gate.CreatorId.ValueString(),
-		CreatorEmail: gate.CreatorEmail.ValueString(),
-		Team:         gate.Team.ValueString(),
+		Id:                 gate.Id.ValueString(),
+		Name:               gate.Name.ValueString(),
+		IdType:             gate.IdType.ValueString(),
+		Description:        gate.Description.ValueString(),
+		IsEnabled:          BoolFromBoolValue(gate.IsEnabled),
+		MeasureMetricLifts: NilableBoolFromBoolValue(gate.MeasureMetricLifts),
+		MonitoringMetrics:  MonitoringMetricsToAPIModel(ctx, gate.MonitoringMetrics),
+		Rules:              RulesToAPIModel(ctx, gate.Rules),
+		Tags:               StringSliceFromListValue(ctx, gate.Tags),
+		Type:               gate.Type.ValueString(),
+		TargetApps:         StringSliceFromListValue(ctx, gate.TargetApps),
+		CreatorId:          gate.CreatorId.ValueString(),
+		CreatorEmail:       gate.CreatorEmail.ValueString(),
+		Team:               gate.Team.ValueString(),
 	}
 }
 
@@ -51,7 +55,9 @@ func GateFromAPIModel(ctx context.Context, diags diag.Diagnostics, gate *resourc
 	gate.Name = StringToNilableValue(res.Name)
 	gate.IdType = StringToNilableValue(res.IdType)
 	gate.Description = StringToNilableValue(res.Description)
-	gate.IsEnabled = types.BoolValue(res.IsEnabled)
+	gate.IsEnabled = BoolToBoolValue(res.IsEnabled)
+	gate.MeasureMetricLifts = NilableBoolToBoolValue(res.MeasureMetricLifts)
+	gate.MonitoringMetrics = MonitoringMetricsFromAPIModel(ctx, diags, res.MonitoringMetrics)
 	gate.Rules = RulesFromAPIModel(ctx, diags, res.Rules)
 	gate.Tags = StringSliceToListValue(ctx, diags, res.Tags)
 	gate.Type = StringToNilableValue(res.Type)
@@ -59,6 +65,65 @@ func GateFromAPIModel(ctx context.Context, diags diag.Diagnostics, gate *resourc
 	gate.CreatorId = StringToNilableValue(res.CreatorId)
 	gate.CreatorEmail = StringToNilableValue(res.CreatorEmail)
 	gate.Team = StringToNilableValue(res.Team)
+}
+
+type MonitoringMetricAPIModel struct {
+	Name string `json:"name"`
+	Type string `json:"type"`
+}
+
+func MonitoringMetricToAPIModel(ctx context.Context, metric *resource_gate.MonitoringMetricsValue) MonitoringMetricAPIModel {
+	return MonitoringMetricAPIModel{
+		Name: StringFromNilableValue(metric.Name),
+		Type: StringFromNilableValue(metric.MonitoringMetricsType),
+	}
+}
+
+func MonitoringMetricFromAPIModel(ctx context.Context, diags diag.Diagnostics, metric *resource_gate.MonitoringMetricsValue, res MonitoringMetricAPIModel) {
+	metric.Name = StringToNilableValue(res.Name)
+	metric.MonitoringMetricsType = StringToNilableValue(res.Type)
+}
+
+func MonitoringMetricsToAPIModel(ctx context.Context, list basetypes.ListValue) []MonitoringMetricAPIModel {
+	var res []MonitoringMetricAPIModel
+	if list.IsNull() || list.IsUnknown() {
+		res = make([]MonitoringMetricAPIModel, 0)
+	} else {
+		res = make([]MonitoringMetricAPIModel, len(list.Elements()))
+		for i, elem := range list.Elements() {
+			obj, ok := elem.(resource_gate.MonitoringMetricsValue)
+			if !ok {
+				return nil
+			}
+
+			res[i] = MonitoringMetricToAPIModel(ctx, &obj)
+		}
+	}
+	return res
+}
+
+func MonitoringMetricsFromAPIModel(ctx context.Context, diags diag.Diagnostics, list []MonitoringMetricAPIModel) basetypes.ListValue {
+	attrTypes := resource_gate.MonitoringMetricsValue{}.AttributeTypes(ctx)
+	monitoringMetricsType := resource_gate.MonitoringMetricsType{
+		ObjectType: types.ObjectType{
+			AttrTypes: attrTypes,
+		},
+	}
+	if list == nil || len(list) == 0 {
+		return types.ListNull(monitoringMetricsType)
+	} else {
+		metrics := make([]attr.Value, len(list))
+		for i, elem := range list {
+			var metric resource_gate.MonitoringMetricsValue
+			MonitoringMetricFromAPIModel(ctx, diags, &metric, elem)
+			obj, d := metric.ToObjectValue(ctx)
+			metrics[i] = resource_gate.NewMonitoringMetricsValueMust(attrTypes, obj.Attributes())
+			diags = append(diags, d...)
+		}
+		v, d := types.ListValue(monitoringMetricsType, metrics)
+		diags = append(diags, d...)
+		return v
+	}
 }
 
 type RuleAPIModel struct {

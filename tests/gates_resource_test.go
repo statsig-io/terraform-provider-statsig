@@ -100,6 +100,8 @@ func verifyFullGateSetup(t *testing.T, name string) resource.TestCheckFunc {
 		assert.Equal(t, "any", local["rules.0.conditions.1.operator"])
 		assert.Equal(t, "", local["rules.0.conditions.1.field"])
 
+		assert.Equal(t, "true", local["measure_metric_lifts"])
+
 		return nil
 	}
 }

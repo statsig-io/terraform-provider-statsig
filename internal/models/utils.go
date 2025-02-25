@@ -57,3 +57,25 @@ func IntFromNumberValue(num basetypes.NumberValue) int {
 	val, _ := num.ValueBigFloat().Int64()
 	return int(val)
 }
+
+func BoolToBoolValue(value bool) basetypes.BoolValue {
+	return types.BoolValue(value)
+}
+
+func BoolFromBoolValue(value basetypes.BoolValue) bool {
+	return value.ValueBool()
+}
+
+func NilableBoolToBoolValue(value *bool) basetypes.BoolValue {
+	if value == nil {
+		return types.BoolNull()
+	}
+	return types.BoolValue(*value)
+}
+
+func NilableBoolFromBoolValue(value basetypes.BoolValue) *bool {
+	if value.IsNull() || value.IsUnknown() {
+		return nil
+	}
+	return value.ValueBoolPointer()
+}
