@@ -36541,6 +36541,7 @@
                 },
                 "size": {
                   "type": "number",
+                  "format": "double",
                   "minimum": 0,
                   "maximum": 100
                 },
@@ -36574,6 +36575,7 @@
           },
           "allocation": {
             "type": "number",
+            "format": "double",
             "minimum": 0,
             "maximum": 100,
             "description": "Percent of layer allocated to this experiment"
@@ -36611,7 +36613,8 @@
                   ]
                 },
                 "hypothesizedValue": {
-                  "type": "number"
+                  "type": "number",
+                  "format": "double"
                 }
               },
               "required": [
@@ -36639,7 +36642,8 @@
                   ]
                 },
                 "hypothesizedValue": {
-                  "type": "number"
+                  "type": "number",
+                  "format": "double"
                 }
               },
               "required": [
@@ -37083,6 +37087,7 @@
                 },
                 "size": {
                   "type": "number",
+                  "format": "double",
                   "minimum": 0,
                   "maximum": 100
                 },
@@ -37116,6 +37121,7 @@
           },
           "allocation": {
             "type": "number",
+            "format": "double",
             "minimum": 0,
             "maximum": 100,
             "description": "Percent of layer allocated to this experiment"
@@ -37153,7 +37159,8 @@
                   ]
                 },
                 "hypothesizedValue": {
-                  "type": "number"
+                  "type": "number",
+                  "format": "double"
                 }
               },
               "required": [
@@ -37182,7 +37189,8 @@
                   ]
                 },
                 "hypothesizedValue": {
-                  "type": "number"
+                  "type": "number",
+                  "format": "double"
                 }
               },
               "required": [
@@ -37441,6 +37449,7 @@
                 },
                 "size": {
                   "type": "number",
+                  "format": "double",
                   "minimum": 0,
                   "maximum": 100
                 },
@@ -37474,6 +37483,7 @@
           },
           "allocation": {
             "type": "number",
+            "format": "double",
             "minimum": 0,
             "maximum": 100,
             "description": "Percent of layer allocated to this experiment"
@@ -37511,7 +37521,8 @@
                   ]
                 },
                 "hypothesizedValue": {
-                  "type": "number"
+                  "type": "number",
+                  "format": "double"
                 }
               },
               "required": [
@@ -37540,7 +37551,8 @@
                   ]
                 },
                 "hypothesizedValue": {
-                  "type": "number"
+                  "type": "number",
+                  "format": "double"
                 }
               },
               "required": [
@@ -37774,6 +37786,7 @@
                 },
                 "size": {
                   "type": "number",
+                  "format": "double",
                   "minimum": 0,
                   "maximum": 100
                 },
@@ -37807,6 +37820,7 @@
           },
           "allocation": {
             "type": "number",
+            "format": "double",
             "minimum": 0,
             "maximum": 100,
             "description": "Percent of layer allocated to this experiment"
@@ -37844,7 +37858,8 @@
                   ]
                 },
                 "hypothesizedValue": {
-                  "type": "number"
+                  "type": "number",
+                  "format": "double"
                 }
               },
               "required": [
@@ -37873,7 +37888,8 @@
                   ]
                 },
                 "hypothesizedValue": {
-                  "type": "number"
+                  "type": "number",
+                  "format": "double"
                 }
               },
               "required": [
