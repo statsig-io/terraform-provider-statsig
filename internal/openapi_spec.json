@@ -35184,11 +35184,7 @@
                 "type": {
                   "type": "string"
                 }
-              },
-              "required": [
-                "name",
-                "type"
-              ]
+              }
             }
           },
           "reviewSettings": {
@@ -35424,11 +35420,7 @@
                 "type": {
                   "type": "string"
                 }
-              },
-              "required": [
-                "name",
-                "type"
-              ]
+              }
             }
           },
           "name": {
@@ -35739,11 +35731,7 @@
                 "type": {
                   "type": "string"
                 }
-              },
-              "required": [
-                "name",
-                "type"
-              ]
+              }
             }
           }
         },
@@ -35912,11 +35900,7 @@
                 "type": {
                   "type": "string"
                 }
-              },
-              "required": [
-                "name",
-                "type"
-              ]
+              }
             }
           }
         },
@@ -36616,11 +36600,7 @@
                   "type": "number",
                   "format": "double"
                 }
-              },
-              "required": [
-                "name",
-                "type"
-              ]
+              }
             }
           },
           "secondaryMetrics": {
@@ -36645,11 +36625,7 @@
                   "type": "number",
                   "format": "double"
                 }
-              },
-              "required": [
-                "name",
-                "type"
-              ]
+              }
             }
           },
           "duration": {
@@ -37162,11 +37138,7 @@
                   "type": "number",
                   "format": "double"
                 }
-              },
-              "required": [
-                "name",
-                "type"
-              ]
+              }
             },
             "description": "Main metrics needed to evaluate your hypothesis"
           },
@@ -37192,11 +37164,7 @@
                   "type": "number",
                   "format": "double"
                 }
-              },
-              "required": [
-                "name",
-                "type"
-              ]
+              }
             },
             "description": "Additional metrics to monitor that might impact the analysis or final decision of the experiment"
           },
@@ -37524,11 +37492,7 @@
                   "type": "number",
                   "format": "double"
                 }
-              },
-              "required": [
-                "name",
-                "type"
-              ]
+              }
             },
             "description": "Main metrics needed to evaluate your hypothesis"
           },
@@ -37554,11 +37518,7 @@
                   "type": "number",
                   "format": "double"
                 }
-              },
-              "required": [
-                "name",
-                "type"
-              ]
+              }
             },
             "description": "Additional metrics to monitor that might impact the analysis or final decision of the experiment"
           },
@@ -37861,11 +37821,7 @@
                   "type": "number",
                   "format": "double"
                 }
-              },
-              "required": [
-                "name",
-                "type"
-              ]
+              }
             },
             "description": "Main metrics needed to evaluate your hypothesis"
           },
@@ -37891,11 +37847,7 @@
                   "type": "number",
                   "format": "double"
                 }
-              },
-              "required": [
-                "name",
-                "type"
-              ]
+              }
             },
             "description": "Additional metrics to monitor that might impact the analysis or final decision of the experiment"
           },
