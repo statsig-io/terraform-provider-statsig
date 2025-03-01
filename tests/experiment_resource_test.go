@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAccExperimentFull_MUX(t *testing.T) {
+func TestAccExperimentFull(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: protoV6ProviderFactories(),
 		PreCheck:                 func() { testAccPreCheck(t) },
@@ -34,7 +34,7 @@ func TestAccExperimentFull_MUX(t *testing.T) {
 	})
 }
 
-func TestAccExperimentUpdating_MUX(t *testing.T) {
+func TestAccExperimentUpdating(t *testing.T) {
 	key := "statsig_experiment.my_experiment"
 
 	var testGroupID string
