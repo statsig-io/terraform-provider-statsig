@@ -11036,197 +11036,8 @@
       }
     },
     "/console/v1/experiments/entity_properties": {
-      "post": {
-        "operationId": "ConsoleV1ExperimentsController_genCreateEntityPropertySource",
-        "parameters": [
-          {
-            "name": "x-respect-review-settings",
-            "in": "header",
-            "description": "Optional header to respect review settings for mutation endpoints.",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EntityPropertySourceCreationDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Create Entity Property Source response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SingleDataResponse"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "$ref": "#/components/schemas/EntityPropertySourceDto"
-                        }
-                      }
-                    }
-                  ],
-                  "example": {
-                    "message": "Entity Property Source created successfully",
-                    "data": {
-                      "name": "Location",
-                      "description": "",
-                      "tags": [],
-                      "sql": "SELECT * FROM shoppy-sales.setup.user_properties",
-                      "timestampColumn": "timestamp",
-                      "idTypeMapping": [
-                        {
-                          "statsigUnitID": "stableID",
-                          "column": "user_id"
-                        }
-                      ],
-                      "timestampAsDay": true
-                    }
-                  }
-                },
-                "example": {
-                  "message": "Entity Property Source created successfully",
-                  "data": {
-                    "name": "Location",
-                    "description": "",
-                    "tags": [],
-                    "sql": "SELECT * FROM shoppy-sales.setup.user_properties",
-                    "timestampColumn": "timestamp",
-                    "idTypeMapping": [
-                      {
-                        "statsigUnitID": "stableID",
-                        "column": "user_id"
-                      }
-                    ],
-                    "timestampAsDay": true
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request. Please check the request input and try again.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "enum": [
-                        400
-                      ]
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "status",
-                    "message"
-                  ]
-                },
-                "examples": {
-                  "Invalid Request": {
-                    "value": {
-                      "status": 400,
-                      "message": "Invalid request. Please check the request input and try again."
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "enum": [
-                        401
-                      ]
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "status",
-                    "message"
-                  ]
-                },
-                "examples": {
-                  "Invalid Endpoint": {
-                    "value": {
-                      "status": 401,
-                      "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found. The requested resource could not be found.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "enum": [
-                        404
-                      ]
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "status",
-                    "message"
-                  ]
-                },
-                "examples": {
-                  "Not Found": {
-                    "value": {
-                      "status": 404,
-                      "message": "Not Found. The requested resource could not be found."
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "STATSIG-API-KEY": []
-          }
-        ],
-        "summary": "Create Entity Property Source",
-        "tags": [
-          "Experiments (Warehouse Native)"
-        ]
-      },
       "get": {
-        "operationId": "ConsoleV1ExperimentsController_genListEntityPropertySources",
+        "summary": "List Entity Property Sources",
         "parameters": [
           {
             "name": "limit",
@@ -11426,188 +11237,18 @@
             }
           }
         },
+        "tags": [
+          "Experiments (Warehouse Native)"
+        ],
         "security": [
           {
             "STATSIG-API-KEY": []
           }
-        ],
-        "summary": "List Entity Property Sources",
-        "tags": [
-          "Experiments (Warehouse Native)"
-        ]
-      }
-    },
-    "/console/v1/experiments/entity_property/{name}": {
-      "get": {
-        "operationId": "ConsoleV1ExperimentsController_genEntityPropertySource",
-        "parameters": [
-          {
-            "name": "name",
-            "required": true,
-            "in": "path",
-            "description": "Name of entity property source",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "x-respect-review-settings",
-            "in": "header",
-            "description": "Optional header to respect review settings for mutation endpoints.",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Get Entity Property Source response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/PaginationResponseWithMessage"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/EntityPropertySourceDto"
-                          }
-                        }
-                      }
-                    }
-                  ],
-                  "example": {
-                    "message": "Entity Property Source read successfully.",
-                    "data": {
-                      "name": "Location",
-                      "description": "This is the the location description",
-                      "tags": [],
-                      "sql": "SELECT * FROM shoppy-sales.setup.user_properties",
-                      "timestampColumn": "timestamp",
-                      "idTypeMapping": [
-                        {
-                          "statsigUnitID": "stableID",
-                          "column": "user_id"
-                        }
-                      ],
-                      "timestampAsDay": true
-                    }
-                  }
-                },
-                "example": {
-                  "message": "Entity Property Source read successfully.",
-                  "data": {
-                    "name": "Location",
-                    "description": "This is the the location description",
-                    "tags": [],
-                    "sql": "SELECT * FROM shoppy-sales.setup.user_properties",
-                    "timestampColumn": "timestamp",
-                    "idTypeMapping": [
-                      {
-                        "statsigUnitID": "stableID",
-                        "column": "user_id"
-                      }
-                    ],
-                    "timestampAsDay": true
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request. Please check the request input and try again.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "enum": [
-                        400
-                      ]
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "status",
-                    "message"
-                  ]
-                },
-                "examples": {
-                  "Invalid Request": {
-                    "value": {
-                      "status": 400,
-                      "message": "Invalid request. Please check the request input and try again."
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "enum": [
-                        401
-                      ]
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "status",
-                    "message"
-                  ]
-                },
-                "examples": {
-                  "Invalid Endpoint": {
-                    "value": {
-                      "status": 401,
-                      "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "STATSIG-API-KEY": []
-          }
-        ],
-        "summary": "Get Entity Property Source",
-        "tags": [
-          "Experiments (Warehouse Native)"
         ]
       },
-      "patch": {
-        "operationId": "ConsoleV1ExperimentsController_genUpdateEntityPropertySource",
+      "post": {
+        "summary": "Create Entity Property Source",
         "parameters": [
-          {
-            "name": "name",
-            "required": true,
-            "in": "path",
-            "description": "Name of entity property source",
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "x-respect-review-settings",
             "in": "header",
@@ -11623,14 +11264,14 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EntityPropertySourcePartialUpdateDto"
+                "$ref": "#/components/schemas/EntityPropertySourceCreationDto"
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "Patch Entity Property Source response",
+          "201": {
+            "description": "Create Entity Property Source response",
             "content": {
               "application/json": {
                 "schema": {
@@ -11647,10 +11288,10 @@
                     }
                   ],
                   "example": {
-                    "message": "Entity Property Source updated successfully",
+                    "message": "Entity Property Source created successfully",
                     "data": {
                       "name": "Location",
-                      "description": "This is the the location description",
+                      "description": "",
                       "tags": [],
                       "sql": "SELECT * FROM shoppy-sales.setup.user_properties",
                       "timestampColumn": "timestamp",
@@ -11665,10 +11306,10 @@
                   }
                 },
                 "example": {
-                  "message": "Entity Property Source updated successfully",
+                  "message": "Entity Property Source created successfully",
                   "data": {
                     "name": "Location",
-                    "description": "This is the the location description",
+                    "description": "",
                     "tags": [],
                     "sql": "SELECT * FROM shoppy-sales.setup.user_properties",
                     "timestampColumn": "timestamp",
@@ -11784,18 +11425,173 @@
             }
           }
         },
+        "tags": [
+          "Experiments (Warehouse Native)"
+        ],
         "security": [
           {
             "STATSIG-API-KEY": []
           }
+        ]
+      }
+    },
+    "/console/v1/experiments/entity_property/{name}": {
+      "get": {
+        "summary": "Get Entity Property Source",
+        "parameters": [
+          {
+            "name": "name",
+            "required": true,
+            "in": "path",
+            "description": "Name of entity property source",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-respect-review-settings",
+            "in": "header",
+            "description": "Optional header to respect review settings for mutation endpoints.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
-        "summary": "Patch Entity Property Source",
+        "responses": {
+          "200": {
+            "description": "Get Entity Property Source response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SingleDataResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/EntityPropertySourceDto"
+                        }
+                      }
+                    }
+                  ],
+                  "example": {
+                    "message": "Entity Property Source read successfully.",
+                    "data": {
+                      "name": "Location",
+                      "description": "This is the the location description",
+                      "tags": [],
+                      "sql": "SELECT * FROM shoppy-sales.setup.user_properties",
+                      "timestampColumn": "timestamp",
+                      "idTypeMapping": [
+                        {
+                          "statsigUnitID": "stableID",
+                          "column": "user_id"
+                        }
+                      ],
+                      "timestampAsDay": true
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Entity Property Source read successfully.",
+                  "data": {
+                    "name": "Location",
+                    "description": "This is the the location description",
+                    "tags": [],
+                    "sql": "SELECT * FROM shoppy-sales.setup.user_properties",
+                    "timestampColumn": "timestamp",
+                    "idTypeMapping": [
+                      {
+                        "statsigUnitID": "stableID",
+                        "column": "user_id"
+                      }
+                    ],
+                    "timestampAsDay": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. Please check the request input and try again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        400
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                },
+                "examples": {
+                  "Invalid Request": {
+                    "value": {
+                      "status": 400,
+                      "message": "Invalid request. Please check the request input and try again."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        401
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                },
+                "examples": {
+                  "Invalid Endpoint": {
+                    "value": {
+                      "status": 401,
+                      "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "tags": [
           "Experiments (Warehouse Native)"
+        ],
+        "security": [
+          {
+            "STATSIG-API-KEY": []
+          }
         ]
       },
       "post": {
-        "operationId": "ConsoleV1ExperimentsController_genUpdateEntityPropertySourceQuery",
+        "summary": "Post Entity Property Source",
         "parameters": [
           {
             "name": "name",
@@ -11982,18 +11778,214 @@
             }
           }
         },
+        "tags": [
+          "Experiments (Warehouse Native)"
+        ],
         "security": [
           {
             "STATSIG-API-KEY": []
           }
+        ]
+      },
+      "patch": {
+        "summary": "Patch Entity Property Source",
+        "parameters": [
+          {
+            "name": "name",
+            "required": true,
+            "in": "path",
+            "description": "Name of entity property source",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-respect-review-settings",
+            "in": "header",
+            "description": "Optional header to respect review settings for mutation endpoints.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
-        "summary": "Post Entity Property Source",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EntityPropertySourcePartialUpdateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Patch Entity Property Source response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/SingleDataResponse"
+                    },
+                    {
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/EntityPropertySourceDto"
+                        }
+                      }
+                    }
+                  ],
+                  "example": {
+                    "message": "Entity Property Source updated successfully",
+                    "data": {
+                      "name": "Location",
+                      "description": "This is the the location description",
+                      "tags": [],
+                      "sql": "SELECT * FROM shoppy-sales.setup.user_properties",
+                      "timestampColumn": "timestamp",
+                      "idTypeMapping": [
+                        {
+                          "statsigUnitID": "stableID",
+                          "column": "user_id"
+                        }
+                      ],
+                      "timestampAsDay": true
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Entity Property Source updated successfully",
+                  "data": {
+                    "name": "Location",
+                    "description": "This is the the location description",
+                    "tags": [],
+                    "sql": "SELECT * FROM shoppy-sales.setup.user_properties",
+                    "timestampColumn": "timestamp",
+                    "idTypeMapping": [
+                      {
+                        "statsigUnitID": "stableID",
+                        "column": "user_id"
+                      }
+                    ],
+                    "timestampAsDay": true
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. Please check the request input and try again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        400
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                },
+                "examples": {
+                  "Invalid Request": {
+                    "value": {
+                      "status": 400,
+                      "message": "Invalid request. Please check the request input and try again."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        401
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                },
+                "examples": {
+                  "Invalid Endpoint": {
+                    "value": {
+                      "status": 401,
+                      "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found. The requested resource could not be found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        404
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                },
+                "examples": {
+                  "Not Found": {
+                    "value": {
+                      "status": 404,
+                      "message": "Not Found. The requested resource could not be found."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "tags": [
           "Experiments (Warehouse Native)"
+        ],
+        "security": [
+          {
+            "STATSIG-API-KEY": []
+          }
         ]
       },
       "delete": {
-        "operationId": "ConsoleV1ExperimentsController_genRemoveEntityPropertySource",
+        "summary": "Delete Entity Property Source",
         "parameters": [
           {
             "name": "name",
@@ -12135,14 +12127,13 @@
             }
           }
         },
+        "tags": [
+          "Experiments (Warehouse Native)"
+        ],
         "security": [
           {
             "STATSIG-API-KEY": []
           }
-        ],
-        "summary": "Delete Entity Property Source",
-        "tags": [
-          "Experiments (Warehouse Native)"
         ]
       }
     },
@@ -38353,7 +38344,8 @@
               "ownerName": "John Doe",
               "ownerEmail": "owner123@test.com"
             },
-            "nullable": true
+            "nullable": true,
+            "readonly": true
           }
         },
         "required": [
@@ -38418,38 +38410,6 @@
           "isReadOnly": {
             "type": "boolean",
             "description": "Specifies if the source can only be edited via the Console API."
-          },
-          "owner": {
-            "type": "object",
-            "properties": {
-              "ownerID": {
-                "type": "string",
-                "description": "ID of the owner",
-                "example": "abc123"
-              },
-              "ownerType": {
-                "type": "string",
-                "description": "Type of the owner (e.g., SDK_KEY or USER)",
-                "example": "USER"
-              },
-              "ownerName": {
-                "type": "string",
-                "description": "The name of the owner. This field is optional.",
-                "example": "John Doe"
-              },
-              "ownerEmail": {
-                "type": "string",
-                "description": "The email of the owner. This field is optional."
-              }
-            },
-            "description": "Schema for owner data including ID, type, name. Note that if Entity is created by CONSOLE API, owner will be undefined.",
-            "example": {
-              "ownerID": "user123",
-              "ownerType": "USER",
-              "ownerName": "John Doe",
-              "ownerEmail": "owner123@test.com"
-            },
-            "nullable": true
           }
         },
         "required": [
@@ -38512,38 +38472,6 @@
           "isReadOnly": {
             "type": "boolean",
             "description": "Specifies if the source can only be edited via the Console API."
-          },
-          "owner": {
-            "type": "object",
-            "properties": {
-              "ownerID": {
-                "type": "string",
-                "description": "ID of the owner",
-                "example": "abc123"
-              },
-              "ownerType": {
-                "type": "string",
-                "description": "Type of the owner (e.g., SDK_KEY or USER)",
-                "example": "USER"
-              },
-              "ownerName": {
-                "type": "string",
-                "description": "The name of the owner. This field is optional.",
-                "example": "John Doe"
-              },
-              "ownerEmail": {
-                "type": "string",
-                "description": "The email of the owner. This field is optional."
-              }
-            },
-            "description": "Schema for owner data including ID, type, name. Note that if Entity is created by CONSOLE API, owner will be undefined.",
-            "example": {
-              "ownerID": "user123",
-              "ownerType": "USER",
-              "ownerName": "John Doe",
-              "ownerEmail": "owner123@test.com"
-            },
-            "nullable": true
           }
         }
       },
@@ -38601,38 +38529,6 @@
           "isReadOnly": {
             "type": "boolean",
             "description": "Specifies if the source can only be edited via the Console API."
-          },
-          "owner": {
-            "type": "object",
-            "properties": {
-              "ownerID": {
-                "type": "string",
-                "description": "ID of the owner",
-                "example": "abc123"
-              },
-              "ownerType": {
-                "type": "string",
-                "description": "Type of the owner (e.g., SDK_KEY or USER)",
-                "example": "USER"
-              },
-              "ownerName": {
-                "type": "string",
-                "description": "The name of the owner. This field is optional.",
-                "example": "John Doe"
-              },
-              "ownerEmail": {
-                "type": "string",
-                "description": "The email of the owner. This field is optional."
-              }
-            },
-            "description": "Schema for owner data including ID, type, name. Note that if Entity is created by CONSOLE API, owner will be undefined.",
-            "example": {
-              "ownerID": "user123",
-              "ownerType": "USER",
-              "ownerName": "John Doe",
-              "ownerEmail": "owner123@test.com"
-            },
-            "nullable": true
           }
         },
         "required": [
