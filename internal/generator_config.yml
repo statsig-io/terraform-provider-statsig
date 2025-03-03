@@ -65,3 +65,21 @@ resources:
       attributes:
         aliases:
           id: name
+
+  entity_property:
+    read:
+      path: /console/v1/experiments/entity_property/{name}
+      method: GET
+    create:
+      path: /console/v1/experiments/entity_properties
+      method: POST
+    update:
+      path: /console/v1/experiments/entity_property/{name}
+      method: POST
+    delete:
+      path: /console/v1/experiments/entity_property/{name}
+      method: DELETE
+    schema:
+      ignores:
+        - message
+        - data

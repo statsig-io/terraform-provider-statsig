@@ -4,6 +4,127 @@
 	},
 	"resources": [
 		{
+			"name": "entity_property",
+			"schema": {
+				"attributes": [
+					{
+						"name": "description",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Optional detailed context for the entity property source."
+						}
+					},
+					{
+						"name": "id_type_mapping",
+						"list_nested": {
+							"computed_optional_required": "required",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "column",
+										"string": {
+											"computed_optional_required": "required",
+											"description": "Column name linked to the ID."
+										}
+									},
+									{
+										"name": "statsig_unit_id",
+										"string": {
+											"computed_optional_required": "required",
+											"description": "ID for the Statsig unit."
+										}
+									}
+								]
+							},
+							"description": "Mappings of Statsig units to their columns."
+						}
+					},
+					{
+						"name": "is_read_only",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Specifies if the source can only be edited via the Console API."
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "Unique identifier for the entity property source."
+						}
+					},
+					{
+						"name": "owner",
+						"single_nested": {
+							"computed_optional_required": "computed",
+							"attributes": [
+								{
+									"name": "owner_email",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "The email of the owner. This field is optional."
+									}
+								},
+								{
+									"name": "owner_id",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "ID of the owner"
+									}
+								},
+								{
+									"name": "owner_name",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "The name of the owner. This field is optional."
+									}
+								},
+								{
+									"name": "owner_type",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "Type of the owner (e.g., SDK_KEY or USER)"
+									}
+								}
+							],
+							"description": "Schema for owner data including ID, type, name. Note that if Entity is created by CONSOLE API, owner will be undefined."
+						}
+					},
+					{
+						"name": "sql",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "SQL query defining the data source."
+						}
+					},
+					{
+						"name": "tags",
+						"list": {
+							"computed_optional_required": "computed_optional",
+							"element_type": {
+								"string": {}
+							},
+							"description": "Optional tags for categorization."
+						}
+					},
+					{
+						"name": "timestamp_as_day",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Indicates if the timestamp is treated as a day."
+						}
+					},
+					{
+						"name": "timestamp_column",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Optional column name for timestamp."
+						}
+					}
+				]
+			}
+		},
+		{
 			"name": "experiment",
 			"schema": {
 				"attributes": [
