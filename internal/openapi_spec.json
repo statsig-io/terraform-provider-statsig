@@ -11091,21 +11091,14 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/PaginationResponseWithMessage"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/EntityPropertySourceDto"
-                          }
-                        }
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EntityPropertySourceDto"
                       }
                     }
-                  ],
+                  },
                   "example": {
                     "message": "Entity Property Sourcess listed successfully.",
                     "data": [
@@ -11275,18 +11268,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SingleDataResponse"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "$ref": "#/components/schemas/EntityPropertySourceDto"
-                        }
-                      }
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/EntityPropertySourceDto"
                     }
-                  ],
+                  },
                   "example": {
                     "message": "Entity Property Source created successfully",
                     "data": {
@@ -11464,18 +11451,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SingleDataResponse"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "$ref": "#/components/schemas/EntityPropertySourceDto"
-                        }
-                      }
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/EntityPropertySourceDto"
                     }
-                  ],
+                  },
                   "example": {
                     "message": "Entity Property Source read successfully.",
                     "data": {
@@ -11628,18 +11609,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SingleDataResponse"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "$ref": "#/components/schemas/EntityPropertySourceDto"
-                        }
-                      }
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/EntityPropertySourceDto"
                     }
-                  ],
+                  },
                   "example": {
                     "message": "Entity Property Sources updated successfully.",
                     "data": {
@@ -11825,18 +11800,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SingleDataResponse"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "$ref": "#/components/schemas/EntityPropertySourceDto"
-                        }
-                      }
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/EntityPropertySourceDto"
                     }
-                  ],
+                  },
                   "example": {
                     "message": "Entity Property Source updated successfully",
                     "data": {
