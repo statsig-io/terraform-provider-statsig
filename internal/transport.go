@@ -35,7 +35,7 @@ func NewTransport(_ context.Context, apiKey string) *Transport {
 		api:      "https://api.statsig.com/console/v1",
 		apiKey:   apiKey,
 		metadata: getStatsigMetadata(),
-		client:   &http.Client{Timeout: time.Second * 5},
+		client:   &http.Client{Timeout: time.Second * 10},
 	}
 }
 
