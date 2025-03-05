@@ -23169,7 +23169,7 @@
     },
     "/console/v1/metrics/metric_source": {
       "post": {
-        "operationId": "ConsoleV1MetricsController_genCreateMetricSource",
+        "summary": "Create Metric Source",
         "parameters": [
           {
             "name": "x-respect-review-settings",
@@ -23197,18 +23197,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SingleDataResponse"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "$ref": "#/components/schemas/MetricSourceContractDto"
-                        }
-                      }
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MetricSourceContractDto"
                     }
-                  ],
+                  },
                   "example": {
                     "message": "Metric source created successfully.",
                     "data": {
@@ -23322,20 +23316,19 @@
             }
           }
         },
+        "tags": [
+          "Metrics (Warehouse Native)"
+        ],
         "security": [
           {
             "STATSIG-API-KEY": []
           }
-        ],
-        "summary": "Create Metric Source",
-        "tags": [
-          "Metrics (Warehouse Native)"
         ]
       }
     },
     "/console/v1/metrics/metric_source/{name}": {
       "get": {
-        "operationId": "ConsoleV1MetricsController_genReadMetricSource",
+        "summary": "Read Metric Source",
         "parameters": [
           {
             "name": "name",
@@ -23362,18 +23355,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SingleDataResponse"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "$ref": "#/components/schemas/MetricSourceContractDto"
-                        }
-                      }
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MetricSourceContractDto"
                     }
-                  ],
+                  },
                   "example": {
                     "message": "Metric source read successfully.",
                     "data": {
@@ -23487,138 +23474,17 @@
             }
           }
         },
+        "tags": [
+          "Metrics (Warehouse Native)"
+        ],
         "security": [
           {
             "STATSIG-API-KEY": []
           }
-        ],
-        "summary": "Read Metric Source",
-        "tags": [
-          "Metrics (Warehouse Native)"
-        ]
-      },
-      "delete": {
-        "operationId": "ConsoleV1MetricsController_genDeleteMetricSource",
-        "parameters": [
-          {
-            "name": "name",
-            "required": true,
-            "in": "path",
-            "description": "name",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "x-respect-review-settings",
-            "in": "header",
-            "description": "Optional header to respect review settings for mutation endpoints.",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Delete metric source response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  },
-                  "example": {
-                    "message": "Metric source deleted successfully."
-                  }
-                },
-                "example": {
-                  "message": "Metric source deleted successfully."
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request. Please check the request input and try again.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "enum": [
-                        400
-                      ]
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "status",
-                    "message"
-                  ]
-                },
-                "examples": {
-                  "Invalid Request": {
-                    "value": {
-                      "status": 400,
-                      "message": "Invalid request. Please check the request input and try again."
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "enum": [
-                        401
-                      ]
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "status",
-                    "message"
-                  ]
-                },
-                "examples": {
-                  "Invalid Endpoint": {
-                    "value": {
-                      "status": 401,
-                      "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "STATSIG-API-KEY": []
-          }
-        ],
-        "summary": "Delete Metric Source",
-        "tags": [
-          "Metrics (Warehouse Native)"
         ]
       },
       "post": {
-        "operationId": "ConsoleV1MetricsController_updateMetricSource",
+        "summary": "Update Metric Source",
         "parameters": [
           {
             "name": "name",
@@ -23655,18 +23521,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SingleDataResponse"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "$ref": "#/components/schemas/MetricSourceContractDto"
-                        }
-                      }
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MetricSourceContractDto"
                     }
-                  ],
+                  },
                   "example": {
                     "message": "Metric source updated successfully.",
                     "data": {
@@ -23780,14 +23640,132 @@
             }
           }
         },
+        "tags": [
+          "Metrics (Warehouse Native)"
+        ],
         "security": [
           {
             "STATSIG-API-KEY": []
           }
+        ]
+      },
+      "delete": {
+        "summary": "Delete Metric Source",
+        "parameters": [
+          {
+            "name": "name",
+            "required": true,
+            "in": "path",
+            "description": "name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-respect-review-settings",
+            "in": "header",
+            "description": "Optional header to respect review settings for mutation endpoints.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
-        "summary": "Update Metric Source",
+        "responses": {
+          "200": {
+            "description": "Delete metric source response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "message": "Metric source deleted successfully."
+                  }
+                },
+                "example": {
+                  "message": "Metric source deleted successfully."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. Please check the request input and try again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        400
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                },
+                "examples": {
+                  "Invalid Request": {
+                    "value": {
+                      "status": 400,
+                      "message": "Invalid request. Please check the request input and try again."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        401
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                },
+                "examples": {
+                  "Invalid Endpoint": {
+                    "value": {
+                      "status": 401,
+                      "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "tags": [
           "Metrics (Warehouse Native)"
+        ],
+        "security": [
+          {
+            "STATSIG-API-KEY": []
+          }
         ]
       }
     },
