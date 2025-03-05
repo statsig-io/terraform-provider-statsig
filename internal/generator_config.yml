@@ -83,3 +83,21 @@ resources:
       ignores:
         - message
         - data
+
+  metric_source:
+    read:
+      path: /console/v1/metrics/metric_source/{name}
+      method: GET
+    create:
+      path: /console/v1/metrics/metric_source
+      method: POST
+    update:
+      path: /console/v1/metrics/metric_source/{name}
+      method: POST
+    delete:
+      path: /console/v1/metrics/metric_source/{name}
+      method: DELETE
+    schema:
+      ignores:
+        - message
+        - data
