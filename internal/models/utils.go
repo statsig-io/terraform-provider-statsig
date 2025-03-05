@@ -51,6 +51,10 @@ func StringToNilableValue(str string) basetypes.StringValue {
 	}
 }
 
+func StringToStringValue(str string) types.String {
+	return types.StringValue(str)
+}
+
 func StringFromNilableValue(str basetypes.StringValue) string {
 	if str.IsNull() || str.IsUnknown() {
 		return ""

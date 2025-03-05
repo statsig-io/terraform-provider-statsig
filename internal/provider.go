@@ -92,5 +92,6 @@ func (p *StatsigProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewGateResource,
 		NewExperimentResource,
 		NewEntityPropertyResource,
+		NewMetricSourceResource,
 	}
 }
