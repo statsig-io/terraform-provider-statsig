@@ -20973,8 +20973,141 @@
       }
     },
     "/console/v1/metrics": {
+      "get": {
+        "summary": "Read Single Metric Value",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "description": "The unique identifier of the metric",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-respect-review-settings",
+            "in": "header",
+            "description": "Optional header to respect review settings for mutation endpoints.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get metric data on given date response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/MetricValuesDto"
+                      }
+                    }
+                  },
+                  "example": {
+                    "message": "Metric read successfully.",
+                    "data": [
+                      {
+                        "value": 0,
+                        "unit_type": "overall",
+                        "numerator": null,
+                        "denominator": null,
+                        "metric_name": "TestMetricCapi",
+                        "metric_type": "sum"
+                      },
+                      {
+                        "value": 0,
+                        "unit_type": "userID",
+                        "numerator": null,
+                        "denominator": null,
+                        "metric_name": "TestMetricCapi",
+                        "metric_type": "sum"
+                      }
+                    ]
+                  }
+                },
+                "example": {
+                  "message": "Metric read successfully.",
+                  "data": [
+                    {
+                      "value": 0,
+                      "unit_type": "overall",
+                      "numerator": null,
+                      "denominator": null,
+                      "metric_name": "TestMetricCapi",
+                      "metric_type": "sum"
+                    },
+                    {
+                      "value": 0,
+                      "unit_type": "userID",
+                      "numerator": null,
+                      "denominator": null,
+                      "metric_name": "TestMetricCapi",
+                      "metric_type": "sum"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        401
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                },
+                "examples": {
+                  "Invalid Endpoint": {
+                    "value": {
+                      "status": 401,
+                      "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Metrics"
+        ],
+        "security": [
+          {
+            "STATSIG-API-KEY": []
+          }
+        ]
+      },
       "post": {
-        "operationId": "ConsoleV1MetricsController_genCreate",
+        "summary": "Create Metric",
         "parameters": [
           {
             "name": "x-respect-review-settings",
@@ -21002,18 +21135,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SingleDataResponse"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "$ref": "#/components/schemas/ExternalMetricDefinitionContractDto"
-                        }
-                      }
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ExternalMetricDefinitionContractDto"
                     }
-                  ],
+                  },
                   "example": {
                     "message": "Metric created successfully.",
                     "data": {
@@ -21128,161 +21255,19 @@
             }
           }
         },
+        "tags": [
+          "Metrics"
+        ],
         "security": [
           {
             "STATSIG-API-KEY": []
           }
-        ],
-        "summary": "Create Metric",
-        "tags": [
-          "Metrics"
-        ]
-      },
-      "get": {
-        "operationId": "ConsoleV1MetricsController_genReadMetric",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "query",
-            "description": "The unique identifier of the metric",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "date",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "x-respect-review-settings",
-            "in": "header",
-            "description": "Optional header to respect review settings for mutation endpoints.",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Get metric data on given date response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/PaginationResponseWithMessage"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "type": "array",
-                          "items": {
-                            "$ref": "#/components/schemas/MetricValuesDto"
-                          }
-                        }
-                      }
-                    }
-                  ],
-                  "example": {
-                    "message": "Metric read successfully.",
-                    "data": [
-                      {
-                        "value": 0,
-                        "unit_type": "overall",
-                        "numerator": null,
-                        "denominator": null,
-                        "metric_name": "TestMetricCapi",
-                        "metric_type": "sum"
-                      },
-                      {
-                        "value": 0,
-                        "unit_type": "userID",
-                        "numerator": null,
-                        "denominator": null,
-                        "metric_name": "TestMetricCapi",
-                        "metric_type": "sum"
-                      }
-                    ]
-                  }
-                },
-                "example": {
-                  "message": "Metric read successfully.",
-                  "data": [
-                    {
-                      "value": 0,
-                      "unit_type": "overall",
-                      "numerator": null,
-                      "denominator": null,
-                      "metric_name": "TestMetricCapi",
-                      "metric_type": "sum"
-                    },
-                    {
-                      "value": 0,
-                      "unit_type": "userID",
-                      "numerator": null,
-                      "denominator": null,
-                      "metric_name": "TestMetricCapi",
-                      "metric_type": "sum"
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "integer",
-                      "enum": [
-                        401
-                      ]
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "status",
-                    "message"
-                  ]
-                },
-                "examples": {
-                  "Invalid Endpoint": {
-                    "value": {
-                      "status": 401,
-                      "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "STATSIG-API-KEY": []
-          }
-        ],
-        "summary": "Read Single Metric Value",
-        "tags": [
-          "Metrics"
         ]
       }
     },
     "/console/v1/metrics/{id}": {
       "get": {
-        "operationId": "ConsoleV1MetricsController_genReadMetricDefinition",
+        "summary": "Read Metric Definition",
         "parameters": [
           {
             "name": "id",
@@ -21309,18 +21294,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SingleDataResponse"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "$ref": "#/components/schemas/ExternalMetricDefinitionContractDto"
-                        }
-                      }
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ExternalMetricDefinitionContractDto"
                     }
-                  ],
+                  },
                   "example": {
                     "message": "Metric read successfully.",
                     "data": {
@@ -21435,18 +21413,17 @@
             }
           }
         },
+        "tags": [
+          "Metrics"
+        ],
         "security": [
           {
             "STATSIG-API-KEY": []
           }
-        ],
-        "summary": "Read Metric Definition",
-        "tags": [
-          "Metrics"
         ]
       },
       "post": {
-        "operationId": "ConsoleV1MetricsController_updateMetric",
+        "summary": "Update a metric",
         "parameters": [
           {
             "name": "id",
@@ -21483,18 +21460,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/SingleDataResponse"
-                    },
-                    {
-                      "properties": {
-                        "data": {
-                          "$ref": "#/components/schemas/ExternalMetricDefinitionContractDto"
-                        }
-                      }
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/ExternalMetricDefinitionContractDto"
                     }
-                  ],
+                  },
                   "example": {
                     "message": "Metric updated successfully.",
                     "data": {
@@ -21642,18 +21612,17 @@
             }
           }
         },
+        "tags": [
+          "Metrics"
+        ],
         "security": [
           {
             "STATSIG-API-KEY": []
           }
-        ],
-        "summary": "Update a metric",
-        "tags": [
-          "Metrics"
         ]
       },
       "delete": {
-        "operationId": "ConsoleV1MetricsController_deleteMetric",
+        "summary": "Delete a metric",
         "parameters": [
           {
             "name": "id",
@@ -21762,14 +21731,13 @@
             }
           }
         },
+        "tags": [
+          "Metrics"
+        ],
         "security": [
           {
             "STATSIG-API-KEY": []
           }
-        ],
-        "summary": "Delete a metric",
-        "tags": [
-          "Metrics"
         ]
       }
     },
@@ -39653,7 +39621,7 @@
                           "user",
                           "user_custom"
                         ],
-                        "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`."
+                        "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
                       },
                       "column": {
                         "type": "string",
@@ -39676,7 +39644,9 @@
                           "sql_filter",
                           "starts_with",
                           "ends_with",
-                          "after_exposure"
+                          "after_exposure",
+                          "is_true",
+                          "is_false"
                         ],
                         "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
                       },
@@ -39770,12 +39740,14 @@
           "customRollUpStart": {
             "type": "number",
             "description": "Custom time window start date in days since exposure.",
-            "example": 1
+            "example": 1,
+            "format": "double"
           },
           "customRollUpEnd": {
             "type": "number",
             "description": "Custom time window end date in days since exposure.",
-            "example": 1
+            "example": 1,
+            "format": "double"
           },
           "funnelEventList": {
             "type": "array",
@@ -39831,6 +39803,8 @@
                   "first_value",
                   "latest_value",
                   "retention",
+                  "max",
+                  "min",
                   ""
                 ],
                 "description": "Allowed: count┃sum┃mean┃daily_participation┃ratio┃funnel┃count_distinct┃percentile"
@@ -39852,7 +39826,7 @@
                         "user",
                         "user_custom"
                       ],
-                      "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`."
+                      "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
                     },
                     "column": {
                       "type": "string",
@@ -39875,7 +39849,9 @@
                         "sql_filter",
                         "starts_with",
                         "ends_with",
-                        "after_exposure"
+                        "after_exposure",
+                        "is_true",
+                        "is_false"
                       ],
                       "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
                     },
@@ -39896,7 +39872,7 @@
                     "condition"
                   ]
                 },
-                "description": "MetricEventCrtieria"
+                "description": "Filtering criteria for the metric source"
               },
               "waitForCohortWindow": {
                 "type": "boolean"
@@ -39914,7 +39890,7 @@
                         "user",
                         "user_custom"
                       ],
-                      "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`."
+                      "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
                     },
                     "column": {
                       "type": "string",
@@ -39937,7 +39913,9 @@
                         "sql_filter",
                         "starts_with",
                         "ends_with",
-                        "after_exposure"
+                        "after_exposure",
+                        "is_true",
+                        "is_false"
                       ],
                       "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
                     },
@@ -39958,7 +39936,7 @@
                     "condition"
                   ]
                 },
-                "description": "MetricEventCriteria"
+                "description": "Filtering criteria for the denominator metric source, if this metric is a ratio"
               },
               "denominatorAggregation": {
                 "type": "string",
@@ -39974,6 +39952,8 @@
                   "first_value",
                   "latest_value",
                   "retention",
+                  "max",
+                  "min",
                   ""
                 ],
                 "description": "Allowed: count┃sum┃mean┃daily_participation┃ratio┃funnel┃count_distinct┃percentile"
@@ -40028,7 +40008,7 @@
                               "user",
                               "user_custom"
                             ],
-                            "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`."
+                            "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
                           },
                           "column": {
                             "type": "string",
@@ -40051,7 +40031,9 @@
                               "sql_filter",
                               "starts_with",
                               "ends_with",
-                              "after_exposure"
+                              "after_exposure",
+                              "is_true",
+                              "is_false"
                             ],
                             "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
                           },
@@ -40125,6 +40107,8 @@
                   "first_value",
                   "latest_value",
                   "retention",
+                  "max",
+                  "min",
                   ""
                 ],
                 "description": "Aggregation type for numerator; Allowed: count┃sum┃mean┃daily_participation┃ratio┃funnel┃count_distinct┃percentile."
@@ -40190,6 +40174,15 @@
             "nullable": true,
             "description": "The team associated with the metric, applicable for enterprise environments."
           },
+          "teamID": {
+            "type": "string",
+            "nullable": true,
+            "description": "The team ID associated with the metric, applicable for enterprise environments."
+          },
+          "dryRun": {
+            "type": "boolean",
+            "description": "Skips persisting the metric (used to validate that inputs are correct)"
+          },
           "id": {
             "type": "string",
             "description": "Unique identifier for the metric, used for referencing within the system.",
@@ -40246,7 +40239,8 @@
           "createdTime": {
             "type": "number",
             "description": "Timestamp indicating when the metric was created.",
-            "example": 1716230400
+            "example": 1716230400,
+            "format": "double"
           },
           "lastModifierID": {
             "type": "string",
@@ -40256,7 +40250,8 @@
           "lastModifiedTime": {
             "type": "number",
             "nullable": true,
-            "description": "Time of the last modification to this metric."
+            "description": "Time of the last modification to this metric.",
+            "format": "double"
           },
           "lastModifierEmail": {
             "type": "string",
@@ -41772,7 +41767,9 @@
         "properties": {
           "name": {
             "type": "string",
-            "pattern": "^[a-zA-Z0-9_\\-()/ ]*$",
+            "maxLength": 200,
+            "minLength": 4,
+            "pattern": "^[a-zA-Z0-9_.\\-()/ %:]*$",
             "description": "The name of the new metric, which identifies it within the system.",
             "example": "metricName"
           },
@@ -41853,7 +41850,7 @@
                           "user",
                           "user_custom"
                         ],
-                        "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`."
+                        "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
                       },
                       "column": {
                         "type": "string",
@@ -41876,7 +41873,9 @@
                           "sql_filter",
                           "starts_with",
                           "ends_with",
-                          "after_exposure"
+                          "after_exposure",
+                          "is_true",
+                          "is_false"
                         ],
                         "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
                       },
@@ -41971,12 +41970,14 @@
           "customRollUpStart": {
             "type": "number",
             "description": "Custom time window start date in days since exposure.",
-            "example": 1
+            "example": 1,
+            "format": "double"
           },
           "customRollUpEnd": {
             "type": "number",
             "description": "Custom time window end date in days since exposure.",
-            "example": 1
+            "example": 1,
+            "format": "double"
           },
           "funnelEventList": {
             "type": "array",
@@ -42032,6 +42033,8 @@
                   "first_value",
                   "latest_value",
                   "retention",
+                  "max",
+                  "min",
                   ""
                 ],
                 "description": "Allowed: count┃sum┃mean┃daily_participation┃ratio┃funnel┃count_distinct┃percentile"
@@ -42053,7 +42056,7 @@
                         "user",
                         "user_custom"
                       ],
-                      "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`."
+                      "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
                     },
                     "column": {
                       "type": "string",
@@ -42076,7 +42079,9 @@
                         "sql_filter",
                         "starts_with",
                         "ends_with",
-                        "after_exposure"
+                        "after_exposure",
+                        "is_true",
+                        "is_false"
                       ],
                       "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
                     },
@@ -42097,7 +42102,7 @@
                     "condition"
                   ]
                 },
-                "description": "MetricEventCrtieria"
+                "description": "Filtering criteria for the metric source"
               },
               "waitForCohortWindow": {
                 "type": "boolean"
@@ -42115,7 +42120,7 @@
                         "user",
                         "user_custom"
                       ],
-                      "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`."
+                      "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
                     },
                     "column": {
                       "type": "string",
@@ -42138,7 +42143,9 @@
                         "sql_filter",
                         "starts_with",
                         "ends_with",
-                        "after_exposure"
+                        "after_exposure",
+                        "is_true",
+                        "is_false"
                       ],
                       "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
                     },
@@ -42159,7 +42166,7 @@
                     "condition"
                   ]
                 },
-                "description": "MetricEventCriteria"
+                "description": "Filtering criteria for the denominator metric source, if this metric is a ratio"
               },
               "denominatorAggregation": {
                 "type": "string",
@@ -42175,17 +42182,21 @@
                   "first_value",
                   "latest_value",
                   "retention",
+                  "max",
+                  "min",
                   ""
                 ],
                 "description": "Allowed: count┃sum┃mean┃daily_participation┃ratio┃funnel┃count_distinct┃percentile"
               },
               "denominatorCustomRollupEnd": {
                 "type": "number",
-                "description": "Custom end date for rollup in days since exposure."
+                "description": "Custom end date for rollup in days since exposure.",
+                "format": "double"
               },
               "denominatorCustomRollupStart": {
                 "type": "number",
-                "description": "Custom start date for rollup in days since exposure."
+                "description": "Custom start date for rollup in days since exposure.",
+                "format": "double"
               },
               "denominatorMetricSourceName": {
                 "type": "string",
@@ -42201,7 +42212,8 @@
               },
               "funnelCalculationWindow": {
                 "type": "number",
-                "description": "Duration for counting funnel events in days."
+                "description": "Duration for counting funnel events in days.",
+                "format": "double"
               },
               "funnelCountDistinct": {
                 "type": "string",
@@ -42229,7 +42241,7 @@
                               "user",
                               "user_custom"
                             ],
-                            "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`."
+                            "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
                           },
                           "column": {
                             "type": "string",
@@ -42252,7 +42264,9 @@
                               "sql_filter",
                               "starts_with",
                               "ends_with",
-                              "after_exposure"
+                              "after_exposure",
+                              "is_true",
+                              "is_false"
                             ],
                             "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
                           },
@@ -42310,7 +42324,8 @@
               },
               "metricBakeDays": {
                 "type": "number",
-                "description": "Number of days for metric baking; specify duration for analysis."
+                "description": "Number of days for metric baking; specify duration for analysis.",
+                "format": "double"
               },
               "numeratorAggregation": {
                 "type": "string",
@@ -42326,6 +42341,8 @@
                   "first_value",
                   "latest_value",
                   "retention",
+                  "max",
+                  "min",
                   ""
                 ],
                 "description": "Aggregation type for numerator; Allowed: count┃sum┃mean┃daily_participation┃ratio┃funnel┃count_distinct┃percentile."
@@ -42338,18 +42355,21 @@
                 "type": "number",
                 "maximum": 1,
                 "minimum": 0,
-                "description": "High threshold for winsorization; must be between 0 and 1."
+                "description": "High threshold for winsorization; must be between 0 and 1.",
+                "format": "double"
               },
               "winsorizationLow": {
                 "type": "number",
                 "maximum": 1,
                 "minimum": 0,
-                "description": "Low threshold for winsorization; must be between 0 and 1."
+                "description": "Low threshold for winsorization; must be between 0 and 1.",
+                "format": "double"
               },
               "cupedAttributionWindow": {
                 "type": "number",
                 "nullable": true,
-                "description": "Attribution window for CUPED adjustments in days."
+                "description": "Attribution window for CUPED adjustments in days.",
+                "format": "double"
               },
               "onlyIncludeUsersWithConversionEvent": {
                 "type": "boolean",
@@ -42357,15 +42377,18 @@
               },
               "percentile": {
                 "type": "number",
-                "description": "Percentile value for statistical calculations."
+                "description": "Percentile value for statistical calculations.",
+                "format": "double"
               },
               "valueThreshold": {
                 "type": "number",
-                "description": "Threshold value for filtering metrics."
+                "description": "Threshold value for filtering metrics.",
+                "format": "double"
               },
               "cap": {
                 "type": "number",
-                "description": "Maximum cap for metric values."
+                "description": "Maximum cap for metric values.",
+                "format": "double"
               },
               "rollupTimeWindow": {
                 "type": "string",
@@ -42373,11 +42396,13 @@
               },
               "customRollUpStart": {
                 "type": "number",
-                "description": "Custom start date for rollup in days since exposure."
+                "description": "Custom start date for rollup in days since exposure.",
+                "format": "double"
               },
               "customRollUpEnd": {
                 "type": "number",
-                "description": "Custom end date for rollup in days since exposure."
+                "description": "Custom end date for rollup in days since exposure.",
+                "format": "double"
               },
               "allowNullRatioDenominator": {
                 "type": "boolean",
@@ -42390,6 +42415,15 @@
             "type": "string",
             "nullable": true,
             "description": "The team associated with the metric, applicable for enterprise environments."
+          },
+          "teamID": {
+            "type": "string",
+            "nullable": true,
+            "description": "The team ID associated with the metric, applicable for enterprise environments."
+          },
+          "dryRun": {
+            "type": "boolean",
+            "description": "Skips persisting the metric (used to validate that inputs are correct)"
           }
         },
         "required": [
@@ -42469,6 +42503,8 @@
                   "first_value",
                   "latest_value",
                   "retention",
+                  "max",
+                  "min",
                   ""
                 ],
                 "description": "Allowed: count┃sum┃mean┃daily_participation┃ratio┃funnel┃count_distinct┃percentile"
@@ -42490,7 +42526,7 @@
                         "user",
                         "user_custom"
                       ],
-                      "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`."
+                      "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
                     },
                     "column": {
                       "type": "string",
@@ -42513,7 +42549,9 @@
                         "sql_filter",
                         "starts_with",
                         "ends_with",
-                        "after_exposure"
+                        "after_exposure",
+                        "is_true",
+                        "is_false"
                       ],
                       "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
                     },
@@ -42534,7 +42572,7 @@
                     "condition"
                   ]
                 },
-                "description": "MetricEventCrtieria"
+                "description": "Filtering criteria for the metric source"
               },
               "waitForCohortWindow": {
                 "type": "boolean"
@@ -42552,7 +42590,7 @@
                         "user",
                         "user_custom"
                       ],
-                      "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`."
+                      "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
                     },
                     "column": {
                       "type": "string",
@@ -42575,7 +42613,9 @@
                         "sql_filter",
                         "starts_with",
                         "ends_with",
-                        "after_exposure"
+                        "after_exposure",
+                        "is_true",
+                        "is_false"
                       ],
                       "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
                     },
@@ -42596,7 +42636,7 @@
                     "condition"
                   ]
                 },
-                "description": "MetricEventCriteria"
+                "description": "Filtering criteria for the denominator metric source, if this metric is a ratio"
               },
               "denominatorAggregation": {
                 "type": "string",
@@ -42612,17 +42652,21 @@
                   "first_value",
                   "latest_value",
                   "retention",
+                  "max",
+                  "min",
                   ""
                 ],
                 "description": "Allowed: count┃sum┃mean┃daily_participation┃ratio┃funnel┃count_distinct┃percentile"
               },
               "denominatorCustomRollupEnd": {
                 "type": "number",
-                "description": "Custom end date for rollup in days since exposure."
+                "description": "Custom end date for rollup in days since exposure.",
+                "format": "double"
               },
               "denominatorCustomRollupStart": {
                 "type": "number",
-                "description": "Custom start date for rollup in days since exposure."
+                "description": "Custom start date for rollup in days since exposure.",
+                "format": "double"
               },
               "denominatorMetricSourceName": {
                 "type": "string",
@@ -42638,7 +42682,8 @@
               },
               "funnelCalculationWindow": {
                 "type": "number",
-                "description": "Duration for counting funnel events in days."
+                "description": "Duration for counting funnel events in days.",
+                "format": "double"
               },
               "funnelCountDistinct": {
                 "type": "string",
@@ -42666,7 +42711,7 @@
                               "user",
                               "user_custom"
                             ],
-                            "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`."
+                            "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
                           },
                           "column": {
                             "type": "string",
@@ -42689,7 +42734,9 @@
                               "sql_filter",
                               "starts_with",
                               "ends_with",
-                              "after_exposure"
+                              "after_exposure",
+                              "is_true",
+                              "is_false"
                             ],
                             "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
                           },
@@ -42747,7 +42794,8 @@
               },
               "metricBakeDays": {
                 "type": "number",
-                "description": "Number of days for metric baking; specify duration for analysis."
+                "description": "Number of days for metric baking; specify duration for analysis.",
+                "format": "double"
               },
               "numeratorAggregation": {
                 "type": "string",
@@ -42763,6 +42811,8 @@
                   "first_value",
                   "latest_value",
                   "retention",
+                  "max",
+                  "min",
                   ""
                 ],
                 "description": "Aggregation type for numerator; Allowed: count┃sum┃mean┃daily_participation┃ratio┃funnel┃count_distinct┃percentile."
@@ -42775,18 +42825,21 @@
                 "type": "number",
                 "maximum": 1,
                 "minimum": 0,
-                "description": "High threshold for winsorization; must be between 0 and 1."
+                "description": "High threshold for winsorization; must be between 0 and 1.",
+                "format": "double"
               },
               "winsorizationLow": {
                 "type": "number",
                 "maximum": 1,
                 "minimum": 0,
-                "description": "Low threshold for winsorization; must be between 0 and 1."
+                "description": "Low threshold for winsorization; must be between 0 and 1.",
+                "format": "double"
               },
               "cupedAttributionWindow": {
                 "type": "number",
                 "nullable": true,
-                "description": "Attribution window for CUPED adjustments in days."
+                "description": "Attribution window for CUPED adjustments in days.",
+                "format": "double"
               },
               "onlyIncludeUsersWithConversionEvent": {
                 "type": "boolean",
@@ -42794,15 +42847,18 @@
               },
               "percentile": {
                 "type": "number",
-                "description": "Percentile value for statistical calculations."
+                "description": "Percentile value for statistical calculations.",
+                "format": "double"
               },
               "valueThreshold": {
                 "type": "number",
-                "description": "Threshold value for filtering metrics."
+                "description": "Threshold value for filtering metrics.",
+                "format": "double"
               },
               "cap": {
                 "type": "number",
-                "description": "Maximum cap for metric values."
+                "description": "Maximum cap for metric values.",
+                "format": "double"
               },
               "rollupTimeWindow": {
                 "type": "string",
@@ -42810,11 +42866,13 @@
               },
               "customRollUpStart": {
                 "type": "number",
-                "description": "Custom start date for rollup in days since exposure."
+                "description": "Custom start date for rollup in days since exposure.",
+                "format": "double"
               },
               "customRollUpEnd": {
                 "type": "number",
-                "description": "Custom end date for rollup in days since exposure."
+                "description": "Custom end date for rollup in days since exposure.",
+                "format": "double"
               },
               "allowNullRatioDenominator": {
                 "type": "boolean",
@@ -42833,7 +42891,12 @@
           "team": {
             "type": "string",
             "nullable": true,
-            "description": "Optional field indicating the team responsible for the metric, aiding in accountability and management."
+            "description": "Optional field indicating the team name responsible for the metric, aiding in accountability and management."
+          },
+          "teamID": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional field indicating the team ID responsible for the metric, aiding in accountability and management."
           },
           "directionality": {
             "default": "increase",
@@ -42845,9 +42908,9 @@
             "description": "Indicates the desired change direction for the metric. Use \"increase\" for positive changes and \"decrease\" for negative changes.",
             "example": "increase"
           },
-          "updateRelatedMetrics": {
+          "dryRun": {
             "type": "boolean",
-            "description": "Indicates whether to update related metrics when the directionality changes."
+            "description": "Skips persisting updates to the metric (used to validate that inputs are correct)"
           }
         }
       },
