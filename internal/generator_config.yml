@@ -101,3 +101,21 @@ resources:
       ignores:
         - message
         - data
+
+  metric:
+    read:
+      path: /console/v1/metrics/{id}
+      method: GET
+    create:
+      path: /console/v1/metrics
+      method: POST
+    update:
+      path: /console/v1/metrics/{id}
+      method: POST
+    delete:
+      path: /console/v1/metrics/{id}
+      method: DELETE
+    schema:
+      ignores:
+        - message
+        - data

@@ -1155,6 +1155,902 @@
 			}
 		},
 		{
+			"name": "metric",
+			"schema": {
+				"attributes": [
+					{
+						"name": "custom_roll_up_end",
+						"float64": {
+							"computed_optional_required": "computed_optional",
+							"description": "Custom time window end date in days since exposure."
+						}
+					},
+					{
+						"name": "custom_roll_up_start",
+						"float64": {
+							"computed_optional_required": "computed_optional",
+							"description": "Custom time window start date in days since exposure."
+						}
+					},
+					{
+						"name": "description",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "A description of the new metric, providing context and purpose.",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.LengthAtMost(1000)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "directionality",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"default": {
+								"static": "increase"
+							},
+							"description": "Indicates the desired change direction for the metric. Use \"increase\" for positive changes and \"decrease\" for negative changes.",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.OneOf(\n\"increase\",\n\"decrease\",\n)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "dry_run",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Skips persisting the metric (used to validate that inputs are correct)"
+						}
+					},
+					{
+						"name": "funnel_count_distinct",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Specifies whether to count events or distinct users for the funnel metric.",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.OneOf(\n\"events\",\n\"users\",\n)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "funnel_event_list",
+						"list_nested": {
+							"computed_optional_required": "computed_optional",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "name",
+										"string": {
+											"computed_optional_required": "required",
+											"description": "The name of the funnel event used in the metric."
+										}
+									},
+									{
+										"name": "type",
+										"string": {
+											"computed_optional_required": "required",
+											"description": "The type of funnel event, specifying how the event is tracked.",
+											"validators": [
+												{
+													"custom": {
+														"imports": [
+															{
+																"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+															}
+														],
+														"schema_definition": "stringvalidator.OneOf(\n\"event_dau\",\n\"event_user\",\n\"event_count\",\n\"event_count_custom\",\n)"
+													}
+												}
+											]
+										}
+									}
+								]
+							},
+							"description": "List of events used to create funnel metrics."
+						}
+					},
+					{
+						"name": "is_permanent",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Indicates whether the metric is permanent and should not be deleted."
+						}
+					},
+					{
+						"name": "is_read_only",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Set to true to make the metric definition editable only from the Console API."
+						}
+					},
+					{
+						"name": "is_verified",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Marks the metric as verified for internal trustworthiness."
+						}
+					},
+					{
+						"name": "metric_component_metrics",
+						"list_nested": {
+							"computed_optional_required": "computed_optional",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "name",
+										"string": {
+											"computed_optional_required": "required"
+										}
+									},
+									{
+										"name": "type",
+										"string": {
+											"computed_optional_required": "required"
+										}
+									}
+								]
+							},
+							"description": "List of input metrics used to calculate the new metric for composite types."
+						}
+					},
+					{
+						"name": "metric_events",
+						"list_nested": {
+							"computed_optional_required": "computed_optional",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "criteria",
+										"list_nested": {
+											"computed_optional_required": "computed_optional",
+											"nested_object": {
+												"attributes": [
+													{
+														"name": "column",
+														"string": {
+															"computed_optional_required": "computed_optional",
+															"description": "Optional column specifying which data attribute to filter on."
+														}
+													},
+													{
+														"name": "condition",
+														"string": {
+															"computed_optional_required": "required",
+															"description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native",
+															"validators": [
+																{
+																	"custom": {
+																		"imports": [
+																			{
+																				"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+																			}
+																		],
+																		"schema_definition": "stringvalidator.OneOf(\n\"in\",\n\"not_in\",\n\"=\",\n\"\u003e\",\n\"\u003c\",\n\"\u003e=\",\n\"\u003c=\",\n\"is_null\",\n\"non_null\",\n\"contains\",\n\"not_contains\",\n\"sql_filter\",\n\"starts_with\",\n\"ends_with\",\n\"after_exposure\",\n\"is_true\",\n\"is_false\",\n)"
+																	}
+																}
+															]
+														}
+													},
+													{
+														"name": "null_vacuous_override",
+														"bool": {
+															"computed_optional_required": "computed_optional",
+															"description": "If true, overrides null values in criterion evaluation."
+														}
+													},
+													{
+														"name": "type",
+														"string": {
+															"computed_optional_required": "required",
+															"description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`.",
+															"validators": [
+																{
+																	"custom": {
+																		"imports": [
+																			{
+																				"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+																			}
+																		],
+																		"schema_definition": "stringvalidator.OneOf(\n\"value\",\n\"metadata\",\n\"user\",\n\"user_custom\",\n)"
+																	}
+																}
+															]
+														}
+													},
+													{
+														"name": "values",
+														"list": {
+															"computed_optional_required": "computed_optional",
+															"element_type": {
+																"string": {}
+															},
+															"description": "Optional array of values for the criterion to match against."
+														}
+													}
+												]
+											},
+											"description": "Filtering criteria for the metric event, including conditions and values to refine the event data."
+										}
+									},
+									{
+										"name": "metadata_key",
+										"string": {
+											"computed_optional_required": "computed_optional",
+											"description": "The key for associated metadata, if applicable."
+										}
+									},
+									{
+										"name": "name",
+										"string": {
+											"computed_optional_required": "required",
+											"description": "The name of the metric event."
+										}
+									},
+									{
+										"name": "type",
+										"string": {
+											"computed_optional_required": "computed_optional",
+											"description": "The type of metric event. Allowed values include: count, count_distinct, value, and metadata.",
+											"validators": [
+												{
+													"custom": {
+														"imports": [
+															{
+																"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+															}
+														],
+														"schema_definition": "stringvalidator.OneOf(\n\"count\",\n\"count_distinct\",\n\"value\",\n\"metadata\",\n)"
+													}
+												}
+											]
+										}
+									}
+								]
+							},
+							"description": "An array of event definitions used to compute the metric."
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "The name of the new metric, which identifies it within the system.",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.LengthBetween(4, 200)"
+									}
+								},
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "regexp"
+											},
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.RegexMatches(regexp.MustCompile(\"^[a-zA-Z0-9_.\\\\-()/ %:]*$\"), \"\")"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "rollup_time_window",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Time window for the metric rollup. Specify \"custom\" for a customized time window."
+						}
+					},
+					{
+						"name": "tags",
+						"list": {
+							"computed_optional_required": "computed_optional",
+							"element_type": {
+								"string": {}
+							},
+							"description": "Tags associated with the metric for categorization and searchability."
+						}
+					},
+					{
+						"name": "team",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The team associated with the metric, applicable for enterprise environments."
+						}
+					},
+					{
+						"name": "team_id",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The team ID associated with the metric, applicable for enterprise environments."
+						}
+					},
+					{
+						"name": "type",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "The type of the metric. Allowed values include sum, ratio, mean, event_count_sum, composite, composite_sum, undefined, funnel, user_warehouse.",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.OneOf(\n\"ratio\",\n\"sum\",\n\"composite\",\n\"mean\",\n\"event_count_custom\",\n\"event_user\",\n\"funnel\",\n\"undefined\",\n\"setup_incomplete\",\n\"composite_sum\",\n\"import_window\",\n\"user_warehouse\",\n)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "unit_types",
+						"list": {
+							"computed_optional_required": "computed_optional",
+							"element_type": {
+								"string": {}
+							},
+							"description": "Array of unit types associated with the metric, such as stableID or userID."
+						}
+					},
+					{
+						"name": "warehouse_native",
+						"single_nested": {
+							"computed_optional_required": "computed_optional",
+							"attributes": [
+								{
+									"name": "aggregation",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "Allowed: count┃sum┃mean┃daily_participation┃ratio┃funnel┃count_distinct┃percentile",
+										"validators": [
+											{
+												"custom": {
+													"imports": [
+														{
+															"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+														}
+													],
+													"schema_definition": "stringvalidator.OneOf(\n\"count\",\n\"sum\",\n\"mean\",\n\"daily_participation\",\n\"ratio\",\n\"funnel\",\n\"count_distinct\",\n\"percentile\",\n\"first_value\",\n\"latest_value\",\n\"retention\",\n\"max\",\n\"min\",\n\"\",\n)"
+												}
+											}
+										]
+									}
+								},
+								{
+									"name": "allow_null_ratio_denominator",
+									"bool": {
+										"computed_optional_required": "computed_optional",
+										"description": "Include units which do not have a denominator. Only applicable to ratios."
+									}
+								},
+								{
+									"name": "cap",
+									"float64": {
+										"computed_optional_required": "computed_optional",
+										"description": "Maximum cap for metric values."
+									}
+								},
+								{
+									"name": "criteria",
+									"list_nested": {
+										"computed_optional_required": "computed_optional",
+										"nested_object": {
+											"attributes": [
+												{
+													"name": "column",
+													"string": {
+														"computed_optional_required": "computed_optional",
+														"description": "Optional column specifying which data attribute to filter on."
+													}
+												},
+												{
+													"name": "condition",
+													"string": {
+														"computed_optional_required": "required",
+														"description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native",
+														"validators": [
+															{
+																"custom": {
+																	"imports": [
+																		{
+																			"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+																		}
+																	],
+																	"schema_definition": "stringvalidator.OneOf(\n\"in\",\n\"not_in\",\n\"=\",\n\"\u003e\",\n\"\u003c\",\n\"\u003e=\",\n\"\u003c=\",\n\"is_null\",\n\"non_null\",\n\"contains\",\n\"not_contains\",\n\"sql_filter\",\n\"starts_with\",\n\"ends_with\",\n\"after_exposure\",\n\"is_true\",\n\"is_false\",\n)"
+																}
+															}
+														]
+													}
+												},
+												{
+													"name": "null_vacuous_override",
+													"bool": {
+														"computed_optional_required": "computed_optional",
+														"description": "If true, overrides null values in criterion evaluation."
+													}
+												},
+												{
+													"name": "type",
+													"string": {
+														"computed_optional_required": "required",
+														"description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`.",
+														"validators": [
+															{
+																"custom": {
+																	"imports": [
+																		{
+																			"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+																		}
+																	],
+																	"schema_definition": "stringvalidator.OneOf(\n\"value\",\n\"metadata\",\n\"user\",\n\"user_custom\",\n)"
+																}
+															}
+														]
+													}
+												},
+												{
+													"name": "values",
+													"list": {
+														"computed_optional_required": "computed_optional",
+														"element_type": {
+															"string": {}
+														},
+														"description": "Optional array of values for the criterion to match against."
+													}
+												}
+											]
+										},
+										"description": "Filtering criteria for the metric source"
+									}
+								},
+								{
+									"name": "cuped_attribution_window",
+									"float64": {
+										"computed_optional_required": "computed_optional",
+										"description": "Attribution window for CUPED adjustments in days."
+									}
+								},
+								{
+									"name": "custom_roll_up_end",
+									"float64": {
+										"computed_optional_required": "computed_optional",
+										"description": "Custom end date for rollup in days since exposure."
+									}
+								},
+								{
+									"name": "custom_roll_up_start",
+									"float64": {
+										"computed_optional_required": "computed_optional",
+										"description": "Custom start date for rollup in days since exposure."
+									}
+								},
+								{
+									"name": "denominator_aggregation",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "Allowed: count┃sum┃mean┃daily_participation┃ratio┃funnel┃count_distinct┃percentile",
+										"validators": [
+											{
+												"custom": {
+													"imports": [
+														{
+															"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+														}
+													],
+													"schema_definition": "stringvalidator.OneOf(\n\"count\",\n\"sum\",\n\"mean\",\n\"daily_participation\",\n\"ratio\",\n\"funnel\",\n\"count_distinct\",\n\"percentile\",\n\"first_value\",\n\"latest_value\",\n\"retention\",\n\"max\",\n\"min\",\n\"\",\n)"
+												}
+											}
+										]
+									}
+								},
+								{
+									"name": "denominator_criteria",
+									"list_nested": {
+										"computed_optional_required": "computed_optional",
+										"nested_object": {
+											"attributes": [
+												{
+													"name": "column",
+													"string": {
+														"computed_optional_required": "computed_optional",
+														"description": "Optional column specifying which data attribute to filter on."
+													}
+												},
+												{
+													"name": "condition",
+													"string": {
+														"computed_optional_required": "required",
+														"description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native",
+														"validators": [
+															{
+																"custom": {
+																	"imports": [
+																		{
+																			"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+																		}
+																	],
+																	"schema_definition": "stringvalidator.OneOf(\n\"in\",\n\"not_in\",\n\"=\",\n\"\u003e\",\n\"\u003c\",\n\"\u003e=\",\n\"\u003c=\",\n\"is_null\",\n\"non_null\",\n\"contains\",\n\"not_contains\",\n\"sql_filter\",\n\"starts_with\",\n\"ends_with\",\n\"after_exposure\",\n\"is_true\",\n\"is_false\",\n)"
+																}
+															}
+														]
+													}
+												},
+												{
+													"name": "null_vacuous_override",
+													"bool": {
+														"computed_optional_required": "computed_optional",
+														"description": "If true, overrides null values in criterion evaluation."
+													}
+												},
+												{
+													"name": "type",
+													"string": {
+														"computed_optional_required": "required",
+														"description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`.",
+														"validators": [
+															{
+																"custom": {
+																	"imports": [
+																		{
+																			"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+																		}
+																	],
+																	"schema_definition": "stringvalidator.OneOf(\n\"value\",\n\"metadata\",\n\"user\",\n\"user_custom\",\n)"
+																}
+															}
+														]
+													}
+												},
+												{
+													"name": "values",
+													"list": {
+														"computed_optional_required": "computed_optional",
+														"element_type": {
+															"string": {}
+														},
+														"description": "Optional array of values for the criterion to match against."
+													}
+												}
+											]
+										},
+										"description": "Filtering criteria for the denominator metric source, if this metric is a ratio"
+									}
+								},
+								{
+									"name": "denominator_custom_rollup_end",
+									"float64": {
+										"computed_optional_required": "computed_optional",
+										"description": "Custom end date for rollup in days since exposure."
+									}
+								},
+								{
+									"name": "denominator_custom_rollup_start",
+									"float64": {
+										"computed_optional_required": "computed_optional",
+										"description": "Custom start date for rollup in days since exposure."
+									}
+								},
+								{
+									"name": "denominator_metric_source_name",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "Name of the metric source for the denominator."
+									}
+								},
+								{
+									"name": "denominator_rollup_time_window",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "Time window for the denominator metric. Specify \"custom\" for a custom window."
+									}
+								},
+								{
+									"name": "denominator_value_column",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "Column name for the denominator’s value."
+									}
+								},
+								{
+									"name": "funnel_calculation_window",
+									"float64": {
+										"computed_optional_required": "computed_optional",
+										"description": "Duration for counting funnel events in days."
+									}
+								},
+								{
+									"name": "funnel_count_distinct",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "Allowed: users┃sessions for distinct count method in funnel events.",
+										"validators": [
+											{
+												"custom": {
+													"imports": [
+														{
+															"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+														}
+													],
+													"schema_definition": "stringvalidator.OneOf(\n\"sessions\",\n\"users\",\n)"
+												}
+											}
+										]
+									}
+								},
+								{
+									"name": "funnel_events",
+									"list_nested": {
+										"computed_optional_required": "computed_optional",
+										"nested_object": {
+											"attributes": [
+												{
+													"name": "criteria",
+													"list_nested": {
+														"computed_optional_required": "computed_optional",
+														"nested_object": {
+															"attributes": [
+																{
+																	"name": "column",
+																	"string": {
+																		"computed_optional_required": "computed_optional",
+																		"description": "Optional column specifying which data attribute to filter on."
+																	}
+																},
+																{
+																	"name": "condition",
+																	"string": {
+																		"computed_optional_required": "required",
+																		"description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native",
+																		"validators": [
+																			{
+																				"custom": {
+																					"imports": [
+																						{
+																							"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+																						}
+																					],
+																					"schema_definition": "stringvalidator.OneOf(\n\"in\",\n\"not_in\",\n\"=\",\n\"\u003e\",\n\"\u003c\",\n\"\u003e=\",\n\"\u003c=\",\n\"is_null\",\n\"non_null\",\n\"contains\",\n\"not_contains\",\n\"sql_filter\",\n\"starts_with\",\n\"ends_with\",\n\"after_exposure\",\n\"is_true\",\n\"is_false\",\n)"
+																				}
+																			}
+																		]
+																	}
+																},
+																{
+																	"name": "null_vacuous_override",
+																	"bool": {
+																		"computed_optional_required": "computed_optional",
+																		"description": "If true, overrides null values in criterion evaluation."
+																	}
+																},
+																{
+																	"name": "type",
+																	"string": {
+																		"computed_optional_required": "required",
+																		"description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`.",
+																		"validators": [
+																			{
+																				"custom": {
+																					"imports": [
+																						{
+																							"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+																						}
+																					],
+																					"schema_definition": "stringvalidator.OneOf(\n\"value\",\n\"metadata\",\n\"user\",\n\"user_custom\",\n)"
+																				}
+																			}
+																		]
+																	}
+																},
+																{
+																	"name": "values",
+																	"list": {
+																		"computed_optional_required": "computed_optional",
+																		"element_type": {
+																			"string": {}
+																		},
+																		"description": "Optional array of values for the criterion to match against."
+																	}
+																}
+															]
+														},
+														"description": "Optional array of criteria to filter the funnel events, defined by various types and conditions."
+													}
+												},
+												{
+													"name": "metric_source_name",
+													"string": {
+														"computed_optional_required": "computed_optional",
+														"description": "Optional name of the metric source associated with the funnel event."
+													}
+												},
+												{
+													"name": "name",
+													"string": {
+														"computed_optional_required": "computed_optional",
+														"description": "Optional step name for the funnel event, can be null if not specified."
+													}
+												},
+												{
+													"name": "session_identifier_field",
+													"string": {
+														"computed_optional_required": "computed_optional",
+														"description": "Name of column which being used as session identifier. Funnel event with the same metric source"
+													}
+												}
+											]
+										},
+										"description": "List of funnel events with associated criteria and identifiers."
+									}
+								},
+								{
+									"name": "funnel_start_criteria",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "Allowed: start_event┃exposure to determine funnel start criteria.",
+										"validators": [
+											{
+												"custom": {
+													"imports": [
+														{
+															"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+														}
+													],
+													"schema_definition": "stringvalidator.OneOf(\n\"start_event\",\n\"exposure\",\n)"
+												}
+											}
+										]
+									}
+								},
+								{
+									"name": "metric_bake_days",
+									"float64": {
+										"computed_optional_required": "computed_optional",
+										"description": "Number of days for metric baking; specify duration for analysis."
+									}
+								},
+								{
+									"name": "metric_dimension_columns",
+									"list": {
+										"computed_optional_required": "computed_optional",
+										"element_type": {
+											"string": {}
+										},
+										"description": "Specify metadata columns for breaking down metric analysis."
+									}
+								},
+								{
+									"name": "metric_source_name",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "For Count, Sum, Mean, User Count aggregation types: the name of metric source"
+									}
+								},
+								{
+									"name": "numerator_aggregation",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "Aggregation type for numerator; Allowed: count┃sum┃mean┃daily_participation┃ratio┃funnel┃count_distinct┃percentile.",
+										"validators": [
+											{
+												"custom": {
+													"imports": [
+														{
+															"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+														}
+													],
+													"schema_definition": "stringvalidator.OneOf(\n\"count\",\n\"sum\",\n\"mean\",\n\"daily_participation\",\n\"ratio\",\n\"funnel\",\n\"count_distinct\",\n\"percentile\",\n\"first_value\",\n\"latest_value\",\n\"retention\",\n\"max\",\n\"min\",\n\"\",\n)"
+												}
+											}
+										]
+									}
+								},
+								{
+									"name": "only_include_users_with_conversion_event",
+									"bool": {
+										"computed_optional_required": "computed_optional",
+										"description": "Flag to include only users with a conversion event in the metric."
+									}
+								},
+								{
+									"name": "percentile",
+									"float64": {
+										"computed_optional_required": "computed_optional",
+										"description": "Percentile value for statistical calculations."
+									}
+								},
+								{
+									"name": "rollup_time_window",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "General time window for rollup; can specify custom settings."
+									}
+								},
+								{
+									"name": "value_column",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "Column name representing the metric’s value."
+									}
+								},
+								{
+									"name": "value_threshold",
+									"float64": {
+										"computed_optional_required": "computed_optional",
+										"description": "Threshold value for filtering metrics."
+									}
+								},
+								{
+									"name": "wait_for_cohort_window",
+									"bool": {
+										"computed_optional_required": "computed_optional"
+									}
+								},
+								{
+									"name": "winsorization_high",
+									"float64": {
+										"computed_optional_required": "computed_optional",
+										"description": "High threshold for winsorization; must be between 0 and 1."
+									}
+								},
+								{
+									"name": "winsorization_low",
+									"float64": {
+										"computed_optional_required": "computed_optional",
+										"description": "Low threshold for winsorization; must be between 0 and 1."
+									}
+								}
+							],
+							"description": "Defines warehouse native metrics for advanced configurations."
+						}
+					},
+					{
+						"name": "id",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "id"
+						}
+					}
+				]
+			}
+		},
+		{
 			"name": "metric_source",
 			"schema": {
 				"attributes": [
