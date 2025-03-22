@@ -101,8 +101,22 @@ func FloatToFloatValue(value float64) basetypes.Float64Value {
 	return types.Float64Value(value)
 }
 
+func NilableFloatToFloatValue(value *float64) basetypes.Float64Value {
+	if value == nil {
+		return types.Float64Null()
+	}
+	return types.Float64Value(*value)
+}
+
 func FloatFromFloatValue(value types.Float64) float64 {
 	return value.ValueFloat64()
+}
+
+func NilableFloatFromFloatValue(value types.Float64) *float64 {
+	if value.IsNull() || value.IsUnknown() {
+		return nil
+	}
+	return value.ValueFloat64Pointer()
 }
 
 func BoolToBoolValue(value bool) basetypes.BoolValue {

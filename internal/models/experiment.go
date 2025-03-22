@@ -13,50 +13,50 @@ import (
 
 // API data model for ExperimentModel
 type ExperimentAPIModel struct {
-	Allocation                     float64          `json:"allocation"`
-	AllocationDuration             *int64           `json:"allocationDuration,omitempty"`
-	AnalysisEndTime                string           `json:"analysisEndTime,omitempty"`
-	AnalyticsType                  string           `json:"analyticsType,omitempty"`
-	AssignmentSourceExperimentName string           `json:"assignmentSourceExperimentName,omitempty"`
-	AssignmentSourceName           string           `json:"assignmentSourceName,omitempty"`
-	BenjaminiHochbergPerMetric     *bool            `json:"benjaminiHochbergPerMetric,omitempty"`
-	BenjaminiHochbergPerVariant    *bool            `json:"benjaminiHochbergPerVariant,omitempty"`
-	BenjaminiPrimaryMetricsOnly    *bool            `json:"benjaminiPrimaryMetricsOnly,omitempty"`
-	BonferroniCorrection           bool             `json:"bonferroniCorrection"`
-	BonferroniCorrectionPerMetric  *bool            `json:"bonferroniCorrectionPerMetric,omitempty"`
-	CohortWaitUntilEndToInclude    *bool            `json:"cohortWaitUntilEndToInclude,omitempty"`
-	CohortedAnalysisDuration       *int64           `json:"cohortedAnalysisDuration,omitempty"`
-	CohortedMetricsMatureAfterEnd  *bool            `json:"cohortedMetricsMatureAfterEnd,omitempty"`
-	ControlGroupId                 string           `json:"controlGroupID,omitempty"`
-	CreatorEmail                   string           `json:"creatorEmail,omitempty"`
-	CreatorId                      string           `json:"creatorID,omitempty"`
-	DefaultConfidenceInterval      string           `json:"defaultConfidenceInterval,omitempty"`
-	Description                    string           `json:"description"`
-	Duration                       *int64           `json:"duration,omitempty"`
-	FixedAnalysisDuration          *int64           `json:"fixedAnalysisDuration,omitempty"`
-	Groups                         []GroupAPIModel  `json:"groups"`
-	Hypothesis                     string           `json:"hypothesis"`
-	Id                             string           `json:"id,omitempty"`
-	IdType                         string           `json:"idType"`
-	IsAnalysisOnly                 *bool            `json:"isAnalysisOnly,omitempty"`
-	LaunchedGroupId                string           `json:"launchedGroupID,omitempty"`
-	LayerId                        string           `json:"layerID,omitempty"`
-	Links                          []LinkAPIModel   `json:"links"`
-	Name                           string           `json:"name"`
-	PrimaryMetricTags              []string         `json:"primaryMetricTags"`
-	PrimaryMetrics                 []MetricAPIModel `json:"primaryMetrics"`
-	ScheduledReloadHour            *int64           `json:"scheduledReloadHour,omitempty"`
-	ScheduledReloadType            string           `json:"scheduledReloadType,omitempty"`
-	SecondaryIdtype                string           `json:"secondaryIDType,omitempty"`
-	SecondaryMetricTags            []string         `json:"secondaryMetricTags"`
-	SecondaryMetrics               []MetricAPIModel `json:"secondaryMetrics"`
-	SequentialTesting              *bool            `json:"sequentialTesting,omitempty"`
-	Status                         string           `json:"status,omitempty"`
-	Tags                           []string         `json:"tags,omitempty"`
-	TargetApps                     []string         `json:"targetApps,omitempty"`
-	TargetExposures                *int64           `json:"targetExposures,omitempty"`
-	TargetingGateId                string           `json:"targetingGateID,omitempty"`
-	Team                           string           `json:"team,omitempty"`
+	Allocation                     float64                    `json:"allocation"`
+	AllocationDuration             *int64                     `json:"allocationDuration,omitempty"`
+	AnalysisEndTime                string                     `json:"analysisEndTime,omitempty"`
+	AnalyticsType                  string                     `json:"analyticsType,omitempty"`
+	AssignmentSourceExperimentName string                     `json:"assignmentSourceExperimentName,omitempty"`
+	AssignmentSourceName           string                     `json:"assignmentSourceName,omitempty"`
+	BenjaminiHochbergPerMetric     *bool                      `json:"benjaminiHochbergPerMetric,omitempty"`
+	BenjaminiHochbergPerVariant    *bool                      `json:"benjaminiHochbergPerVariant,omitempty"`
+	BenjaminiPrimaryMetricsOnly    *bool                      `json:"benjaminiPrimaryMetricsOnly,omitempty"`
+	BonferroniCorrection           bool                       `json:"bonferroniCorrection"`
+	BonferroniCorrectionPerMetric  *bool                      `json:"bonferroniCorrectionPerMetric,omitempty"`
+	CohortWaitUntilEndToInclude    *bool                      `json:"cohortWaitUntilEndToInclude,omitempty"`
+	CohortedAnalysisDuration       *int64                     `json:"cohortedAnalysisDuration,omitempty"`
+	CohortedMetricsMatureAfterEnd  *bool                      `json:"cohortedMetricsMatureAfterEnd,omitempty"`
+	ControlGroupId                 string                     `json:"controlGroupID,omitempty"`
+	CreatorEmail                   string                     `json:"creatorEmail,omitempty"`
+	CreatorId                      string                     `json:"creatorID,omitempty"`
+	DefaultConfidenceInterval      string                     `json:"defaultConfidenceInterval,omitempty"`
+	Description                    string                     `json:"description"`
+	Duration                       *int64                     `json:"duration,omitempty"`
+	FixedAnalysisDuration          *int64                     `json:"fixedAnalysisDuration,omitempty"`
+	Groups                         []GroupAPIModel            `json:"groups"`
+	Hypothesis                     string                     `json:"hypothesis"`
+	Id                             string                     `json:"id,omitempty"`
+	IdType                         string                     `json:"idType"`
+	IsAnalysisOnly                 *bool                      `json:"isAnalysisOnly,omitempty"`
+	LaunchedGroupId                string                     `json:"launchedGroupID,omitempty"`
+	LayerId                        string                     `json:"layerID,omitempty"`
+	Links                          []LinkAPIModel             `json:"links"`
+	Name                           string                     `json:"name"`
+	PrimaryMetricTags              []string                   `json:"primaryMetricTags"`
+	PrimaryMetrics                 []ExperimentMetricAPIModel `json:"primaryMetrics"`
+	ScheduledReloadHour            *int64                     `json:"scheduledReloadHour,omitempty"`
+	ScheduledReloadType            string                     `json:"scheduledReloadType,omitempty"`
+	SecondaryIdtype                string                     `json:"secondaryIDType,omitempty"`
+	SecondaryMetricTags            []string                   `json:"secondaryMetricTags"`
+	SecondaryMetrics               []ExperimentMetricAPIModel `json:"secondaryMetrics"`
+	SequentialTesting              *bool                      `json:"sequentialTesting,omitempty"`
+	Status                         string                     `json:"status,omitempty"`
+	Tags                           []string                   `json:"tags,omitempty"`
+	TargetApps                     []string                   `json:"targetApps,omitempty"`
+	TargetExposures                *int64                     `json:"targetExposures,omitempty"`
+	TargetingGateId                string                     `json:"targetingGateID,omitempty"`
+	Team                           string                     `json:"team,omitempty"`
 }
 
 func ExperimentToAPIModel(ctx context.Context, experiment *resource_experiment.ExperimentModel) ExperimentAPIModel {
@@ -229,15 +229,15 @@ func GroupsFromAPIModel(ctx context.Context, diags diag.Diagnostics, list []Grou
 	}
 }
 
-type MetricAPIModel struct {
+type ExperimentMetricAPIModel struct {
 	Name              string  `json:"name"`
 	Type              string  `json:"type"`
 	Direction         string  `json:"direction,omitempty"`
 	HypothesizedValue float64 `json:"hypothesizedValue,omitempty"`
 }
 
-func PrimaryMetricToAPIModel(ctx context.Context, metric *resource_experiment.PrimaryMetricsValue) MetricAPIModel {
-	return MetricAPIModel{
+func PrimaryMetricToAPIModel(ctx context.Context, metric *resource_experiment.PrimaryMetricsValue) ExperimentMetricAPIModel {
+	return ExperimentMetricAPIModel{
 		Name:              StringFromNilableValue(metric.Name),
 		Type:              StringFromNilableValue(metric.PrimaryMetricsType),
 		Direction:         StringFromNilableValue(metric.Direction),
@@ -245,8 +245,8 @@ func PrimaryMetricToAPIModel(ctx context.Context, metric *resource_experiment.Pr
 	}
 }
 
-func SecondaryMetricToAPIModel(ctx context.Context, metric *resource_experiment.SecondaryMetricsValue) MetricAPIModel {
-	return MetricAPIModel{
+func SecondaryMetricToAPIModel(ctx context.Context, metric *resource_experiment.SecondaryMetricsValue) ExperimentMetricAPIModel {
+	return ExperimentMetricAPIModel{
 		Name:              StringFromNilableValue(metric.Name),
 		Type:              StringFromNilableValue(metric.SecondaryMetricsType),
 		Direction:         StringFromNilableValue(metric.Direction),
@@ -254,26 +254,26 @@ func SecondaryMetricToAPIModel(ctx context.Context, metric *resource_experiment.
 	}
 }
 
-func PrimaryMetricFromAPIModel(ctx context.Context, diags diag.Diagnostics, metric *resource_experiment.PrimaryMetricsValue, res MetricAPIModel) {
+func PrimaryMetricFromAPIModel(ctx context.Context, diags diag.Diagnostics, metric *resource_experiment.PrimaryMetricsValue, res ExperimentMetricAPIModel) {
 	metric.Name = StringToNilableValue(res.Name)
 	metric.PrimaryMetricsType = StringToNilableValue(res.Type)
 	metric.Direction = StringToNilableValue(res.Direction)
 	metric.HypothesizedValue = FloatToFloatValue(res.HypothesizedValue)
 }
 
-func SecondaryMetricFromAPIModel(ctx context.Context, diags diag.Diagnostics, metric *resource_experiment.SecondaryMetricsValue, res MetricAPIModel) {
+func SecondaryMetricFromAPIModel(ctx context.Context, diags diag.Diagnostics, metric *resource_experiment.SecondaryMetricsValue, res ExperimentMetricAPIModel) {
 	metric.Name = StringToNilableValue(res.Name)
 	metric.SecondaryMetricsType = StringToNilableValue(res.Type)
 	metric.Direction = StringToNilableValue(res.Direction)
 	metric.HypothesizedValue = FloatToFloatValue(res.HypothesizedValue)
 }
 
-func MetricsToAPIModel(ctx context.Context, list basetypes.ListValue) []MetricAPIModel {
-	var res []MetricAPIModel
+func MetricsToAPIModel(ctx context.Context, list basetypes.ListValue) []ExperimentMetricAPIModel {
+	var res []ExperimentMetricAPIModel
 	if list.IsNull() || list.IsUnknown() {
-		res = make([]MetricAPIModel, 0)
+		res = make([]ExperimentMetricAPIModel, 0)
 	} else {
-		res = make([]MetricAPIModel, len(list.Elements()))
+		res = make([]ExperimentMetricAPIModel, len(list.Elements()))
 		list.ElementsAs(ctx, &res, false)
 
 		for i, elem := range list.Elements() {
@@ -291,7 +291,7 @@ func MetricsToAPIModel(ctx context.Context, list basetypes.ListValue) []MetricAP
 	return res
 }
 
-func PrimaryMetricsFromAPIModel(ctx context.Context, diags diag.Diagnostics, list []MetricAPIModel) basetypes.ListValue {
+func PrimaryMetricsFromAPIModel(ctx context.Context, diags diag.Diagnostics, list []ExperimentMetricAPIModel) basetypes.ListValue {
 	attrTypes := resource_experiment.PrimaryMetricsValue{}.AttributeTypes(ctx)
 	metricsType := resource_experiment.PrimaryMetricsType{
 		ObjectType: types.ObjectType{
@@ -315,7 +315,7 @@ func PrimaryMetricsFromAPIModel(ctx context.Context, diags diag.Diagnostics, lis
 	}
 }
 
-func SecondaryMetricsFromAPIModel(ctx context.Context, diags diag.Diagnostics, list []MetricAPIModel) basetypes.ListValue {
+func SecondaryMetricsFromAPIModel(ctx context.Context, diags diag.Diagnostics, list []ExperimentMetricAPIModel) basetypes.ListValue {
 	attrTypes := resource_experiment.SecondaryMetricsValue{}.AttributeTypes(ctx)
 	metricsType := resource_experiment.SecondaryMetricsType{
 		ObjectType: types.ObjectType{

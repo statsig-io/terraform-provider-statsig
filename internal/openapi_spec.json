@@ -39611,61 +39611,7 @@
                 "criteria": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "enum": [
-                          "value",
-                          "metadata",
-                          "user",
-                          "user_custom"
-                        ],
-                        "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
-                      },
-                      "column": {
-                        "type": "string",
-                        "description": "Optional column specifying which data attribute to filter on."
-                      },
-                      "condition": {
-                        "type": "string",
-                        "enum": [
-                          "in",
-                          "not_in",
-                          "=",
-                          ">",
-                          "<",
-                          ">=",
-                          "<=",
-                          "is_null",
-                          "non_null",
-                          "contains",
-                          "not_contains",
-                          "sql_filter",
-                          "starts_with",
-                          "ends_with",
-                          "after_exposure",
-                          "is_true",
-                          "is_false"
-                        ],
-                        "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
-                      },
-                      "values": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        },
-                        "description": "Optional array of values for the criterion to match against."
-                      },
-                      "nullVacuousOverride": {
-                        "type": "boolean",
-                        "description": "If true, overrides null values in criterion evaluation."
-                      }
-                    },
-                    "required": [
-                      "type",
-                      "condition"
-                    ]
+                    "$ref": "#/components/schemas/MetricEventsCriteriaDto"
                   },
                   "description": "Filtering criteria for the metric event, including conditions and values to refine the event data."
                 }
@@ -39816,61 +39762,7 @@
               "criteria": {
                 "type": "array",
                 "items": {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "value",
-                        "metadata",
-                        "user",
-                        "user_custom"
-                      ],
-                      "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
-                    },
-                    "column": {
-                      "type": "string",
-                      "description": "Optional column specifying which data attribute to filter on."
-                    },
-                    "condition": {
-                      "type": "string",
-                      "enum": [
-                        "in",
-                        "not_in",
-                        "=",
-                        ">",
-                        "<",
-                        ">=",
-                        "<=",
-                        "is_null",
-                        "non_null",
-                        "contains",
-                        "not_contains",
-                        "sql_filter",
-                        "starts_with",
-                        "ends_with",
-                        "after_exposure",
-                        "is_true",
-                        "is_false"
-                      ],
-                      "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
-                    },
-                    "values": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "Optional array of values for the criterion to match against."
-                    },
-                    "nullVacuousOverride": {
-                      "type": "boolean",
-                      "description": "If true, overrides null values in criterion evaluation."
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "condition"
-                  ]
+                  "$ref": "#/components/schemas/MetricEventsCriteriaDto"
                 },
                 "description": "Filtering criteria for the metric source"
               },
@@ -39880,61 +39772,7 @@
               "denominatorCriteria": {
                 "type": "array",
                 "items": {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "value",
-                        "metadata",
-                        "user",
-                        "user_custom"
-                      ],
-                      "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
-                    },
-                    "column": {
-                      "type": "string",
-                      "description": "Optional column specifying which data attribute to filter on."
-                    },
-                    "condition": {
-                      "type": "string",
-                      "enum": [
-                        "in",
-                        "not_in",
-                        "=",
-                        ">",
-                        "<",
-                        ">=",
-                        "<=",
-                        "is_null",
-                        "non_null",
-                        "contains",
-                        "not_contains",
-                        "sql_filter",
-                        "starts_with",
-                        "ends_with",
-                        "after_exposure",
-                        "is_true",
-                        "is_false"
-                      ],
-                      "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
-                    },
-                    "values": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "Optional array of values for the criterion to match against."
-                    },
-                    "nullVacuousOverride": {
-                      "type": "boolean",
-                      "description": "If true, overrides null values in criterion evaluation."
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "condition"
-                  ]
+                  "$ref": "#/components/schemas/MetricEventsCriteriaDto"
                 },
                 "description": "Filtering criteria for the denominator metric source, if this metric is a ratio"
               },
@@ -39998,61 +39836,7 @@
                     "criteria": {
                       "type": "array",
                       "items": {
-                        "type": "object",
-                        "properties": {
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "value",
-                              "metadata",
-                              "user",
-                              "user_custom"
-                            ],
-                            "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
-                          },
-                          "column": {
-                            "type": "string",
-                            "description": "Optional column specifying which data attribute to filter on."
-                          },
-                          "condition": {
-                            "type": "string",
-                            "enum": [
-                              "in",
-                              "not_in",
-                              "=",
-                              ">",
-                              "<",
-                              ">=",
-                              "<=",
-                              "is_null",
-                              "non_null",
-                              "contains",
-                              "not_contains",
-                              "sql_filter",
-                              "starts_with",
-                              "ends_with",
-                              "after_exposure",
-                              "is_true",
-                              "is_false"
-                            ],
-                            "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
-                          },
-                          "values": {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            },
-                            "description": "Optional array of values for the criterion to match against."
-                          },
-                          "nullVacuousOverride": {
-                            "type": "boolean",
-                            "description": "If true, overrides null values in criterion evaluation."
-                          }
-                        },
-                        "required": [
-                          "type",
-                          "condition"
-                        ]
+                        "$ref": "#/components/schemas/MetricEventsCriteriaDto"
                       },
                       "description": "Optional array of criteria to filter the funnel events, defined by various types and conditions."
                     },
@@ -41840,61 +41624,7 @@
                 "criteria": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "enum": [
-                          "value",
-                          "metadata",
-                          "user",
-                          "user_custom"
-                        ],
-                        "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
-                      },
-                      "column": {
-                        "type": "string",
-                        "description": "Optional column specifying which data attribute to filter on."
-                      },
-                      "condition": {
-                        "type": "string",
-                        "enum": [
-                          "in",
-                          "not_in",
-                          "=",
-                          ">",
-                          "<",
-                          ">=",
-                          "<=",
-                          "is_null",
-                          "non_null",
-                          "contains",
-                          "not_contains",
-                          "sql_filter",
-                          "starts_with",
-                          "ends_with",
-                          "after_exposure",
-                          "is_true",
-                          "is_false"
-                        ],
-                        "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
-                      },
-                      "values": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
-                        },
-                        "description": "Optional array of values for the criterion to match against."
-                      },
-                      "nullVacuousOverride": {
-                        "type": "boolean",
-                        "description": "If true, overrides null values in criterion evaluation."
-                      }
-                    },
-                    "required": [
-                      "type",
-                      "condition"
-                    ]
+                    "$ref": "#/components/schemas/MetricEventsCriteriaDto"
                   },
                   "description": "Filtering criteria for the metric event, including conditions and values to refine the event data."
                 }
@@ -42046,61 +41776,7 @@
               "criteria": {
                 "type": "array",
                 "items": {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "value",
-                        "metadata",
-                        "user",
-                        "user_custom"
-                      ],
-                      "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
-                    },
-                    "column": {
-                      "type": "string",
-                      "description": "Optional column specifying which data attribute to filter on."
-                    },
-                    "condition": {
-                      "type": "string",
-                      "enum": [
-                        "in",
-                        "not_in",
-                        "=",
-                        ">",
-                        "<",
-                        ">=",
-                        "<=",
-                        "is_null",
-                        "non_null",
-                        "contains",
-                        "not_contains",
-                        "sql_filter",
-                        "starts_with",
-                        "ends_with",
-                        "after_exposure",
-                        "is_true",
-                        "is_false"
-                      ],
-                      "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
-                    },
-                    "values": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "Optional array of values for the criterion to match against."
-                    },
-                    "nullVacuousOverride": {
-                      "type": "boolean",
-                      "description": "If true, overrides null values in criterion evaluation."
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "condition"
-                  ]
+                  "$ref": "#/components/schemas/MetricEventsCriteriaDto"
                 },
                 "description": "Filtering criteria for the metric source"
               },
@@ -42110,61 +41786,7 @@
               "denominatorCriteria": {
                 "type": "array",
                 "items": {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "value",
-                        "metadata",
-                        "user",
-                        "user_custom"
-                      ],
-                      "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
-                    },
-                    "column": {
-                      "type": "string",
-                      "description": "Optional column specifying which data attribute to filter on."
-                    },
-                    "condition": {
-                      "type": "string",
-                      "enum": [
-                        "in",
-                        "not_in",
-                        "=",
-                        ">",
-                        "<",
-                        ">=",
-                        "<=",
-                        "is_null",
-                        "non_null",
-                        "contains",
-                        "not_contains",
-                        "sql_filter",
-                        "starts_with",
-                        "ends_with",
-                        "after_exposure",
-                        "is_true",
-                        "is_false"
-                      ],
-                      "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
-                    },
-                    "values": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "Optional array of values for the criterion to match against."
-                    },
-                    "nullVacuousOverride": {
-                      "type": "boolean",
-                      "description": "If true, overrides null values in criterion evaluation."
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "condition"
-                  ]
+                  "$ref": "#/components/schemas/MetricEventsCriteriaDto"
                 },
                 "description": "Filtering criteria for the denominator metric source, if this metric is a ratio"
               },
@@ -42231,61 +41853,7 @@
                     "criteria": {
                       "type": "array",
                       "items": {
-                        "type": "object",
-                        "properties": {
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "value",
-                              "metadata",
-                              "user",
-                              "user_custom"
-                            ],
-                            "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
-                          },
-                          "column": {
-                            "type": "string",
-                            "description": "Optional column specifying which data attribute to filter on."
-                          },
-                          "condition": {
-                            "type": "string",
-                            "enum": [
-                              "in",
-                              "not_in",
-                              "=",
-                              ">",
-                              "<",
-                              ">=",
-                              "<=",
-                              "is_null",
-                              "non_null",
-                              "contains",
-                              "not_contains",
-                              "sql_filter",
-                              "starts_with",
-                              "ends_with",
-                              "after_exposure",
-                              "is_true",
-                              "is_false"
-                            ],
-                            "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
-                          },
-                          "values": {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            },
-                            "description": "Optional array of values for the criterion to match against."
-                          },
-                          "nullVacuousOverride": {
-                            "type": "boolean",
-                            "description": "If true, overrides null values in criterion evaluation."
-                          }
-                        },
-                        "required": [
-                          "type",
-                          "condition"
-                        ]
+                        "$ref": "#/components/schemas/MetricEventsCriteriaDto"
                       },
                       "description": "Optional array of criteria to filter the funnel events, defined by various types and conditions."
                     },
@@ -42431,6 +41999,64 @@
           "type"
         ]
       },
+      "MetricEventsCriteriaDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "value",
+              "metadata",
+              "user",
+              "user_custom"
+            ],
+            "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
+          },
+          "column": {
+            "type": "string",
+            "description": "Optional column specifying which data attribute to filter on."
+          },
+          "condition": {
+            "type": "string",
+            "enum": [
+              "in",
+              "not_in",
+              "=",
+              ">",
+              "<",
+              ">=",
+              "<=",
+              "is_null",
+              "non_null",
+              "contains",
+              "not_contains",
+              "sql_filter",
+              "starts_with",
+              "ends_with",
+              "after_exposure",
+              "is_true",
+              "is_false"
+            ],
+            "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Optional array of values for the criterion to match against."
+          },
+          "nullVacuousOverride": {
+            "type": "boolean",
+            "description": "If true, overrides null values in criterion evaluation."
+          }
+        },
+        "required": [
+          "type",
+          "condition"
+        ],
+        "description": "Array of event criteria for defining filtering conditions in metrics analysis."
+      },
       "MetricValuesDto": {
         "type": "object",
         "properties": {
@@ -42516,61 +42142,7 @@
               "criteria": {
                 "type": "array",
                 "items": {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "value",
-                        "metadata",
-                        "user",
-                        "user_custom"
-                      ],
-                      "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
-                    },
-                    "column": {
-                      "type": "string",
-                      "description": "Optional column specifying which data attribute to filter on."
-                    },
-                    "condition": {
-                      "type": "string",
-                      "enum": [
-                        "in",
-                        "not_in",
-                        "=",
-                        ">",
-                        "<",
-                        ">=",
-                        "<=",
-                        "is_null",
-                        "non_null",
-                        "contains",
-                        "not_contains",
-                        "sql_filter",
-                        "starts_with",
-                        "ends_with",
-                        "after_exposure",
-                        "is_true",
-                        "is_false"
-                      ],
-                      "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
-                    },
-                    "values": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "Optional array of values for the criterion to match against."
-                    },
-                    "nullVacuousOverride": {
-                      "type": "boolean",
-                      "description": "If true, overrides null values in criterion evaluation."
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "condition"
-                  ]
+                  "$ref": "#/components/schemas/MetricEventsCriteriaDto"
                 },
                 "description": "Filtering criteria for the metric source"
               },
@@ -42580,61 +42152,7 @@
               "denominatorCriteria": {
                 "type": "array",
                 "items": {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "enum": [
-                        "value",
-                        "metadata",
-                        "user",
-                        "user_custom"
-                      ],
-                      "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
-                    },
-                    "column": {
-                      "type": "string",
-                      "description": "Optional column specifying which data attribute to filter on."
-                    },
-                    "condition": {
-                      "type": "string",
-                      "enum": [
-                        "in",
-                        "not_in",
-                        "=",
-                        ">",
-                        "<",
-                        ">=",
-                        "<=",
-                        "is_null",
-                        "non_null",
-                        "contains",
-                        "not_contains",
-                        "sql_filter",
-                        "starts_with",
-                        "ends_with",
-                        "after_exposure",
-                        "is_true",
-                        "is_false"
-                      ],
-                      "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
-                    },
-                    "values": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "description": "Optional array of values for the criterion to match against."
-                    },
-                    "nullVacuousOverride": {
-                      "type": "boolean",
-                      "description": "If true, overrides null values in criterion evaluation."
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "condition"
-                  ]
+                  "$ref": "#/components/schemas/MetricEventsCriteriaDto"
                 },
                 "description": "Filtering criteria for the denominator metric source, if this metric is a ratio"
               },
@@ -42701,61 +42219,7 @@
                     "criteria": {
                       "type": "array",
                       "items": {
-                        "type": "object",
-                        "properties": {
-                          "type": {
-                            "type": "string",
-                            "enum": [
-                              "value",
-                              "metadata",
-                              "user",
-                              "user_custom"
-                            ],
-                            "description": "Type of event criterion for filtering metrics. Options include `value`, `metadata`, `user`, and `user_custom`; in Warehouse Native, this should always be `metadata`."
-                          },
-                          "column": {
-                            "type": "string",
-                            "description": "Optional column specifying which data attribute to filter on."
-                          },
-                          "condition": {
-                            "type": "string",
-                            "enum": [
-                              "in",
-                              "not_in",
-                              "=",
-                              ">",
-                              "<",
-                              ">=",
-                              "<=",
-                              "is_null",
-                              "non_null",
-                              "contains",
-                              "not_contains",
-                              "sql_filter",
-                              "starts_with",
-                              "ends_with",
-                              "after_exposure",
-                              "is_true",
-                              "is_false"
-                            ],
-                            "description": "sql_filter, start_withs, ends_with, and after_exposure are only applicable in Warehouse Native"
-                          },
-                          "values": {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            },
-                            "description": "Optional array of values for the criterion to match against."
-                          },
-                          "nullVacuousOverride": {
-                            "type": "boolean",
-                            "description": "If true, overrides null values in criterion evaluation."
-                          }
-                        },
-                        "required": [
-                          "type",
-                          "condition"
-                        ]
+                        "$ref": "#/components/schemas/MetricEventsCriteriaDto"
                       },
                       "description": "Optional array of criteria to filter the funnel events, defined by various types and conditions."
                     },
