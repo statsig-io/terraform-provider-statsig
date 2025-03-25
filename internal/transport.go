@@ -12,11 +12,11 @@ import (
 )
 
 type Transport struct {
-	ctx      context.Context
-	api      string
-	apiKey   string
-	metadata statsigMetadata
-	client   *http.Client
+	ctx     context.Context
+	api     string
+	apiKey  string
+	version StatsigProviderVersion
+	client  *http.Client
 }
 
 type Response struct {
@@ -30,12 +30,12 @@ type APIResponse struct {
 	Response
 }
 
-func NewTransport(_ context.Context, apiKey string) *Transport {
+func NewTransport(_ context.Context, apiKey string, version StatsigProviderVersion) *Transport {
 	return &Transport{
-		api:      "https://api.statsig.com/console/v1",
-		apiKey:   apiKey,
-		metadata: getStatsigMetadata(),
-		client:   &http.Client{Timeout: time.Second * 10},
+		api:     "https://api.statsig.com/console/v1",
+		apiKey:  apiKey,
+		version: version,
+		client:  &http.Client{Timeout: time.Second * 10},
 	}
 }
 
@@ -106,7 +106,7 @@ func (t *Transport) buildRequest(method, endpoint string, body interface{}) (*ht
 	if method == "POST" || method == "PATCH" {
 		req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	}
-	req.Header.Add("STATSIG-SDK-TYPE", t.metadata.SDKType)
-	req.Header.Add("STATSIG-SDK-VERSION", t.metadata.SDKVersion)
+	req.Header.Add("STATSIG-SDK-TYPE", "terraform-provider")
+	req.Header.Add("STATSIG-SDK-VERSION", string(t.version))
 	return req, nil
 }

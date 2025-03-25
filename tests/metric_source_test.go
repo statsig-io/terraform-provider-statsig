@@ -12,8 +12,7 @@ import (
 
 func TestAccMetricSourceQuery(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		ProtoV6ProviderFactories: protoV6ProviderFactories(),
-		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProviders(t, TestOptions{isWHN: true}),
 		Steps: []resource.TestStep{
 			{
 				ConfigFile: config.StaticFile("test_resources/metric_source_query.tf"),
@@ -36,8 +35,7 @@ func TestAccMetricSourceQuery(t *testing.T) {
 
 func TestAccMetricSourceTable(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		ProtoV6ProviderFactories: protoV6ProviderFactories(),
-		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProviders(t, TestOptions{isWHN: true}),
 		Steps: []resource.TestStep{
 			{
 				ConfigFile: config.StaticFile("test_resources/metric_source_table.tf"),

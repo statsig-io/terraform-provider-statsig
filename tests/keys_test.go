@@ -16,8 +16,7 @@ func TestAccServerKey(t *testing.T) {
 	var key string
 
 	resource.Test(t, resource.TestCase{
-		ProtoV6ProviderFactories: protoV6ProviderFactories(),
-		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProviders(t, TestOptions{}),
 		Steps: []resource.TestStep{
 			{
 				Config: string(serverKey),
@@ -63,8 +62,7 @@ func TestAccClientKey(t *testing.T) {
 	var key string
 
 	resource.Test(t, resource.TestCase{
-		ProtoV6ProviderFactories: protoV6ProviderFactories(),
-		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProviders(t, TestOptions{}),
 		Steps: []resource.TestStep{
 			{
 				Config: string(clientKey),
@@ -112,8 +110,7 @@ func TestAccConsoleKey(t *testing.T) {
 	var key string
 
 	resource.Test(t, resource.TestCase{
-		ProtoV6ProviderFactories: protoV6ProviderFactories(),
-		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProviders(t, TestOptions{}),
 		Steps: []resource.TestStep{
 			{
 				Config: string(consoleKey),

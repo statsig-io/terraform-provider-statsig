@@ -11,8 +11,7 @@ import (
 
 func TestAccMultiConfig(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		ProtoV6ProviderFactories: protoV6ProviderFactories(),
-		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProviders(t, TestOptions{}),
 		Steps: []resource.TestStep{
 			{
 				ConfigFile: config.StaticFile("test_resources/multi_config.tf"),

@@ -13,9 +13,13 @@ require (
 	github.com/hashicorp/go-retryablehttp v0.7.7 // indirect
 	github.com/hashicorp/terraform-plugin-log v0.9.0 // indirect
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.36.1 // indirect
+	github.com/statsig-io/go-sdk v1.35.0 // indirect
+	github.com/statsig-io/ip3country-go v0.2.0 // indirect
+	github.com/ua-parser/uap-go v0.0.0-20211112212520-00c877edfe0f // indirect
 	golang.org/x/sync v0.11.0 // indirect
 	golang.org/x/tools v0.30.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
 require (

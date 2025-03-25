@@ -12,8 +12,7 @@ import (
 
 func TestAccEntityPropertyFull(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		ProtoV6ProviderFactories: protoV6ProviderFactories(),
-		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProviders(t, TestOptions{isWHN: true}),
 		Steps: []resource.TestStep{
 			{
 				ConfigFile: config.StaticFile("test_resources/entity_property_full.tf"),

@@ -14,13 +14,32 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
+type StatsigProviderVersion string
+
+const (
+	Test StatsigProviderVersion = "test"
+	Prod StatsigProviderVersion = "1.0.0"
+)
+
 var _ provider.Provider = (*StatsigProvider)(nil)
 
 func New() provider.Provider {
-	return &StatsigProvider{}
+	return &StatsigProvider{
+		Version: Prod,
+	}
 }
 
-type StatsigProvider struct{}
+func NewTestProvider(apiKey string) provider.Provider {
+	return &StatsigProvider{
+		Version: Test,
+		APIKey:  apiKey,
+	}
+}
+
+type StatsigProvider struct {
+	Version StatsigProviderVersion
+	APIKey  string
+}
 
 type StatsigProviderModel struct {
 	apiKey types.String `tfsdk:"console_api_key"`
@@ -45,10 +64,12 @@ func (p *StatsigProvider) Schema(ctx context.Context, req provider.SchemaRequest
 }
 
 func (p *StatsigProvider) Configure(ctx context.Context, req provider.ConfigureRequest, resp *provider.ConfigureResponse) {
-	// Check environment variables
-	apiKey := os.Getenv("STATSIG_CONSOLE_KEY")
-	if apiKey == "" {
-		apiKey = os.Getenv("statsig_console_key")
+	if p.Version != Test {
+		// Check environment variables
+		p.APIKey = os.Getenv("STATSIG_CONSOLE_KEY")
+		if p.APIKey == "" {
+			p.APIKey = os.Getenv("statsig_console_key")
+		}
 	}
 
 	var data StatsigProviderModel
@@ -61,10 +82,10 @@ func (p *StatsigProvider) Configure(ctx context.Context, req provider.ConfigureR
 	// Check configuration data, which should take precedence over
 	// environment variable data, if found.
 	if data.apiKey.ValueString() != "" {
-		apiKey = data.apiKey.ValueString()
+		p.APIKey = data.apiKey.ValueString()
 	}
 
-	if apiKey == "" {
+	if p.APIKey == "" {
 		resp.Diagnostics.AddError(
 			"Missing Console API Key Configuration",
 			"While configuring the provider, the Console API key was not found in "+
@@ -74,7 +95,7 @@ func (p *StatsigProvider) Configure(ctx context.Context, req provider.ConfigureR
 	}
 
 	resp.ResourceData = &StatsigResourceData{
-		transport: NewTransport(ctx, apiKey),
+		transport: NewTransport(ctx, p.APIKey, p.Version),
 	}
 }
 
