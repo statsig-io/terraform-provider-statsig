@@ -58,3 +58,56 @@ func verifyEventCountMetricSetup(t *testing.T, name string) resource.TestCheckFu
 		return nil
 	}
 }
+
+func TestAccWarehouseNativeMetric(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		ProtoV6ProviderFactories: testAccProviders(t, TestOptions{isWHN: true}),
+		Steps: []resource.TestStep{
+			{
+				ConfigFile: config.StaticFile("test_resources/metric_warehouse_native.tf"),
+				Check: resource.ComposeTestCheckFunc(
+					verifyWarehouseNativeMetricSetup(t, "statsig_metric.warehouse_native_metric"),
+				),
+			},
+			{
+				ConfigFile: config.StaticFile("test_resources/metric_warehouse_native.tf"),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+func verifyWarehouseNativeMetricSetup(t *testing.T, name string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, _ := s.RootModule().Resources[name]
+		local := rs.Primary.Attributes
+
+		assert.Equal(t, "A short description of this metric.", local["description"])
+		assert.Equal(t, "increase", local["directionality"])
+		assert.Equal(t, "false", local["is_permanent"])
+		assert.Equal(t, "false", local["is_read_only"])
+		assert.Equal(t, "false", local["is_verified"])
+		assert.Equal(t, "shoppy_events", local["warehouse_native.metric_source_name"])
+		assert.Equal(t, "count", local["warehouse_native.aggregation"])
+		assert.Equal(t, "1", local["warehouse_native.criteria.#"])
+		assert.Equal(t, "metadata", local["warehouse_native.criteria.0.type"])
+		assert.Equal(t, "event", local["warehouse_native.criteria.0.column"])
+		assert.Equal(t, "=", local["warehouse_native.criteria.0.condition"])
+		assert.Equal(t, "1", local["warehouse_native.criteria.0.values.#"])
+		assert.Equal(t, "add_to_cart", local["warehouse_native.criteria.0.values.0"])
+		assert.Equal(t, "7", local["warehouse_native.cuped_attribution_window"])
+		assert.Equal(t, "150", local["warehouse_native.cap"])
+		assert.Equal(t, "Warehouse Native Metric", local["name"])
+		assert.Equal(t, "1", local["tags.#"])
+		assert.Equal(t, "test-tag", local["tags.0"])
+		assert.Equal(t, "user_warehouse", local["type"])
+		assert.Equal(t, "1", local["unit_types.#"])
+		assert.Equal(t, "userID", local["unit_types.0"])
+
+		return nil
+	}
+}
