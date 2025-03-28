@@ -32,7 +32,7 @@ install: build
 	mv ${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
 setup-test-projects: 
-	go run tests/setup/main.go
+	cd tests/setup && go install && go run main.go && cd ../..
 
 testacc: install
 	TF_ACC=1 go test -v ./... -timeout 120m
@@ -40,3 +40,23 @@ testacc: install
 sweep:
 	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."
 	TF_ACC=1 go test $(TEST) -v ./... -sweep=all
+
+generate-provider:
+	tfplugingen-openapi generate \
+    --config internal/generator_config.yml \
+    --output internal/provider_code_spec.json \
+    internal/openapi_spec.json
+
+generate-resources:
+	tfplugingen-framework generate resources \
+		--input internal/provider_code_spec.json \
+		--output internal
+
+generate-scaffold:
+	tfplugingen-framework scaffold resource \
+    --name $(resource) \
+    --force \
+    --output-dir internal
+
+generate-docs:
+	cd tools && go install github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs && cd .. && tfplugindocs generate
