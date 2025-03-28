@@ -7,7 +7,11 @@ description: |-
 
 # statsig_experiment (Resource)
 
+This resource allows you to configure experiments for your Statsig project.
 
+To learn more about experiments, see [Experiments Documentation](https://docs.statsig.com/experiments-plus/)
+
+To learn more about the API powering this resource, see [Experiments API Documentation](https://docs.statsig.com/console-api/experiments)
 
 ## Example Usage
 

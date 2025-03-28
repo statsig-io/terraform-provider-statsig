@@ -7,7 +7,13 @@ description: |-
 
 # statsig_entity_property (Resource)
 
+This resource allows you to configure entity properties for your Statsig project.
 
+To learn more about entity properties, see [Entity Properties Documentation](https://docs.statsig.com/statsig-warehouse-native/features/entity-properties/)
+
+To learn more about the API powering this resource, see [Experiments API Documentation](https://docs.statsig.com/console-api/experiments)
+
+-> Note: This resource is only available for [Warehouse Native](https://docs.statsig.com/statsig-warehouse-native/introduction/) projects
 
 ## Example Usage
 

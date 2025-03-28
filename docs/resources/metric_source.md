@@ -7,7 +7,13 @@ description: |-
 
 # statsig_metric_source (Resource)
 
+This resource allows you to configure metric sources for your Statsig project.
 
+To learn more about metric sources, see [Metric Source Documentation](https://docs.statsig.com/statsig-warehouse-native/configuration/metric-sources)
+
+To learn more about the API powering this resource, see [Metrics API Documentation](https://docs.statsig.com/console-api/metrics)
+
+-> Note: This resource is only available for [Warehouse Native](https://docs.statsig.com/statsig-warehouse-native/introduction/) projects
 
 ## Example Usage
 
