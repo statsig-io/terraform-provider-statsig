@@ -13,7 +13,6 @@ import (
 func TestAccEventCountMetric(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccProviders(t, TestOptions{}),
-		PreCheck:                 testAccPreCheck,
 		Steps: []resource.TestStep{
 			{
 				ConfigFile: config.StaticFile("test_resources/metric_event_count.tf"),

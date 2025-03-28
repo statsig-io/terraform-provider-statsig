@@ -1,0 +1,23 @@
+name: Test Project Setup
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 * * * *
+
+jobs:
+  setup:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-go@v2
+        with:
+          go-version: "1.21"
+
+      - name: Setup Test Projects
+        run: |
+          make setup-test-projects
+        env:
+          statsig_server_key: ${{ secrets.SERVER_SDK_KEY }}

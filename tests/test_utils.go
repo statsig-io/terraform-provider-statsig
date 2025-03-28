@@ -12,7 +12,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-go/tfprotov6"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
-	statsig "github.com/statsig-io/go-sdk"
 )
 
 type TestOptions struct {
@@ -25,12 +24,6 @@ func testAccProviders(t *testing.T, opts TestOptions) map[string]func() (tfproto
 			provider.NewTestProvider(getTestAPIKey(t, opts)),
 		),
 	}
-}
-
-func testAccPreCheck() {
-	statsig.Initialize("secret-PeK3crePyHU5PcKqIn7oGPWX3OiKZiqSMqYAcjQvpTY")
-	statsig.LogEvent(statsig.Event{EventName: "test_event_1", User: statsig.User{UserID: "test_user"}})
-	statsig.Shutdown()
 }
 
 func getTestAPIKey(t *testing.T, opts TestOptions) string {

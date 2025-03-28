@@ -31,6 +31,9 @@ install: build
 	mkdir -p ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 	mv ${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
+setup-test-projects: 
+	go run tests/setup/main.go
+
 testacc: install
 	TF_ACC=1 go test -v ./... -timeout 120m
 
