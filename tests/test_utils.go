@@ -21,7 +21,7 @@ type TestOptions struct {
 func testAccProviders(t *testing.T, opts TestOptions) map[string]func() (tfprotov6.ProviderServer, error) {
 	return map[string]func() (tfprotov6.ProviderServer, error){
 		"statsig": providerserver.NewProtocol6WithError(
-			provider.NewTestProvider(getTestAPIKey(t, opts)),
+			provider.NewTestProvider(getTestAPIKey(t, opts), getTier(t)),
 		),
 	}
 }
@@ -39,6 +39,21 @@ func getTestAPIKey(t *testing.T, opts TestOptions) string {
 		t.Fatal(fmt.Sprintf("%s env var not provided", apiKeyEnv))
 	}
 	return apiKey
+}
+
+func getTier(t *testing.T) provider.ConsoleAPITier {
+	tier, ok := os.LookupEnv("TIER")
+	if tier == string(provider.ProdTier) || !ok {
+		return provider.ProdTier
+	}
+	if tier == string(provider.StagingTier) {
+		return provider.StagingTier
+	}
+	if tier == string(provider.LatestTier) {
+		return provider.LatestTier
+	}
+	t.Fatal("Invalid value provided for TIER env var")
+	return provider.ProdTier
 }
 
 func testAccExtractResourceAttr(name string, attr string, res *string) resource.TestCheckFunc {

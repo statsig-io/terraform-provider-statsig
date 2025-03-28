@@ -31,11 +31,11 @@ install: build
 	mkdir -p ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 	mv ${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
-setup-test-projects: 
+setup-test-projects:
 	cd tests/setup && go install && go run main.go && cd ../..
 
 testacc: install
-	TF_ACC=1 go test -v ./... -timeout 120m
+	TF_ACC=1 TIER=$(TIER) go test -v ./... -timeout 120m
 
 sweep:
 	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."

@@ -30,9 +30,26 @@ type APIResponse struct {
 	Response
 }
 
-func NewTransport(_ context.Context, apiKey string, version StatsigProviderVersion) *Transport {
+const ProdAPI = "https://api.statsig.com/console/v1"
+const StagingAPI = "https://staging.api.statsig.com/console/v1"
+const LatestAPI = "https://latest.api.statsig.com/console/v1"
+
+func getAPI(tier ConsoleAPITier) string {
+	var api string
+	switch tier {
+	case ProdTier:
+		api = ProdAPI
+	case StagingTier:
+		api = StagingAPI
+	case LatestTier:
+		api = LatestAPI
+	}
+	return api
+}
+
+func NewTransport(_ context.Context, apiKey string, version StatsigProviderVersion, tier ConsoleAPITier) *Transport {
 	return &Transport{
-		api:     "https://api.statsig.com/console/v1",
+		api:     getAPI(tier),
 		apiKey:  apiKey,
 		version: version,
 		client:  &http.Client{Timeout: time.Second * 10},

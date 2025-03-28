@@ -21,6 +21,14 @@ const (
 	Prod StatsigProviderVersion = "1.0.0"
 )
 
+type ConsoleAPITier string
+
+const (
+	LatestTier  ConsoleAPITier = "latest"
+	StagingTier ConsoleAPITier = "staging"
+	ProdTier    ConsoleAPITier = ""
+)
+
 var _ provider.Provider = (*StatsigProvider)(nil)
 
 func New() provider.Provider {
@@ -29,16 +37,18 @@ func New() provider.Provider {
 	}
 }
 
-func NewTestProvider(apiKey string) provider.Provider {
+func NewTestProvider(apiKey string, tier ConsoleAPITier) provider.Provider {
 	return &StatsigProvider{
 		Version: Test,
 		APIKey:  apiKey,
+		Tier:    tier,
 	}
 }
 
 type StatsigProvider struct {
 	Version StatsigProviderVersion
 	APIKey  string
+	Tier    ConsoleAPITier
 }
 
 type StatsigProviderModel struct {
@@ -95,7 +105,7 @@ func (p *StatsigProvider) Configure(ctx context.Context, req provider.ConfigureR
 	}
 
 	resp.ResourceData = &StatsigResourceData{
-		transport: NewTransport(ctx, p.APIKey, p.Version),
+		transport: NewTransport(ctx, p.APIKey, p.Version, p.Tier),
 	}
 }
 
