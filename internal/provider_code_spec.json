@@ -2221,6 +2221,178 @@
 					}
 				]
 			}
+		},
+		{
+			"name": "qualifying_event",
+			"schema": {
+				"attributes": [
+					{
+						"name": "custom_field_mapping",
+						"list_nested": {
+							"computed_optional_required": "computed_optional",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "formula",
+										"string": {
+											"computed_optional_required": "required",
+											"description": "The formula or expression used to compute the custom field value."
+										}
+									},
+									{
+										"name": "key",
+										"string": {
+											"computed_optional_required": "required",
+											"description": "The identifier for the custom field mapping."
+										}
+									}
+								]
+							},
+							"description": "Optional array defining mappings for custom fields using specific formulas."
+						}
+					},
+					{
+						"name": "description",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "An optional description for the metric source, providing context and details about its purpose and usage."
+						}
+					},
+					{
+						"name": "id_type_mapping",
+						"list_nested": {
+							"computed_optional_required": "required",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "column",
+										"string": {
+											"computed_optional_required": "required",
+											"description": "The corresponding column name in the source that relates to the Statsig unit ID."
+										}
+									},
+									{
+										"name": "statsig_unit_id",
+										"string": {
+											"computed_optional_required": "required",
+											"description": "The identifier mapping for Statsig units."
+										}
+									}
+								]
+							},
+							"description": "Array defining the mapping between Statsig unit IDs and their respective source columns."
+						}
+					},
+					{
+						"name": "is_read_only",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Specifies if the source can only be edited via the Console API."
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "The name of the metric source, serving as its primary identifier."
+						}
+					},
+					{
+						"name": "owner",
+						"single_nested": {
+							"computed_optional_required": "computed_optional",
+							"attributes": [
+								{
+									"name": "owner_email",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "The email of the owner. This field is optional."
+									}
+								},
+								{
+									"name": "owner_id",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "ID of the owner"
+									}
+								},
+								{
+									"name": "owner_name",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "The name of the owner. This field is optional."
+									}
+								},
+								{
+									"name": "owner_type",
+									"string": {
+										"computed_optional_required": "computed_optional",
+										"description": "Type of the owner (e.g., SDK_KEY or USER)"
+									}
+								}
+							],
+							"description": "Schema for owner data including ID, type, name. Note that if Entity is created by CONSOLE API, owner will be undefined."
+						}
+					},
+					{
+						"name": "source_type",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The type of source, indicating whether it is a database table or a custom query.",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.OneOf(\n\"table\",\n\"query\",\n)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "sql",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "The SQL query or statement used to extract data from the metric source."
+						}
+					},
+					{
+						"name": "table_name",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The name of the database table if the source type is \"table\"."
+						}
+					},
+					{
+						"name": "tags",
+						"list": {
+							"computed_optional_required": "computed_optional",
+							"element_type": {
+								"string": {}
+							},
+							"description": "Optional array of tags to categorize the metric source, facilitating easier organization and retrieval."
+						}
+					},
+					{
+						"name": "timestamp_as_day",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Indicates whether the timestamp should be treated as a day-level granularity."
+						}
+					},
+					{
+						"name": "timestamp_column",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "The name of the column containing timestamp data for the metric source."
+						}
+					}
+				]
+			}
 		}
 	],
 	"version": "0.1"

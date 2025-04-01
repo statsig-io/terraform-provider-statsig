@@ -84,6 +84,24 @@ resources:
         - message
         - data
 
+  qualifying_event:
+    read:
+      path: /console/v1/experiments/qualifying_events/{name}
+      method: GET
+    create:
+      path: /console/v1/experiments/qualifying_events
+      method: POST
+    update:
+      path: /console/v1/experiments/qualifying_events/{name}
+      method: POST
+    delete:
+      path: /console/v1/experiments/qualifying_events/{name}
+      method: DELETE
+    schema:
+      ignores:
+        - message
+        - data
+
   metric_source:
     read:
       path: /console/v1/metrics/metric_source/{name}
