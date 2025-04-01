@@ -12106,6 +12106,813 @@
         ]
       }
     },
+    "/console/v1/experiments/qualifying_events": {
+      "get": {
+        "summary": "List qualifying event",
+        "parameters": [
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "Results per page",
+            "schema": {
+              "example": 10,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "Page number",
+            "schema": {
+              "example": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "x-respect-review-settings",
+            "in": "header",
+            "description": "Optional header to respect review settings for mutation endpoints.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List metric source response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/MetricSourceContractDto"
+                      }
+                    }
+                  },
+                  "example": {
+                    "message": "Qualifying events listed successfully.",
+                    "data": [
+                      {
+                        "name": "Log Events",
+                        "description": "all app events including add to cart, purchase, page view, checkout",
+                        "tags": [],
+                        "sql": "SELECT *\nFROM shoppy-sales.logging.events\nwhere DATE(ts) between {statsig_start_date} and {statsig_end_date}\n",
+                        "timestampColumn": "ts",
+                        "timestampAsDay": false,
+                        "idTypeMapping": [
+                          {
+                            "statsigUnitID": "userID",
+                            "column": "user_id"
+                          },
+                          {
+                            "statsigUnitID": "deviceID",
+                            "column": "device_id"
+                          }
+                        ],
+                        "tableName": "",
+                        "customFieldMapping": [
+                          {
+                            "key": "",
+                            "formula": ""
+                          }
+                        ]
+                      }
+                    ],
+                    "pagination": {
+                      "itemsPerPage": 1,
+                      "pageNumber": 1,
+                      "totalItems": 14,
+                      "nextPage": "/console/v1/metrics/qualifying_event/list?page=2&limit=1",
+                      "previousPage": null,
+                      "all": "/console/v1/metrics/qualifying_event/list"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Qualifying events listed successfully.",
+                  "data": [
+                    {
+                      "name": "Log Events",
+                      "description": "all app events including add to cart, purchase, page view, checkout",
+                      "tags": [],
+                      "sql": "SELECT *\nFROM shoppy-sales.logging.events\nwhere DATE(ts) between {statsig_start_date} and {statsig_end_date}\n",
+                      "timestampColumn": "ts",
+                      "timestampAsDay": false,
+                      "idTypeMapping": [
+                        {
+                          "statsigUnitID": "userID",
+                          "column": "user_id"
+                        },
+                        {
+                          "statsigUnitID": "deviceID",
+                          "column": "device_id"
+                        }
+                      ],
+                      "tableName": "",
+                      "customFieldMapping": [
+                        {
+                          "key": "",
+                          "formula": ""
+                        }
+                      ]
+                    }
+                  ],
+                  "pagination": {
+                    "itemsPerPage": 1,
+                    "pageNumber": 1,
+                    "totalItems": 14,
+                    "nextPage": "/console/v1/metrics/qualifying_event/list?page=2&limit=1",
+                    "previousPage": null,
+                    "all": "/console/v1/metrics/qualifying_event/list"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. Please check the request input and try again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        400
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                },
+                "examples": {
+                  "Invalid Request": {
+                    "value": {
+                      "status": 400,
+                      "message": "Invalid request. Please check the request input and try again."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        401
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                },
+                "examples": {
+                  "Invalid Endpoint": {
+                    "value": {
+                      "status": 401,
+                      "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Experiments (Warehouse Native)",
+          "Experiments (Warehouse Native)"
+        ],
+        "security": [
+          {
+            "STATSIG-API-KEY": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Create Qualifying Event",
+        "parameters": [
+          {
+            "name": "x-respect-review-settings",
+            "in": "header",
+            "description": "Optional header to respect review settings for mutation endpoints.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MetricSourceCreationContractDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Create qualifying event response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MetricSourceContractDto"
+                    }
+                  },
+                  "example": {
+                    "message": "Qualifying event created successfully.",
+                    "data": {
+                      "name": "test_qualifying_event",
+                      "description": "Test description for qualifying event",
+                      "tags": [
+                        "non_production"
+                      ],
+                      "sql": "SELECT * FROM `shoppy-sales.logging.events`",
+                      "timestampColumn": "ts",
+                      "timestampAsDay": true,
+                      "idTypeMapping": [
+                        {
+                          "statsigUnitID": "userID",
+                          "column": "user_id"
+                        }
+                      ],
+                      "sourceType": "table",
+                      "tableName": "shoppy-sales.logging.events"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Qualifying event created successfully.",
+                  "data": {
+                    "name": "test_qualifying_event",
+                    "description": "Test description for qualifying event",
+                    "tags": [
+                      "non_production"
+                    ],
+                    "sql": "SELECT * FROM `shoppy-sales.logging.events`",
+                    "timestampColumn": "ts",
+                    "timestampAsDay": true,
+                    "idTypeMapping": [
+                      {
+                        "statsigUnitID": "userID",
+                        "column": "user_id"
+                      }
+                    ],
+                    "sourceType": "table",
+                    "tableName": "shoppy-sales.logging.events"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. Please check the request input and try again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        400
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                },
+                "examples": {
+                  "Invalid Request": {
+                    "value": {
+                      "status": 400,
+                      "message": "Invalid request. Please check the request input and try again."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        401
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                },
+                "examples": {
+                  "Invalid Endpoint": {
+                    "value": {
+                      "status": 401,
+                      "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Experiments (Warehouse Native)",
+          "Experiments (Warehouse Native)"
+        ],
+        "security": [
+          {
+            "STATSIG-API-KEY": []
+          }
+        ]
+      }
+    },
+    "/console/v1/experiments/qualifying_events/{name}": {
+      "get": {
+        "summary": "Read Qualifying Event",
+        "parameters": [
+          {
+            "name": "name",
+            "required": true,
+            "in": "path",
+            "description": "name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-respect-review-settings",
+            "in": "header",
+            "description": "Optional header to respect review settings for mutation endpoints.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Read Qualifying Event response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MetricSourceContractDto"
+                    }
+                  },
+                  "example": {
+                    "message": "Qualifying event read successfully.",
+                    "data": {
+                      "name": "test_qualifying_event",
+                      "description": "Test description for qualifying event",
+                      "tags": [
+                        "non_production"
+                      ],
+                      "sql": "SELECT * FROM `shoppy-sales.logging.events`",
+                      "timestampColumn": "ts",
+                      "timestampAsDay": true,
+                      "idTypeMapping": [
+                        {
+                          "statsigUnitID": "userID",
+                          "column": "user_id"
+                        }
+                      ],
+                      "sourceType": "table",
+                      "tableName": "shoppy-sales.logging.events"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Qualifying event read successfully.",
+                  "data": {
+                    "name": "test_qualifying_event",
+                    "description": "Test description for qualifying event",
+                    "tags": [
+                      "non_production"
+                    ],
+                    "sql": "SELECT * FROM `shoppy-sales.logging.events`",
+                    "timestampColumn": "ts",
+                    "timestampAsDay": true,
+                    "idTypeMapping": [
+                      {
+                        "statsigUnitID": "userID",
+                        "column": "user_id"
+                      }
+                    ],
+                    "sourceType": "table",
+                    "tableName": "shoppy-sales.logging.events"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. Please check the request input and try again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        400
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                },
+                "examples": {
+                  "Invalid Request": {
+                    "value": {
+                      "status": 400,
+                      "message": "Invalid request. Please check the request input and try again."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        401
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                },
+                "examples": {
+                  "Invalid Endpoint": {
+                    "value": {
+                      "status": 401,
+                      "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Experiments (Warehouse Native)",
+          "Experiments (Warehouse Native)"
+        ],
+        "security": [
+          {
+            "STATSIG-API-KEY": []
+          }
+        ]
+      },
+      "post": {
+        "summary": "Update Qualifying Event",
+        "parameters": [
+          {
+            "name": "name",
+            "required": true,
+            "in": "path",
+            "description": "name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-respect-review-settings",
+            "in": "header",
+            "description": "Optional header to respect review settings for mutation endpoints.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MetricSourceUpdateContractDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Update Qualifying Event response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MetricSourceContractDto"
+                    }
+                  },
+                  "example": {
+                    "message": "Qualifying event updated successfully.",
+                    "data": {
+                      "name": "test_qualifying_event",
+                      "description": "Test description for qualifying event",
+                      "tags": [
+                        "non_production"
+                      ],
+                      "sql": "SELECT * FROM `shoppy-sales.logging.events`",
+                      "timestampColumn": "ts",
+                      "timestampAsDay": true,
+                      "idTypeMapping": [
+                        {
+                          "statsigUnitID": "userID",
+                          "column": "user_id"
+                        }
+                      ],
+                      "sourceType": "table",
+                      "tableName": "shoppy-sales.logging.events"
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Qualifying event updated successfully.",
+                  "data": {
+                    "name": "test_qualifying_event",
+                    "description": "Test description for qualifying event",
+                    "tags": [
+                      "non_production"
+                    ],
+                    "sql": "SELECT * FROM `shoppy-sales.logging.events`",
+                    "timestampColumn": "ts",
+                    "timestampAsDay": true,
+                    "idTypeMapping": [
+                      {
+                        "statsigUnitID": "userID",
+                        "column": "user_id"
+                      }
+                    ],
+                    "sourceType": "table",
+                    "tableName": "shoppy-sales.logging.events"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. Please check the request input and try again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        400
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                },
+                "examples": {
+                  "Invalid Request": {
+                    "value": {
+                      "status": 400,
+                      "message": "Invalid request. Please check the request input and try again."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        401
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                },
+                "examples": {
+                  "Invalid Endpoint": {
+                    "value": {
+                      "status": 401,
+                      "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Experiments (Warehouse Native)",
+          "Experiments (Warehouse Native)"
+        ],
+        "security": [
+          {
+            "STATSIG-API-KEY": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete Qualifying Event",
+        "parameters": [
+          {
+            "name": "name",
+            "required": true,
+            "in": "path",
+            "description": "name",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-respect-review-settings",
+            "in": "header",
+            "description": "Optional header to respect review settings for mutation endpoints.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete Qualifying Event response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "example": {
+                    "message": "Qualifying event deleted successfully."
+                  }
+                },
+                "example": {
+                  "message": "Qualifying event deleted successfully."
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request. Please check the request input and try again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        400
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                },
+                "examples": {
+                  "Invalid Request": {
+                    "value": {
+                      "status": 400,
+                      "message": "Invalid request. Please check the request input and try again."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "enum": [
+                        401
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "message"
+                  ]
+                },
+                "examples": {
+                  "Invalid Endpoint": {
+                    "value": {
+                      "status": 401,
+                      "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Experiments (Warehouse Native)",
+          "Experiments (Warehouse Native)"
+        ],
+        "security": [
+          {
+            "STATSIG-API-KEY": []
+          }
+        ]
+      }
+    },
     "/console/v1/experiments/assignment_sources": {
       "post": {
         "operationId": "ConsoleV1ExperimentsController_genCreateAssignmentSource",
