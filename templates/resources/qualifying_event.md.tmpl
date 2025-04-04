@@ -1,0 +1,22 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{.Name}} ({{.Type}})
+
+This resource allows you to configure qualifying events for your Statsig project.
+
+To learn more about qualifying events, see [Qualifying EVent Documentation](https://docs.statsig.com/statsig-warehouse-native/configuration/qualifying-events)
+
+To learn more about the API powering this resource, see [Experiments API Documentation](https://docs.statsig.com/console-api/experiments)
+
+-> Note: This resource is only available for [Warehouse Native](https://docs.statsig.com/statsig-warehouse-native/introduction/) projects
+
+## Example Usage
+
+{{ tffile (printf "examples/resources/%s/resource.tf" .Name)}}
+
+{{ .SchemaMarkdown | trimspace }}
