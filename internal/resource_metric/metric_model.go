@@ -1,8 +1,8 @@
-package models
+package resource_metric
 
 import (
 	"context"
-	"terraform-provider-statsig/internal/resource_metric"
+	"terraform-provider-statsig/internal/utils"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -35,53 +35,53 @@ type MetricAPIModel struct {
 	WarehouseNative        *WarehouseNativeAPIModel        `json:"warehouseNative,omitempty"`
 }
 
-func MetricToAPIModel(ctx context.Context, metric *resource_metric.MetricModel) MetricAPIModel {
+func MetricToAPIModel(ctx context.Context, metric *MetricModel) MetricAPIModel {
 	return MetricAPIModel{
-		CustomRollUpEnd:        NilableFloatFromFloatValue(metric.CustomRollUpEnd),
-		CustomRollUpStart:      NilableFloatFromFloatValue(metric.CustomRollUpStart),
-		Description:            StringFromNilableValue(metric.Description),
-		Directionality:         StringFromNilableValue(metric.Directionality),
-		DryRun:                 NilableBoolFromBoolValue(metric.DryRun),
-		FunnelCountDistinct:    StringFromNilableValue(metric.FunnelCountDistinct),
+		CustomRollUpEnd:        utils.NilableFloatFromFloatValue(metric.CustomRollUpEnd),
+		CustomRollUpStart:      utils.NilableFloatFromFloatValue(metric.CustomRollUpStart),
+		Description:            utils.StringFromNilableValue(metric.Description),
+		Directionality:         utils.StringFromNilableValue(metric.Directionality),
+		DryRun:                 utils.NilableBoolFromBoolValue(metric.DryRun),
+		FunnelCountDistinct:    utils.StringFromNilableValue(metric.FunnelCountDistinct),
 		FunnelEventList:        FunnelEventsToAPIModel(ctx, metric.FunnelEventList),
-		Id:                     StringFromNilableValue(metric.Id),
-		IsPermanent:            NilableBoolFromBoolValue(metric.IsPermanent),
-		IsReadOnly:             NilableBoolFromBoolValue(metric.IsReadOnly),
-		IsVerified:             NilableBoolFromBoolValue(metric.IsVerified),
+		Id:                     utils.StringFromNilableValue(metric.Id),
+		IsPermanent:            utils.NilableBoolFromBoolValue(metric.IsPermanent),
+		IsReadOnly:             utils.NilableBoolFromBoolValue(metric.IsReadOnly),
+		IsVerified:             utils.NilableBoolFromBoolValue(metric.IsVerified),
 		MetricComponentMetrics: MetricComponentMetricsToAPIModel(ctx, metric.MetricComponentMetrics),
 		MetricEvents:           MetricEventsToAPIModel(ctx, metric.MetricEvents),
-		Name:                   StringFromNilableValue(metric.Name),
-		RollupTimeWindow:       StringFromNilableValue(metric.RollupTimeWindow),
-		Tags:                   StringSliceFromListValue(ctx, metric.Tags),
-		Team:                   StringFromNilableValue(metric.Team),
-		TeamId:                 StringFromNilableValue(metric.TeamId),
-		Type:                   StringFromNilableValue(metric.Type),
-		UnitTypes:              StringSliceFromListValue(ctx, metric.UnitTypes),
+		Name:                   utils.StringFromNilableValue(metric.Name),
+		RollupTimeWindow:       utils.StringFromNilableValue(metric.RollupTimeWindow),
+		Tags:                   utils.StringSliceFromListValue(ctx, metric.Tags),
+		Team:                   utils.StringFromNilableValue(metric.Team),
+		TeamId:                 utils.StringFromNilableValue(metric.TeamId),
+		Type:                   utils.StringFromNilableValue(metric.Type),
+		UnitTypes:              utils.StringSliceFromListValue(ctx, metric.UnitTypes),
 		WarehouseNative:        WarehouseNativeToAPIModel(ctx, metric.WarehouseNative),
 	}
 }
 
-func MetricFromAPIModel(ctx context.Context, diags diag.Diagnostics, metric *resource_metric.MetricModel, res MetricAPIModel) {
-	metric.CustomRollUpEnd = NilableFloatToFloatValue(res.CustomRollUpEnd)
-	metric.CustomRollUpStart = NilableFloatToFloatValue(res.CustomRollUpStart)
-	metric.Description = StringToNilableValue(res.Description)
-	metric.Directionality = StringToNilableValue(res.Directionality)
-	metric.DryRun = NilableBoolToBoolValue(res.DryRun)
-	metric.FunnelCountDistinct = StringToNilableValue(res.FunnelCountDistinct)
+func MetricFromAPIModel(ctx context.Context, diags diag.Diagnostics, metric *MetricModel, res MetricAPIModel) {
+	metric.CustomRollUpEnd = utils.NilableFloatToFloatValue(res.CustomRollUpEnd)
+	metric.CustomRollUpStart = utils.NilableFloatToFloatValue(res.CustomRollUpStart)
+	metric.Description = utils.StringToNilableValue(res.Description)
+	metric.Directionality = utils.StringToNilableValue(res.Directionality)
+	metric.DryRun = utils.NilableBoolToBoolValue(res.DryRun)
+	metric.FunnelCountDistinct = utils.StringToNilableValue(res.FunnelCountDistinct)
 	metric.FunnelEventList = FunnelEventsFromAPIModel(ctx, diags, res.FunnelEventList)
-	metric.Id = StringToNilableValue(res.Id)
-	metric.IsPermanent = NilableBoolToBoolValue(res.IsPermanent)
-	metric.IsReadOnly = NilableBoolToBoolValue(res.IsReadOnly)
-	metric.IsVerified = NilableBoolToBoolValue(res.IsVerified)
+	metric.Id = utils.StringToNilableValue(res.Id)
+	metric.IsPermanent = utils.NilableBoolToBoolValue(res.IsPermanent)
+	metric.IsReadOnly = utils.NilableBoolToBoolValue(res.IsReadOnly)
+	metric.IsVerified = utils.NilableBoolToBoolValue(res.IsVerified)
 	metric.MetricComponentMetrics = MetricComponentMetricsFromAPIModel(ctx, diags, res.MetricComponentMetrics)
 	metric.MetricEvents = MetricEventsFromAPIModel(ctx, diags, res.MetricEvents)
-	metric.Name = StringToNilableValue(res.Name)
-	metric.RollupTimeWindow = StringToNilableValue(res.RollupTimeWindow)
-	metric.Tags = StringSliceToListValue(ctx, diags, res.Tags)
-	metric.Team = StringToNilableValue(res.Team)
-	metric.TeamId = StringToNilableValue(res.TeamId)
-	metric.Type = StringToNilableValue(res.Type)
-	metric.UnitTypes = StringSliceToListValue(ctx, diags, res.UnitTypes)
+	metric.Name = utils.StringToNilableValue(res.Name)
+	metric.RollupTimeWindow = utils.StringToNilableValue(res.RollupTimeWindow)
+	metric.Tags = utils.StringSliceToListValue(ctx, diags, res.Tags)
+	metric.Team = utils.StringToNilableValue(res.Team)
+	metric.TeamId = utils.StringToNilableValue(res.TeamId)
+	metric.Type = utils.StringToNilableValue(res.Type)
+	metric.UnitTypes = utils.StringSliceToListValue(ctx, diags, res.UnitTypes)
 	metric.WarehouseNative = WarehouseNativeFromAPIModel(ctx, diags, res.WarehouseNative)
 }
 
@@ -118,84 +118,84 @@ type WarehouseNativeAPIModel struct {
 	WinsorizationLow                    *float64                             `json:"winsorizationLow,omitempty"`
 }
 
-func WarehouseNativeToAPIModel(ctx context.Context, warehouseNative resource_metric.WarehouseNativeValue) *WarehouseNativeAPIModel {
+func WarehouseNativeToAPIModel(ctx context.Context, warehouseNative WarehouseNativeValue) *WarehouseNativeAPIModel {
 	if warehouseNative.IsNull() {
 		return nil
 	}
 	return &WarehouseNativeAPIModel{
-		Aggregation:                         StringFromNilableValue(warehouseNative.Aggregation),
-		AllowNullRatioDenominator:           NilableBoolFromBoolValue(warehouseNative.AllowNullRatioDenominator),
-		Cap:                                 NilableFloatFromFloatValue(warehouseNative.Cap),
+		Aggregation:                         utils.StringFromNilableValue(warehouseNative.Aggregation),
+		AllowNullRatioDenominator:           utils.NilableBoolFromBoolValue(warehouseNative.AllowNullRatioDenominator),
+		Cap:                                 utils.NilableFloatFromFloatValue(warehouseNative.Cap),
 		Criteria:                            CriteriasToAPIModel(ctx, warehouseNative.Criteria),
-		CupedAttributionWindow:              NilableFloatFromFloatValue(warehouseNative.CupedAttributionWindow),
-		CustomRollUpEnd:                     NilableFloatFromFloatValue(warehouseNative.CustomRollUpEnd),
-		CustomRollUpStart:                   NilableFloatFromFloatValue(warehouseNative.CustomRollUpStart),
-		DenominatorAggregation:              StringFromNilableValue(warehouseNative.DenominatorAggregation),
+		CupedAttributionWindow:              utils.NilableFloatFromFloatValue(warehouseNative.CupedAttributionWindow),
+		CustomRollUpEnd:                     utils.NilableFloatFromFloatValue(warehouseNative.CustomRollUpEnd),
+		CustomRollUpStart:                   utils.NilableFloatFromFloatValue(warehouseNative.CustomRollUpStart),
+		DenominatorAggregation:              utils.StringFromNilableValue(warehouseNative.DenominatorAggregation),
 		DenominatorCriteria:                 CriteriasToAPIModel(ctx, warehouseNative.DenominatorCriteria),
-		DenominatorCustomRollupEnd:          NilableFloatFromFloatValue(warehouseNative.DenominatorCustomRollupEnd),
-		DenominatorCustomRollupStart:        NilableFloatFromFloatValue(warehouseNative.DenominatorCustomRollupStart),
-		DenominatorMetricSourceName:         StringFromNilableValue(warehouseNative.DenominatorMetricSourceName),
-		DenominatorRollupTimeWindow:         StringFromNilableValue(warehouseNative.DenominatorRollupTimeWindow),
-		DenominatorValueColumn:              StringFromNilableValue(warehouseNative.DenominatorValueColumn),
-		FunnelCalculationWindow:             NilableFloatFromFloatValue(warehouseNative.FunnelCalculationWindow),
-		FunnelCountDistinct:                 StringFromNilableValue(warehouseNative.FunnelCountDistinct),
+		DenominatorCustomRollupEnd:          utils.NilableFloatFromFloatValue(warehouseNative.DenominatorCustomRollupEnd),
+		DenominatorCustomRollupStart:        utils.NilableFloatFromFloatValue(warehouseNative.DenominatorCustomRollupStart),
+		DenominatorMetricSourceName:         utils.StringFromNilableValue(warehouseNative.DenominatorMetricSourceName),
+		DenominatorRollupTimeWindow:         utils.StringFromNilableValue(warehouseNative.DenominatorRollupTimeWindow),
+		DenominatorValueColumn:              utils.StringFromNilableValue(warehouseNative.DenominatorValueColumn),
+		FunnelCalculationWindow:             utils.NilableFloatFromFloatValue(warehouseNative.FunnelCalculationWindow),
+		FunnelCountDistinct:                 utils.StringFromNilableValue(warehouseNative.FunnelCountDistinct),
 		FunnelEvents:                        WarehouseNativeFunnelEventsToAPIModel(ctx, warehouseNative.FunnelEvents),
-		FunnelStartCriteria:                 StringFromNilableValue(warehouseNative.FunnelStartCriteria),
-		MetricBakeDays:                      NilableFloatFromFloatValue(warehouseNative.MetricBakeDays),
-		MetricDimensionColumns:              StringSliceFromListValue(ctx, warehouseNative.MetricDimensionColumns),
-		MetricSourceName:                    StringFromNilableValue(warehouseNative.MetricSourceName),
-		NumeratorAggregation:                StringFromNilableValue(warehouseNative.NumeratorAggregation),
-		OnlyIncludeUsersWithConversionEvent: NilableBoolFromBoolValue(warehouseNative.OnlyIncludeUsersWithConversionEvent),
-		Percentile:                          NilableFloatFromFloatValue(warehouseNative.Percentile),
-		RollupTimeWindow:                    StringFromNilableValue(warehouseNative.RollupTimeWindow),
-		ValueColumn:                         StringFromNilableValue(warehouseNative.ValueColumn),
-		ValueThreshold:                      NilableFloatFromFloatValue(warehouseNative.ValueThreshold),
-		WaitForCohortWindow:                 NilableBoolFromBoolValue(warehouseNative.WaitForCohortWindow),
-		WinsorizationHigh:                   NilableFloatFromFloatValue(warehouseNative.WinsorizationHigh),
-		WinsorizationLow:                    NilableFloatFromFloatValue(warehouseNative.WinsorizationLow),
+		FunnelStartCriteria:                 utils.StringFromNilableValue(warehouseNative.FunnelStartCriteria),
+		MetricBakeDays:                      utils.NilableFloatFromFloatValue(warehouseNative.MetricBakeDays),
+		MetricDimensionColumns:              utils.StringSliceFromListValue(ctx, warehouseNative.MetricDimensionColumns),
+		MetricSourceName:                    utils.StringFromNilableValue(warehouseNative.MetricSourceName),
+		NumeratorAggregation:                utils.StringFromNilableValue(warehouseNative.NumeratorAggregation),
+		OnlyIncludeUsersWithConversionEvent: utils.NilableBoolFromBoolValue(warehouseNative.OnlyIncludeUsersWithConversionEvent),
+		Percentile:                          utils.NilableFloatFromFloatValue(warehouseNative.Percentile),
+		RollupTimeWindow:                    utils.StringFromNilableValue(warehouseNative.RollupTimeWindow),
+		ValueColumn:                         utils.StringFromNilableValue(warehouseNative.ValueColumn),
+		ValueThreshold:                      utils.NilableFloatFromFloatValue(warehouseNative.ValueThreshold),
+		WaitForCohortWindow:                 utils.NilableBoolFromBoolValue(warehouseNative.WaitForCohortWindow),
+		WinsorizationHigh:                   utils.NilableFloatFromFloatValue(warehouseNative.WinsorizationHigh),
+		WinsorizationLow:                    utils.NilableFloatFromFloatValue(warehouseNative.WinsorizationLow),
 	}
 }
 
-func WarehouseNativeFromAPIModel(ctx context.Context, diags diag.Diagnostics, warehouseNative *WarehouseNativeAPIModel) resource_metric.WarehouseNativeValue {
+func WarehouseNativeFromAPIModel(ctx context.Context, diags diag.Diagnostics, warehouseNative *WarehouseNativeAPIModel) WarehouseNativeValue {
 	if warehouseNative == nil {
-		return resource_metric.NewWarehouseNativeValueNull()
+		return NewWarehouseNativeValueNull()
 	}
 
-	var res resource_metric.WarehouseNativeValue
-	res.Aggregation = StringToNilableValue(warehouseNative.Aggregation)
-	res.AllowNullRatioDenominator = NilableBoolToBoolValue(warehouseNative.AllowNullRatioDenominator)
-	res.Cap = NilableFloatToFloatValue(warehouseNative.Cap)
+	var res WarehouseNativeValue
+	res.Aggregation = utils.StringToNilableValue(warehouseNative.Aggregation)
+	res.AllowNullRatioDenominator = utils.NilableBoolToBoolValue(warehouseNative.AllowNullRatioDenominator)
+	res.Cap = utils.NilableFloatToFloatValue(warehouseNative.Cap)
 	res.Criteria = CriteriasFromAPIModel(ctx, diags, warehouseNative.Criteria)
-	res.CupedAttributionWindow = NilableFloatToFloatValue(warehouseNative.CupedAttributionWindow)
-	res.CustomRollUpEnd = NilableFloatToFloatValue(warehouseNative.CustomRollUpEnd)
-	res.CustomRollUpStart = NilableFloatToFloatValue(warehouseNative.CustomRollUpStart)
-	res.DenominatorAggregation = StringToNilableValue(warehouseNative.DenominatorAggregation)
+	res.CupedAttributionWindow = utils.NilableFloatToFloatValue(warehouseNative.CupedAttributionWindow)
+	res.CustomRollUpEnd = utils.NilableFloatToFloatValue(warehouseNative.CustomRollUpEnd)
+	res.CustomRollUpStart = utils.NilableFloatToFloatValue(warehouseNative.CustomRollUpStart)
+	res.DenominatorAggregation = utils.StringToNilableValue(warehouseNative.DenominatorAggregation)
 	res.DenominatorCriteria = CriteriasFromAPIModel(ctx, diags, warehouseNative.DenominatorCriteria)
-	res.DenominatorCustomRollupEnd = NilableFloatToFloatValue(warehouseNative.DenominatorCustomRollupEnd)
-	res.DenominatorCustomRollupStart = NilableFloatToFloatValue(warehouseNative.DenominatorCustomRollupStart)
-	res.DenominatorMetricSourceName = StringToNilableValue(warehouseNative.DenominatorMetricSourceName)
-	res.DenominatorRollupTimeWindow = StringToNilableValue(warehouseNative.DenominatorRollupTimeWindow)
-	res.DenominatorValueColumn = StringToNilableValue(warehouseNative.DenominatorValueColumn)
-	res.FunnelCalculationWindow = NilableFloatToFloatValue(warehouseNative.FunnelCalculationWindow)
-	res.FunnelCountDistinct = StringToNilableValue(warehouseNative.FunnelCountDistinct)
+	res.DenominatorCustomRollupEnd = utils.NilableFloatToFloatValue(warehouseNative.DenominatorCustomRollupEnd)
+	res.DenominatorCustomRollupStart = utils.NilableFloatToFloatValue(warehouseNative.DenominatorCustomRollupStart)
+	res.DenominatorMetricSourceName = utils.StringToNilableValue(warehouseNative.DenominatorMetricSourceName)
+	res.DenominatorRollupTimeWindow = utils.StringToNilableValue(warehouseNative.DenominatorRollupTimeWindow)
+	res.DenominatorValueColumn = utils.StringToNilableValue(warehouseNative.DenominatorValueColumn)
+	res.FunnelCalculationWindow = utils.NilableFloatToFloatValue(warehouseNative.FunnelCalculationWindow)
+	res.FunnelCountDistinct = utils.StringToNilableValue(warehouseNative.FunnelCountDistinct)
 	res.FunnelEvents = WarehouseNativeFunnelEventsFromAPIModel(ctx, diags, warehouseNative.FunnelEvents)
-	res.FunnelStartCriteria = StringToNilableValue(warehouseNative.FunnelStartCriteria)
-	res.MetricBakeDays = NilableFloatToFloatValue(warehouseNative.MetricBakeDays)
-	res.MetricDimensionColumns = StringSliceToListValue(ctx, diags, warehouseNative.MetricDimensionColumns)
-	res.MetricSourceName = StringToNilableValue(warehouseNative.MetricSourceName)
-	res.NumeratorAggregation = StringToNilableValue(warehouseNative.NumeratorAggregation)
-	res.OnlyIncludeUsersWithConversionEvent = NilableBoolToBoolValue(warehouseNative.OnlyIncludeUsersWithConversionEvent)
-	res.Percentile = NilableFloatToFloatValue(warehouseNative.Percentile)
-	res.RollupTimeWindow = StringToNilableValue(warehouseNative.RollupTimeWindow)
-	res.ValueColumn = StringToNilableValue(warehouseNative.ValueColumn)
-	res.ValueThreshold = NilableFloatToFloatValue(warehouseNative.ValueThreshold)
-	res.WaitForCohortWindow = NilableBoolToBoolValue(warehouseNative.WaitForCohortWindow)
-	res.WinsorizationHigh = NilableFloatToFloatValue(warehouseNative.WinsorizationHigh)
-	res.WinsorizationLow = NilableFloatToFloatValue(warehouseNative.WinsorizationLow)
+	res.FunnelStartCriteria = utils.StringToNilableValue(warehouseNative.FunnelStartCriteria)
+	res.MetricBakeDays = utils.NilableFloatToFloatValue(warehouseNative.MetricBakeDays)
+	res.MetricDimensionColumns = utils.StringSliceToListValue(ctx, diags, warehouseNative.MetricDimensionColumns)
+	res.MetricSourceName = utils.StringToNilableValue(warehouseNative.MetricSourceName)
+	res.NumeratorAggregation = utils.StringToNilableValue(warehouseNative.NumeratorAggregation)
+	res.OnlyIncludeUsersWithConversionEvent = utils.NilableBoolToBoolValue(warehouseNative.OnlyIncludeUsersWithConversionEvent)
+	res.Percentile = utils.NilableFloatToFloatValue(warehouseNative.Percentile)
+	res.RollupTimeWindow = utils.StringToNilableValue(warehouseNative.RollupTimeWindow)
+	res.ValueColumn = utils.StringToNilableValue(warehouseNative.ValueColumn)
+	res.ValueThreshold = utils.NilableFloatToFloatValue(warehouseNative.ValueThreshold)
+	res.WaitForCohortWindow = utils.NilableBoolToBoolValue(warehouseNative.WaitForCohortWindow)
+	res.WinsorizationHigh = utils.NilableFloatToFloatValue(warehouseNative.WinsorizationHigh)
+	res.WinsorizationLow = utils.NilableFloatToFloatValue(warehouseNative.WinsorizationLow)
 	obj, d := res.ToObjectValue(ctx)
 	diags = append(diags, d...)
-	return resource_metric.NewWarehouseNativeValueMust(
-		resource_metric.WarehouseNativeValue{}.AttributeTypes(ctx),
+	return NewWarehouseNativeValueMust(
+		WarehouseNativeValue{}.AttributeTypes(ctx),
 		obj.Attributes(),
 	)
 }
@@ -207,20 +207,20 @@ type MetricEventAPIModel struct {
 	Type        string             `json:"type,omitempty"`
 }
 
-func MetricEventToAPIModel(ctx context.Context, metricEvent *resource_metric.MetricEventsValue) MetricEventAPIModel {
+func MetricEventToAPIModel(ctx context.Context, metricEvent *MetricEventsValue) MetricEventAPIModel {
 	return MetricEventAPIModel{
 		Criteria:    CriteriasToAPIModel(ctx, metricEvent.Criteria),
-		MetadataKey: StringFromNilableValue(metricEvent.MetadataKey),
-		Name:        StringFromNilableValue(metricEvent.Name),
-		Type:        StringFromNilableValue(metricEvent.MetricEventsType),
+		MetadataKey: utils.StringFromNilableValue(metricEvent.MetadataKey),
+		Name:        utils.StringFromNilableValue(metricEvent.Name),
+		Type:        utils.StringFromNilableValue(metricEvent.MetricEventsType),
 	}
 }
 
-func MetricEventFromAPIModel(ctx context.Context, diags diag.Diagnostics, metricEvents *resource_metric.MetricEventsValue, res MetricEventAPIModel) {
+func MetricEventFromAPIModel(ctx context.Context, diags diag.Diagnostics, metricEvents *MetricEventsValue, res MetricEventAPIModel) {
 	metricEvents.Criteria = CriteriasFromAPIModel(ctx, diags, res.Criteria)
-	metricEvents.MetadataKey = StringToNilableValue(res.MetadataKey)
-	metricEvents.Name = StringToNilableValue(res.Name)
-	metricEvents.MetricEventsType = StringToNilableValue(res.Type)
+	metricEvents.MetadataKey = utils.StringToNilableValue(res.MetadataKey)
+	metricEvents.Name = utils.StringToNilableValue(res.Name)
+	metricEvents.MetricEventsType = utils.StringToNilableValue(res.Type)
 }
 
 func MetricEventsToAPIModel(ctx context.Context, list basetypes.ListValue) []MetricEventAPIModel {
@@ -230,7 +230,7 @@ func MetricEventsToAPIModel(ctx context.Context, list basetypes.ListValue) []Met
 	} else {
 		res = make([]MetricEventAPIModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
-			obj, ok := elem.(resource_metric.MetricEventsValue)
+			obj, ok := elem.(MetricEventsValue)
 			if !ok {
 				return nil
 			}
@@ -242,8 +242,8 @@ func MetricEventsToAPIModel(ctx context.Context, list basetypes.ListValue) []Met
 }
 
 func MetricEventsFromAPIModel(ctx context.Context, diags diag.Diagnostics, list []MetricEventAPIModel) basetypes.ListValue {
-	attrTypes := resource_metric.MetricEventsValue{}.AttributeTypes(ctx)
-	metricEventsType := resource_metric.MetricEventsType{
+	attrTypes := MetricEventsValue{}.AttributeTypes(ctx)
+	metricEventsType := MetricEventsType{
 		ObjectType: types.ObjectType{
 			AttrTypes: attrTypes,
 		},
@@ -253,10 +253,10 @@ func MetricEventsFromAPIModel(ctx context.Context, diags diag.Diagnostics, list 
 	} else {
 		metricEvents := make([]attr.Value, len(list))
 		for i, elem := range list {
-			var metricEvent resource_metric.MetricEventsValue
+			var metricEvent MetricEventsValue
 			MetricEventFromAPIModel(ctx, diags, &metricEvent, elem)
 			obj, d := metricEvent.ToObjectValue(ctx)
-			metricEvents[i] = resource_metric.NewMetricEventsValueMust(attrTypes, obj.Attributes())
+			metricEvents[i] = NewMetricEventsValueMust(attrTypes, obj.Attributes())
 			diags = append(diags, d...)
 		}
 		v, d := types.ListValue(metricEventsType, metricEvents)
@@ -273,22 +273,22 @@ type CriteriaAPIModel struct {
 	Values              []string `json:"values"`
 }
 
-func CriteriaToAPIModel(ctx context.Context, criteria *resource_metric.CriteriaValue) CriteriaAPIModel {
+func CriteriaToAPIModel(ctx context.Context, criteria *CriteriaValue) CriteriaAPIModel {
 	return CriteriaAPIModel{
-		Column:              StringFromNilableValue(criteria.Column),
-		Condition:           StringFromNilableValue(criteria.Condition),
-		NullVacuousOverride: NilableBoolFromBoolValue(criteria.NullVacuousOverride),
-		Type:                StringFromNilableValue(criteria.CriteriaType),
-		Values:              StringSliceFromListValue(ctx, criteria.Values),
+		Column:              utils.StringFromNilableValue(criteria.Column),
+		Condition:           utils.StringFromNilableValue(criteria.Condition),
+		NullVacuousOverride: utils.NilableBoolFromBoolValue(criteria.NullVacuousOverride),
+		Type:                utils.StringFromNilableValue(criteria.CriteriaType),
+		Values:              utils.StringSliceFromListValue(ctx, criteria.Values),
 	}
 }
 
-func CriteriaFromAPIModel(ctx context.Context, diags diag.Diagnostics, criteria *resource_metric.CriteriaValue, res CriteriaAPIModel) {
-	criteria.Column = StringToNilableValue(res.Column)
-	criteria.Condition = StringToNilableValue(res.Condition)
-	criteria.NullVacuousOverride = NilableBoolToBoolValue(res.NullVacuousOverride)
-	criteria.CriteriaType = StringToNilableValue(res.Type)
-	criteria.Values = StringSliceToListValue(ctx, diags, res.Values)
+func CriteriaFromAPIModel(ctx context.Context, diags diag.Diagnostics, criteria *CriteriaValue, res CriteriaAPIModel) {
+	criteria.Column = utils.StringToNilableValue(res.Column)
+	criteria.Condition = utils.StringToNilableValue(res.Condition)
+	criteria.NullVacuousOverride = utils.NilableBoolToBoolValue(res.NullVacuousOverride)
+	criteria.CriteriaType = utils.StringToNilableValue(res.Type)
+	criteria.Values = utils.StringSliceToListValue(ctx, diags, res.Values)
 }
 
 func CriteriasToAPIModel(ctx context.Context, list basetypes.ListValue) []CriteriaAPIModel {
@@ -298,7 +298,7 @@ func CriteriasToAPIModel(ctx context.Context, list basetypes.ListValue) []Criter
 	} else {
 		res = make([]CriteriaAPIModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
-			obj, ok := elem.(resource_metric.CriteriaValue)
+			obj, ok := elem.(CriteriaValue)
 			if !ok {
 				return nil
 			}
@@ -310,8 +310,8 @@ func CriteriasToAPIModel(ctx context.Context, list basetypes.ListValue) []Criter
 }
 
 func CriteriasFromAPIModel(ctx context.Context, diags diag.Diagnostics, list []CriteriaAPIModel) basetypes.ListValue {
-	attrTypes := resource_metric.CriteriaValue{}.AttributeTypes(ctx)
-	criteriaType := resource_metric.CriteriaType{
+	attrTypes := CriteriaValue{}.AttributeTypes(ctx)
+	criteriaType := CriteriaType{
 		ObjectType: types.ObjectType{
 			AttrTypes: attrTypes,
 		},
@@ -321,10 +321,10 @@ func CriteriasFromAPIModel(ctx context.Context, diags diag.Diagnostics, list []C
 	} else {
 		criterias := make([]attr.Value, len(list))
 		for i, elem := range list {
-			var criteria resource_metric.CriteriaValue
+			var criteria CriteriaValue
 			CriteriaFromAPIModel(ctx, diags, &criteria, elem)
 			obj, d := criteria.ToObjectValue(ctx)
-			criterias[i] = resource_metric.NewCriteriaValueMust(attrTypes, obj.Attributes())
+			criterias[i] = NewCriteriaValueMust(attrTypes, obj.Attributes())
 			diags = append(diags, d...)
 		}
 		v, d := types.ListValue(criteriaType, criterias)
@@ -338,16 +338,16 @@ type MetricComponentMetricAPIModel struct {
 	Type string `json:"type"`
 }
 
-func MetricComponentMetricToAPIModel(ctx context.Context, metricComponentMetrics *resource_metric.MetricComponentMetricsValue) MetricComponentMetricAPIModel {
+func MetricComponentMetricToAPIModel(ctx context.Context, metricComponentMetrics *MetricComponentMetricsValue) MetricComponentMetricAPIModel {
 	return MetricComponentMetricAPIModel{
-		Name: StringFromNilableValue(metricComponentMetrics.Name),
-		Type: StringFromNilableValue(metricComponentMetrics.MetricComponentMetricsType),
+		Name: utils.StringFromNilableValue(metricComponentMetrics.Name),
+		Type: utils.StringFromNilableValue(metricComponentMetrics.MetricComponentMetricsType),
 	}
 }
 
-func MetricComponentMetricFromAPIModel(ctx context.Context, diags diag.Diagnostics, metricComponentMetrics *resource_metric.MetricComponentMetricsValue, res MetricComponentMetricAPIModel) {
-	metricComponentMetrics.Name = StringToNilableValue(res.Name)
-	metricComponentMetrics.MetricComponentMetricsType = StringToNilableValue(res.Type)
+func MetricComponentMetricFromAPIModel(ctx context.Context, diags diag.Diagnostics, metricComponentMetrics *MetricComponentMetricsValue, res MetricComponentMetricAPIModel) {
+	metricComponentMetrics.Name = utils.StringToNilableValue(res.Name)
+	metricComponentMetrics.MetricComponentMetricsType = utils.StringToNilableValue(res.Type)
 }
 
 func MetricComponentMetricsToAPIModel(ctx context.Context, list basetypes.ListValue) []MetricComponentMetricAPIModel {
@@ -357,7 +357,7 @@ func MetricComponentMetricsToAPIModel(ctx context.Context, list basetypes.ListVa
 	} else {
 		res = make([]MetricComponentMetricAPIModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
-			obj, ok := elem.(resource_metric.MetricComponentMetricsValue)
+			obj, ok := elem.(MetricComponentMetricsValue)
 			if !ok {
 				return nil
 			}
@@ -369,8 +369,8 @@ func MetricComponentMetricsToAPIModel(ctx context.Context, list basetypes.ListVa
 }
 
 func MetricComponentMetricsFromAPIModel(ctx context.Context, diags diag.Diagnostics, list []MetricComponentMetricAPIModel) basetypes.ListValue {
-	attrTypes := resource_metric.FunnelEventListValue{}.AttributeTypes(ctx)
-	metricComponentMetricsType := resource_metric.MetricComponentMetricsType{
+	attrTypes := FunnelEventListValue{}.AttributeTypes(ctx)
+	metricComponentMetricsType := MetricComponentMetricsType{
 		ObjectType: types.ObjectType{
 			AttrTypes: attrTypes,
 		},
@@ -380,10 +380,10 @@ func MetricComponentMetricsFromAPIModel(ctx context.Context, diags diag.Diagnost
 	} else {
 		metricComponentMetrics := make([]attr.Value, len(list))
 		for i, elem := range list {
-			var metricComponentMetric resource_metric.MetricComponentMetricsValue
+			var metricComponentMetric MetricComponentMetricsValue
 			MetricComponentMetricFromAPIModel(ctx, diags, &metricComponentMetric, elem)
 			obj, d := metricComponentMetric.ToObjectValue(ctx)
-			metricComponentMetrics[i] = resource_metric.NewMetricComponentMetricsValueMust(attrTypes, obj.Attributes())
+			metricComponentMetrics[i] = NewMetricComponentMetricsValueMust(attrTypes, obj.Attributes())
 			diags = append(diags, d...)
 		}
 		v, d := types.ListValue(metricComponentMetricsType, metricComponentMetrics)
@@ -397,16 +397,16 @@ type FunnelEventAPIModel struct {
 	Type string `json:"type"`
 }
 
-func FunnelEventToAPIModel(ctx context.Context, event *resource_metric.FunnelEventListValue) FunnelEventAPIModel {
+func FunnelEventToAPIModel(ctx context.Context, event *FunnelEventListValue) FunnelEventAPIModel {
 	return FunnelEventAPIModel{
-		Name: StringFromNilableValue(event.Name),
-		Type: StringFromNilableValue(event.FunnelEventListType),
+		Name: utils.StringFromNilableValue(event.Name),
+		Type: utils.StringFromNilableValue(event.FunnelEventListType),
 	}
 }
 
-func FunnelEventFromAPIModel(ctx context.Context, diags diag.Diagnostics, event *resource_metric.FunnelEventListValue, res FunnelEventAPIModel) {
-	event.Name = StringToNilableValue(res.Name)
-	event.FunnelEventListType = StringToNilableValue(res.Type)
+func FunnelEventFromAPIModel(ctx context.Context, diags diag.Diagnostics, event *FunnelEventListValue, res FunnelEventAPIModel) {
+	event.Name = utils.StringToNilableValue(res.Name)
+	event.FunnelEventListType = utils.StringToNilableValue(res.Type)
 }
 
 func FunnelEventsToAPIModel(ctx context.Context, list basetypes.ListValue) []FunnelEventAPIModel {
@@ -416,7 +416,7 @@ func FunnelEventsToAPIModel(ctx context.Context, list basetypes.ListValue) []Fun
 	} else {
 		res = make([]FunnelEventAPIModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
-			obj, ok := elem.(resource_metric.FunnelEventListValue)
+			obj, ok := elem.(FunnelEventListValue)
 			if !ok {
 				return nil
 			}
@@ -428,8 +428,8 @@ func FunnelEventsToAPIModel(ctx context.Context, list basetypes.ListValue) []Fun
 }
 
 func FunnelEventsFromAPIModel(ctx context.Context, diags diag.Diagnostics, list []FunnelEventAPIModel) basetypes.ListValue {
-	attrTypes := resource_metric.FunnelEventListValue{}.AttributeTypes(ctx)
-	funnelEventsType := resource_metric.FunnelEventListType{
+	attrTypes := FunnelEventListValue{}.AttributeTypes(ctx)
+	funnelEventsType := FunnelEventListType{
 		ObjectType: types.ObjectType{
 			AttrTypes: attrTypes,
 		},
@@ -439,10 +439,10 @@ func FunnelEventsFromAPIModel(ctx context.Context, diags diag.Diagnostics, list 
 	} else {
 		events := make([]attr.Value, len(list))
 		for i, elem := range list {
-			var event resource_metric.FunnelEventListValue
+			var event FunnelEventListValue
 			FunnelEventFromAPIModel(ctx, diags, &event, elem)
 			obj, d := event.ToObjectValue(ctx)
-			events[i] = resource_metric.NewFunnelEventListValueMust(attrTypes, obj.Attributes())
+			events[i] = NewFunnelEventListValueMust(attrTypes, obj.Attributes())
 			diags = append(diags, d...)
 		}
 		v, d := types.ListValue(funnelEventsType, events)
@@ -458,20 +458,20 @@ type WarehouseNativeFunnelEventAPIModel struct {
 	SessionIdentifierField string             `json:"sessionIdentifierField,omitempty"`
 }
 
-func WarehouseNativeFunnelEventToAPIModel(ctx context.Context, funnelEvent *resource_metric.FunnelEventsValue) WarehouseNativeFunnelEventAPIModel {
+func WarehouseNativeFunnelEventToAPIModel(ctx context.Context, funnelEvent *FunnelEventsValue) WarehouseNativeFunnelEventAPIModel {
 	return WarehouseNativeFunnelEventAPIModel{
 		Criteria:               CriteriasToAPIModel(ctx, funnelEvent.Criteria),
-		MetricSourceName:       StringFromNilableValue(funnelEvent.MetricSourceName),
-		Name:                   StringFromNilableValue(funnelEvent.Name),
-		SessionIdentifierField: StringFromNilableValue(funnelEvent.SessionIdentifierField),
+		MetricSourceName:       utils.StringFromNilableValue(funnelEvent.MetricSourceName),
+		Name:                   utils.StringFromNilableValue(funnelEvent.Name),
+		SessionIdentifierField: utils.StringFromNilableValue(funnelEvent.SessionIdentifierField),
 	}
 }
 
-func WarehouseNativeFunnelEventFromAPIModel(ctx context.Context, diags diag.Diagnostics, event *resource_metric.FunnelEventsValue, res WarehouseNativeFunnelEventAPIModel) {
+func WarehouseNativeFunnelEventFromAPIModel(ctx context.Context, diags diag.Diagnostics, event *FunnelEventsValue, res WarehouseNativeFunnelEventAPIModel) {
 	event.Criteria = CriteriasFromAPIModel(ctx, diags, res.Criteria)
-	event.MetricSourceName = StringToNilableValue(res.MetricSourceName)
-	event.Name = StringToNilableValue(res.Name)
-	event.SessionIdentifierField = StringToNilableValue(res.SessionIdentifierField)
+	event.MetricSourceName = utils.StringToNilableValue(res.MetricSourceName)
+	event.Name = utils.StringToNilableValue(res.Name)
+	event.SessionIdentifierField = utils.StringToNilableValue(res.SessionIdentifierField)
 }
 
 func WarehouseNativeFunnelEventsToAPIModel(ctx context.Context, list basetypes.ListValue) []WarehouseNativeFunnelEventAPIModel {
@@ -481,7 +481,7 @@ func WarehouseNativeFunnelEventsToAPIModel(ctx context.Context, list basetypes.L
 	} else {
 		res = make([]WarehouseNativeFunnelEventAPIModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
-			obj, ok := elem.(resource_metric.FunnelEventsValue)
+			obj, ok := elem.(FunnelEventsValue)
 			if !ok {
 				return nil
 			}
@@ -493,8 +493,8 @@ func WarehouseNativeFunnelEventsToAPIModel(ctx context.Context, list basetypes.L
 }
 
 func WarehouseNativeFunnelEventsFromAPIModel(ctx context.Context, diags diag.Diagnostics, list []WarehouseNativeFunnelEventAPIModel) basetypes.ListValue {
-	attrTypes := resource_metric.FunnelEventsValue{}.AttributeTypes(ctx)
-	warehouseNativeFunnelEventsType := resource_metric.FunnelEventsType{
+	attrTypes := FunnelEventsValue{}.AttributeTypes(ctx)
+	warehouseNativeFunnelEventsType := FunnelEventsType{
 		ObjectType: types.ObjectType{
 			AttrTypes: attrTypes,
 		},
@@ -504,10 +504,10 @@ func WarehouseNativeFunnelEventsFromAPIModel(ctx context.Context, diags diag.Dia
 	} else {
 		events := make([]attr.Value, len(list))
 		for i, elem := range list {
-			var event resource_metric.FunnelEventsValue
+			var event FunnelEventsValue
 			WarehouseNativeFunnelEventFromAPIModel(ctx, diags, &event, elem)
 			obj, d := event.ToObjectValue(ctx)
-			events[i] = resource_metric.NewFunnelEventsValueMust(attrTypes, obj.Attributes())
+			events[i] = NewFunnelEventsValueMust(attrTypes, obj.Attributes())
 			diags = append(diags, d...)
 		}
 		v, d := types.ListValue(warehouseNativeFunnelEventsType, events)

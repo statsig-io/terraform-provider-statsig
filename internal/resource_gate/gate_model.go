@@ -1,11 +1,11 @@
-package models
+package resource_gate
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
 	"strconv"
-	"terraform-provider-statsig/internal/resource_gate"
+	"terraform-provider-statsig/internal/utils"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -31,40 +31,40 @@ type GateAPIModel struct {
 	Team               string                     `json:"team,omitempty"`
 }
 
-func GateToAPIModel(ctx context.Context, gate *resource_gate.GateModel) GateAPIModel {
+func GateToAPIModel(ctx context.Context, gate *GateModel) GateAPIModel {
 	return GateAPIModel{
 		Id:                 gate.Id.ValueString(),
 		Name:               gate.Name.ValueString(),
 		IdType:             gate.IdType.ValueString(),
 		Description:        gate.Description.ValueString(),
-		IsEnabled:          BoolFromBoolValue(gate.IsEnabled),
-		MeasureMetricLifts: NilableBoolFromBoolValue(gate.MeasureMetricLifts),
+		IsEnabled:          utils.BoolFromBoolValue(gate.IsEnabled),
+		MeasureMetricLifts: utils.NilableBoolFromBoolValue(gate.MeasureMetricLifts),
 		MonitoringMetrics:  MonitoringMetricsToAPIModel(ctx, gate.MonitoringMetrics),
 		Rules:              RulesToAPIModel(ctx, gate.Rules),
-		Tags:               StringSliceFromListValue(ctx, gate.Tags),
+		Tags:               utils.StringSliceFromListValue(ctx, gate.Tags),
 		Type:               gate.Type.ValueString(),
-		TargetApps:         StringSliceFromListValue(ctx, gate.TargetApps),
+		TargetApps:         utils.StringSliceFromListValue(ctx, gate.TargetApps),
 		CreatorId:          gate.CreatorId.ValueString(),
 		CreatorEmail:       gate.CreatorEmail.ValueString(),
 		Team:               gate.Team.ValueString(),
 	}
 }
 
-func GateFromAPIModel(ctx context.Context, diags diag.Diagnostics, gate *resource_gate.GateModel, res GateAPIModel) {
-	gate.Id = StringToNilableValue(res.Id)
-	gate.Name = StringToNilableValue(res.Name)
-	gate.IdType = StringToNilableValue(res.IdType)
-	gate.Description = StringToNilableValue(res.Description)
-	gate.IsEnabled = BoolToBoolValue(res.IsEnabled)
-	gate.MeasureMetricLifts = NilableBoolToBoolValue(res.MeasureMetricLifts)
+func GateFromAPIModel(ctx context.Context, diags diag.Diagnostics, gate *GateModel, res GateAPIModel) {
+	gate.Id = utils.StringToNilableValue(res.Id)
+	gate.Name = utils.StringToNilableValue(res.Name)
+	gate.IdType = utils.StringToNilableValue(res.IdType)
+	gate.Description = utils.StringToNilableValue(res.Description)
+	gate.IsEnabled = utils.BoolToBoolValue(res.IsEnabled)
+	gate.MeasureMetricLifts = utils.NilableBoolToBoolValue(res.MeasureMetricLifts)
 	gate.MonitoringMetrics = MonitoringMetricsFromAPIModel(ctx, diags, res.MonitoringMetrics)
 	gate.Rules = RulesFromAPIModel(ctx, diags, res.Rules)
-	gate.Tags = StringSliceToListValue(ctx, diags, res.Tags)
-	gate.Type = StringToNilableValue(res.Type)
-	gate.TargetApps = StringSliceToListValue(ctx, diags, res.TargetApps)
-	gate.CreatorId = StringToNilableValue(res.CreatorId)
-	gate.CreatorEmail = StringToNilableValue(res.CreatorEmail)
-	gate.Team = StringToNilableValue(res.Team)
+	gate.Tags = utils.StringSliceToListValue(ctx, diags, res.Tags)
+	gate.Type = utils.StringToNilableValue(res.Type)
+	gate.TargetApps = utils.StringSliceToListValue(ctx, diags, res.TargetApps)
+	gate.CreatorId = utils.StringToNilableValue(res.CreatorId)
+	gate.CreatorEmail = utils.StringToNilableValue(res.CreatorEmail)
+	gate.Team = utils.StringToNilableValue(res.Team)
 }
 
 type MonitoringMetricAPIModel struct {
@@ -72,16 +72,16 @@ type MonitoringMetricAPIModel struct {
 	Type string `json:"type"`
 }
 
-func MonitoringMetricToAPIModel(ctx context.Context, metric *resource_gate.MonitoringMetricsValue) MonitoringMetricAPIModel {
+func MonitoringMetricToAPIModel(ctx context.Context, metric *MonitoringMetricsValue) MonitoringMetricAPIModel {
 	return MonitoringMetricAPIModel{
-		Name: StringFromNilableValue(metric.Name),
-		Type: StringFromNilableValue(metric.MonitoringMetricsType),
+		Name: utils.StringFromNilableValue(metric.Name),
+		Type: utils.StringFromNilableValue(metric.MonitoringMetricsType),
 	}
 }
 
-func MonitoringMetricFromAPIModel(ctx context.Context, diags diag.Diagnostics, metric *resource_gate.MonitoringMetricsValue, res MonitoringMetricAPIModel) {
-	metric.Name = StringToNilableValue(res.Name)
-	metric.MonitoringMetricsType = StringToNilableValue(res.Type)
+func MonitoringMetricFromAPIModel(ctx context.Context, diags diag.Diagnostics, metric *MonitoringMetricsValue, res MonitoringMetricAPIModel) {
+	metric.Name = utils.StringToNilableValue(res.Name)
+	metric.MonitoringMetricsType = utils.StringToNilableValue(res.Type)
 }
 
 func MonitoringMetricsToAPIModel(ctx context.Context, list basetypes.ListValue) []MonitoringMetricAPIModel {
@@ -91,7 +91,7 @@ func MonitoringMetricsToAPIModel(ctx context.Context, list basetypes.ListValue) 
 	} else {
 		res = make([]MonitoringMetricAPIModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
-			obj, ok := elem.(resource_gate.MonitoringMetricsValue)
+			obj, ok := elem.(MonitoringMetricsValue)
 			if !ok {
 				return nil
 			}
@@ -103,8 +103,8 @@ func MonitoringMetricsToAPIModel(ctx context.Context, list basetypes.ListValue) 
 }
 
 func MonitoringMetricsFromAPIModel(ctx context.Context, diags diag.Diagnostics, list []MonitoringMetricAPIModel) basetypes.ListValue {
-	attrTypes := resource_gate.MonitoringMetricsValue{}.AttributeTypes(ctx)
-	monitoringMetricsType := resource_gate.MonitoringMetricsType{
+	attrTypes := MonitoringMetricsValue{}.AttributeTypes(ctx)
+	monitoringMetricsType := MonitoringMetricsType{
 		ObjectType: types.ObjectType{
 			AttrTypes: attrTypes,
 		},
@@ -114,10 +114,10 @@ func MonitoringMetricsFromAPIModel(ctx context.Context, diags diag.Diagnostics, 
 	} else {
 		metrics := make([]attr.Value, len(list))
 		for i, elem := range list {
-			var metric resource_gate.MonitoringMetricsValue
+			var metric MonitoringMetricsValue
 			MonitoringMetricFromAPIModel(ctx, diags, &metric, elem)
 			obj, d := metric.ToObjectValue(ctx)
-			metrics[i] = resource_gate.NewMonitoringMetricsValueMust(attrTypes, obj.Attributes())
+			metrics[i] = NewMonitoringMetricsValueMust(attrTypes, obj.Attributes())
 			diags = append(diags, d...)
 		}
 		v, d := types.ListValue(monitoringMetricsType, metrics)
@@ -135,24 +135,24 @@ type RuleAPIModel struct {
 	Environments   []string            `json:"environments,omitempty"`
 }
 
-func RuleToAPIModel(ctx context.Context, rule *resource_gate.RulesValue) RuleAPIModel {
+func RuleToAPIModel(ctx context.Context, rule *RulesValue) RuleAPIModel {
 	return RuleAPIModel{
-		Id:             StringFromNilableValue(rule.Id),
-		BaseID:         StringFromNilableValue(rule.BaseId),
-		Name:           StringFromNilableValue(rule.Name),
-		PassPercentage: IntFromNumberValue(rule.PassPercentage),
+		Id:             utils.StringFromNilableValue(rule.Id),
+		BaseID:         utils.StringFromNilableValue(rule.BaseId),
+		Name:           utils.StringFromNilableValue(rule.Name),
+		PassPercentage: utils.IntFromNumberValue(rule.PassPercentage),
 		Conditions:     ConditionsToAPIModel(ctx, rule.Conditions),
-		Environments:   StringSliceFromListValue(ctx, rule.Environments),
+		Environments:   utils.StringSliceFromListValue(ctx, rule.Environments),
 	}
 }
 
-func RuleFromAPIModel(ctx context.Context, diags diag.Diagnostics, rule *resource_gate.RulesValue, res RuleAPIModel) {
-	rule.Id = StringToNilableValue(res.Id)
-	rule.BaseId = StringToNilableValue(res.BaseID)
-	rule.Name = StringToNilableValue(res.Name)
-	rule.PassPercentage = IntToNumberValue(res.PassPercentage)
+func RuleFromAPIModel(ctx context.Context, diags diag.Diagnostics, rule *RulesValue, res RuleAPIModel) {
+	rule.Id = utils.StringToNilableValue(res.Id)
+	rule.BaseId = utils.StringToNilableValue(res.BaseID)
+	rule.Name = utils.StringToNilableValue(res.Name)
+	rule.PassPercentage = utils.IntToNumberValue(res.PassPercentage)
 	rule.Conditions = ConditionsFromAPIModel(ctx, diags, res.Conditions)
-	rule.Environments = StringSliceToListValue(ctx, diags, res.Environments)
+	rule.Environments = utils.StringSliceToListValue(ctx, diags, res.Environments)
 }
 
 func RulesToAPIModel(ctx context.Context, list basetypes.ListValue) []RuleAPIModel {
@@ -162,7 +162,7 @@ func RulesToAPIModel(ctx context.Context, list basetypes.ListValue) []RuleAPIMod
 	} else {
 		res = make([]RuleAPIModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
-			obj, ok := elem.(resource_gate.RulesValue)
+			obj, ok := elem.(RulesValue)
 			if !ok {
 				return nil
 			}
@@ -174,8 +174,8 @@ func RulesToAPIModel(ctx context.Context, list basetypes.ListValue) []RuleAPIMod
 }
 
 func RulesFromAPIModel(ctx context.Context, diags diag.Diagnostics, list []RuleAPIModel) basetypes.ListValue {
-	attrTypes := resource_gate.RulesValue{}.AttributeTypes(ctx)
-	rulesType := resource_gate.RulesType{
+	attrTypes := RulesValue{}.AttributeTypes(ctx)
+	rulesType := RulesType{
 		ObjectType: types.ObjectType{
 			AttrTypes: attrTypes,
 		},
@@ -185,10 +185,10 @@ func RulesFromAPIModel(ctx context.Context, diags diag.Diagnostics, list []RuleA
 	} else {
 		rules := make([]attr.Value, len(list))
 		for i, elem := range list {
-			var rule resource_gate.RulesValue
+			var rule RulesValue
 			RuleFromAPIModel(ctx, diags, &rule, elem)
 			obj, d := rule.ToObjectValue(ctx)
-			rules[i] = resource_gate.NewRulesValueMust(attrTypes, obj.Attributes())
+			rules[i] = NewRulesValueMust(attrTypes, obj.Attributes())
 			diags = append(diags, d...)
 		}
 		v, d := types.ListValue(rulesType, rules)
@@ -205,22 +205,22 @@ type ConditionAPIModel struct {
 	Type        string      `json:"type"`
 }
 
-func ConditionToAPIModel(ctx context.Context, condition *resource_gate.ConditionsValue) ConditionAPIModel {
+func ConditionToAPIModel(ctx context.Context, condition *ConditionsValue) ConditionAPIModel {
 	return ConditionAPIModel{
-		TargetValue: StringSliceFromListValue(ctx, condition.TargetValue),
-		Operator:    StringFromNilableValue(condition.Operator),
-		Field:       StringFromNilableValue(condition.Field),
-		CustomID:    StringFromNilableValue(condition.CustomId),
-		Type:        StringFromNilableValue(condition.ConditionsType),
+		TargetValue: utils.StringSliceFromListValue(ctx, condition.TargetValue),
+		Operator:    utils.StringFromNilableValue(condition.Operator),
+		Field:       utils.StringFromNilableValue(condition.Field),
+		CustomID:    utils.StringFromNilableValue(condition.CustomId),
+		Type:        utils.StringFromNilableValue(condition.ConditionsType),
 	}
 }
 
-func ConditionFromAPIModel(ctx context.Context, diags diag.Diagnostics, condition *resource_gate.ConditionsValue, res ConditionAPIModel) {
-	condition.TargetValue = StringSliceToListValue(ctx, diags, res.TargetValue)
-	condition.Operator = StringToNilableValue(res.Operator)
-	condition.Field = StringToNilableValue(res.Field)
-	condition.CustomId = StringToNilableValue(res.CustomID)
-	condition.ConditionsType = StringToNilableValue(res.Type)
+func ConditionFromAPIModel(ctx context.Context, diags diag.Diagnostics, condition *ConditionsValue, res ConditionAPIModel) {
+	condition.TargetValue = utils.StringSliceToListValue(ctx, diags, res.TargetValue)
+	condition.Operator = utils.StringToNilableValue(res.Operator)
+	condition.Field = utils.StringToNilableValue(res.Field)
+	condition.CustomId = utils.StringToNilableValue(res.CustomID)
+	condition.ConditionsType = utils.StringToNilableValue(res.Type)
 }
 
 func ConditionsToAPIModel(ctx context.Context, list basetypes.ListValue) []ConditionAPIModel {
@@ -230,7 +230,7 @@ func ConditionsToAPIModel(ctx context.Context, list basetypes.ListValue) []Condi
 	} else {
 		res = make([]ConditionAPIModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
-			obj, ok := elem.(resource_gate.ConditionsValue)
+			obj, ok := elem.(ConditionsValue)
 			if !ok {
 				return nil
 			}
@@ -242,8 +242,8 @@ func ConditionsToAPIModel(ctx context.Context, list basetypes.ListValue) []Condi
 }
 
 func ConditionsFromAPIModel(ctx context.Context, diags diag.Diagnostics, list []ConditionAPIModel) basetypes.ListValue {
-	attrTypes := resource_gate.ConditionsValue{}.AttributeTypes(ctx)
-	conditionsType := resource_gate.ConditionsType{
+	attrTypes := ConditionsValue{}.AttributeTypes(ctx)
+	conditionsType := ConditionsType{
 		ObjectType: types.ObjectType{
 			AttrTypes: attrTypes,
 		},
@@ -253,10 +253,10 @@ func ConditionsFromAPIModel(ctx context.Context, diags diag.Diagnostics, list []
 	} else {
 		conditions := make([]attr.Value, len(list))
 		for i, elem := range list {
-			var condition resource_gate.ConditionsValue
+			var condition ConditionsValue
 			ConditionFromAPIModel(ctx, diags, &condition, elem)
 			obj, d := condition.ToObjectValue(ctx)
-			conditions[i] = resource_gate.NewConditionsValueMust(attrTypes, obj.Attributes())
+			conditions[i] = NewConditionsValueMust(attrTypes, obj.Attributes())
 			diags = append(diags, d...)
 		}
 		v, d := types.ListValue(conditionsType, conditions)

@@ -2,7 +2,6 @@ package statsig
 
 import (
 	"context"
-	"terraform-provider-statsig/internal/models"
 	"terraform-provider-statsig/internal/resource_gate"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -27,18 +26,18 @@ func (c *gateClient) read(ctx context.Context, gate *resource_gate.GateModel) di
 	}
 
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
-		var data models.GateAPIModel
+		var data resource_gate.GateAPIModel
 		res, err := c.transport.Get(c.endpoint, gate.Id.ValueString(), &data)
-		models.GateFromAPIModel(ctx, diags, gate, data)
+		resource_gate.GateFromAPIModel(ctx, diags, gate, data)
 		return res, err
 	})
 }
 
 func (c *gateClient) create(ctx context.Context, gate *resource_gate.GateModel) diag.Diagnostics {
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
-		var data models.GateAPIModel
-		res, err := c.transport.Post(c.endpoint, models.GateToAPIModel(ctx, gate), &data)
-		models.GateFromAPIModel(ctx, diags, gate, data)
+		var data resource_gate.GateAPIModel
+		res, err := c.transport.Post(c.endpoint, resource_gate.GateToAPIModel(ctx, gate), &data)
+		resource_gate.GateFromAPIModel(ctx, diags, gate, data)
 		return res, err
 	})
 }
@@ -49,9 +48,9 @@ func (c *gateClient) update(ctx context.Context, gate *resource_gate.GateModel) 
 	}
 
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
-		var data models.GateAPIModel
-		res, err := c.transport.Patch(c.endpoint, gate.Id.ValueString(), models.GateToAPIModel(ctx, gate), &data)
-		models.GateFromAPIModel(ctx, diags, gate, data)
+		var data resource_gate.GateAPIModel
+		res, err := c.transport.Patch(c.endpoint, gate.Id.ValueString(), resource_gate.GateToAPIModel(ctx, gate), &data)
+		resource_gate.GateFromAPIModel(ctx, diags, gate, data)
 		return res, err
 	})
 }
@@ -62,7 +61,7 @@ func (c *gateClient) delete(_ context.Context, gate *resource_gate.GateModel) di
 	}
 
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
-		var data models.GateAPIModel
+		var data resource_gate.GateAPIModel
 		return c.transport.Delete(c.endpoint, gate.Id.ValueString(), &data)
 	})
 }

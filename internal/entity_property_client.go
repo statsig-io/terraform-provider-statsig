@@ -3,7 +3,6 @@ package statsig
 import (
 	"context"
 	"fmt"
-	"terraform-provider-statsig/internal/models"
 	"terraform-provider-statsig/internal/resource_entity_property"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -26,17 +25,17 @@ func (c *entityPropertyClient) read(ctx context.Context, entityProperty *resourc
 		entityProperty.Name = types.StringNull()
 	}
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
-		var data models.EntityPropertyAPIModel
+		var data resource_entity_property.EntityPropertyAPIModel
 		res, err := c.transport.Get(c.endpoint, entityProperty.Name.ValueString(), &data)
-		models.EntityPropertyFromAPIModel(ctx, diags, entityProperty, data)
+		resource_entity_property.EntityPropertyFromAPIModel(ctx, diags, entityProperty, data)
 		return res, err
 	})
 }
 func (c *entityPropertyClient) create(ctx context.Context, entityProperty *resource_entity_property.EntityPropertyModel) diag.Diagnostics {
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
-		var data models.EntityPropertyAPIModel
-		res, err := c.transport.Post("experiments/entity_properties", models.EntityPropertyToAPIModel(ctx, entityProperty), &data)
-		models.EntityPropertyFromAPIModel(ctx, diags, entityProperty, data)
+		var data resource_entity_property.EntityPropertyAPIModel
+		res, err := c.transport.Post("experiments/entity_properties", resource_entity_property.EntityPropertyToAPIModel(ctx, entityProperty), &data)
+		resource_entity_property.EntityPropertyFromAPIModel(ctx, diags, entityProperty, data)
 		return res, err
 	})
 }
@@ -45,10 +44,10 @@ func (c *entityPropertyClient) update(ctx context.Context, entityProperty *resou
 		entityProperty.Name = types.StringNull()
 	}
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
-		var data models.EntityPropertyAPIModel
+		var data resource_entity_property.EntityPropertyAPIModel
 		endpoint := fmt.Sprintf("%s/%s", c.endpoint, entityProperty.Name.ValueString())
-		res, err := c.transport.Post(endpoint, models.EntityPropertyToAPIModel(ctx, entityProperty), &data)
-		models.EntityPropertyFromAPIModel(ctx, diags, entityProperty, data)
+		res, err := c.transport.Post(endpoint, resource_entity_property.EntityPropertyToAPIModel(ctx, entityProperty), &data)
+		resource_entity_property.EntityPropertyFromAPIModel(ctx, diags, entityProperty, data)
 		return res, err
 	})
 }
@@ -57,7 +56,7 @@ func (c *entityPropertyClient) delete(_ context.Context, entityProperty *resourc
 		entityProperty.Name = types.StringNull()
 	}
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
-		var data models.EntityPropertyAPIModel
+		var data resource_entity_property.EntityPropertyAPIModel
 		return c.transport.Delete(c.endpoint, entityProperty.Name.ValueString(), &data)
 	})
 }

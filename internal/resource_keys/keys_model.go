@@ -1,8 +1,8 @@
-package models
+package resource_keys
 
 import (
 	"context"
-	"terraform-provider-statsig/internal/resource_keys"
+	"terraform-provider-statsig/internal/utils"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 )
@@ -27,23 +27,23 @@ type KeysAPIOutputModel struct {
 	Type                string   `json:"type"`
 }
 
-func KeyToAPIInputModel(ctx context.Context, key *resource_keys.KeysModel) KeysAPIInputModel {
+func KeyToAPIInputModel(ctx context.Context, key *KeysModel) KeysAPIInputModel {
 	return KeysAPIInputModel{
 		Description:           key.Description.ValueString(),
-		Environments:          StringSliceFromListValue(ctx, key.Environments),
-		Scopes:                StringSliceFromListValue(ctx, key.Scopes),
-		SecondaryTargetAppIds: StringSliceFromListValue(ctx, key.SecondaryTargetAppIds),
+		Environments:          utils.StringSliceFromListValue(ctx, key.Environments),
+		Scopes:                utils.StringSliceFromListValue(ctx, key.Scopes),
+		SecondaryTargetAppIds: utils.StringSliceFromListValue(ctx, key.SecondaryTargetAppIds),
 		TargetAppId:           key.TargetAppId.ValueString(),
 		Type:                  key.Type.ValueString(),
 	}
 }
 
-func KeyFromAPIInputModel(ctx context.Context, diags diag.Diagnostics, key *resource_keys.KeysModel, res KeysAPIOutputModel) {
-	key.Key = StringToNilableValue(res.Key)
-	key.Type = StringToNilableValue(res.Type)
-	key.Description = StringToNilableValue(res.Description)
-	key.TargetAppId = StringToNilableValue(res.PrimaryTargetApp)
-	key.Environments = StringSliceToListValue(ctx, diags, res.Environments)
-	key.Scopes = StringSliceToListValue(ctx, diags, res.Scopes)
-	key.SecondaryTargetAppIds = StringSliceToListValue(ctx, diags, res.SecondaryTargetApps)
+func KeyFromAPIInputModel(ctx context.Context, diags diag.Diagnostics, key *KeysModel, res KeysAPIOutputModel) {
+	key.Key = utils.StringToNilableValue(res.Key)
+	key.Type = utils.StringToNilableValue(res.Type)
+	key.Description = utils.StringToNilableValue(res.Description)
+	key.TargetAppId = utils.StringToNilableValue(res.PrimaryTargetApp)
+	key.Environments = utils.StringSliceToListValue(ctx, diags, res.Environments)
+	key.Scopes = utils.StringSliceToListValue(ctx, diags, res.Scopes)
+	key.SecondaryTargetAppIds = utils.StringSliceToListValue(ctx, diags, res.SecondaryTargetApps)
 }

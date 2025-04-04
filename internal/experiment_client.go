@@ -2,7 +2,6 @@ package statsig
 
 import (
 	"context"
-	"terraform-provider-statsig/internal/models"
 	"terraform-provider-statsig/internal/resource_experiment"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -27,18 +26,18 @@ func (c *experimentClient) read(ctx context.Context, experiment *resource_experi
 	}
 
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
-		var data models.ExperimentAPIModel
+		var data resource_experiment.ExperimentAPIModel
 		res, err := c.transport.Get(c.endpoint, experiment.Id.ValueString(), &data)
-		models.ExperimentFromAPIModel(ctx, diags, experiment, data)
+		resource_experiment.ExperimentFromAPIModel(ctx, diags, experiment, data)
 		return res, err
 	})
 }
 
 func (c *experimentClient) create(ctx context.Context, experiment *resource_experiment.ExperimentModel) diag.Diagnostics {
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
-		var data models.ExperimentAPIModel
-		res, err := c.transport.Post(c.endpoint, models.ExperimentToAPIModel(ctx, experiment), &data)
-		models.ExperimentFromAPIModel(ctx, diags, experiment, data)
+		var data resource_experiment.ExperimentAPIModel
+		res, err := c.transport.Post(c.endpoint, resource_experiment.ExperimentToAPIModel(ctx, experiment), &data)
+		resource_experiment.ExperimentFromAPIModel(ctx, diags, experiment, data)
 		return res, err
 	})
 }
@@ -49,9 +48,9 @@ func (c *experimentClient) update(ctx context.Context, experiment *resource_expe
 	}
 
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
-		var data models.ExperimentAPIModel
-		res, err := c.transport.Patch(c.endpoint, experiment.Id.ValueString(), models.ExperimentToAPIModel(ctx, experiment), &data)
-		models.ExperimentFromAPIModel(ctx, diags, experiment, data)
+		var data resource_experiment.ExperimentAPIModel
+		res, err := c.transport.Patch(c.endpoint, experiment.Id.ValueString(), resource_experiment.ExperimentToAPIModel(ctx, experiment), &data)
+		resource_experiment.ExperimentFromAPIModel(ctx, diags, experiment, data)
 		return res, err
 	})
 }
@@ -62,7 +61,7 @@ func (c *experimentClient) delete(_ context.Context, experiment *resource_experi
 	}
 
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
-		var data models.ExperimentAPIModel
+		var data resource_experiment.ExperimentAPIModel
 		return c.transport.Delete(c.endpoint, experiment.Id.ValueString(), &data)
 	})
 }

@@ -3,7 +3,6 @@ package statsig
 import (
 	"context"
 	"fmt"
-	"terraform-provider-statsig/internal/models"
 	"terraform-provider-statsig/internal/resource_metric_source"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -26,17 +25,17 @@ func (c *metricSourceClient) read(ctx context.Context, metricSource *resource_me
 		metricSource.Name = types.StringNull()
 	}
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
-		var data models.MetricSourceAPIModel
+		var data resource_metric_source.MetricSourceAPIModel
 		res, err := c.transport.Get(c.endpoint, metricSource.Name.ValueString(), &data)
-		models.MetricSourceFromAPIModel(ctx, diags, metricSource, data)
+		resource_metric_source.MetricSourceFromAPIModel(ctx, diags, metricSource, data)
 		return res, err
 	})
 }
 func (c *metricSourceClient) create(ctx context.Context, metricSource *resource_metric_source.MetricSourceModel) diag.Diagnostics {
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
-		var data models.MetricSourceAPIModel
-		res, err := c.transport.Post(c.endpoint, models.MetricSourceToAPIModel(ctx, metricSource), &data)
-		models.MetricSourceFromAPIModel(ctx, diags, metricSource, data)
+		var data resource_metric_source.MetricSourceAPIModel
+		res, err := c.transport.Post(c.endpoint, resource_metric_source.MetricSourceToAPIModel(ctx, metricSource), &data)
+		resource_metric_source.MetricSourceFromAPIModel(ctx, diags, metricSource, data)
 		return res, err
 	})
 }
@@ -45,10 +44,10 @@ func (c *metricSourceClient) update(ctx context.Context, metricSource *resource_
 		metricSource.Name = types.StringNull()
 	}
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
-		var data models.MetricSourceAPIModel
+		var data resource_metric_source.MetricSourceAPIModel
 		endpoint := fmt.Sprintf("%s/%s", c.endpoint, metricSource.Name.ValueString())
-		res, err := c.transport.Post(endpoint, models.MetricSourceToAPIModel(ctx, metricSource), &data)
-		models.MetricSourceFromAPIModel(ctx, diags, metricSource, data)
+		res, err := c.transport.Post(endpoint, resource_metric_source.MetricSourceToAPIModel(ctx, metricSource), &data)
+		resource_metric_source.MetricSourceFromAPIModel(ctx, diags, metricSource, data)
 		return res, err
 	})
 }
@@ -57,7 +56,7 @@ func (c *metricSourceClient) delete(_ context.Context, metricSource *resource_me
 		metricSource.Name = types.StringNull()
 	}
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
-		var data models.MetricSourceAPIModel
+		var data resource_metric_source.MetricSourceAPIModel
 		return c.transport.Delete(c.endpoint, metricSource.Name.ValueString(), &data)
 	})
 }
