@@ -2,7 +2,8 @@ package models
 
 import (
 	"context"
-	"terraform-provider-statsig/internal/resource_metric"
+
+	"github.com/statsig-io/terraform-provider-statsig/internal/resource_metric"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"

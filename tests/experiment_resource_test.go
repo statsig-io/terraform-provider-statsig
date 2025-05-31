@@ -80,7 +80,7 @@ func TestAccExperimentUpdating(t *testing.T) {
 
 func verifyShippedExperimentSetup(t *testing.T, name string, launchedGroupID *string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		rs, _ := s.RootModule().Resources[name]
+		rs := s.RootModule().Resources[name]
 		local := rs.Primary.Attributes
 
 		assert.Equal(t, "my_experiment", local["id"])
@@ -97,7 +97,7 @@ func verifyShippedExperimentSetup(t *testing.T, name string, launchedGroupID *st
 
 func verifyFullExperimentSetup(t *testing.T, name string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		rs, _ := s.RootModule().Resources[name]
+		rs := s.RootModule().Resources[name]
 		local := rs.Primary.Attributes
 
 		assert.Equal(t, "full_experiment", local["id"])

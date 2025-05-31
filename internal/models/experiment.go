@@ -3,7 +3,7 @@ package models
 import (
 	"context"
 
-	"terraform-provider-statsig/internal/resource_experiment"
+	"github.com/statsig-io/terraform-provider-statsig/internal/resource_experiment"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"

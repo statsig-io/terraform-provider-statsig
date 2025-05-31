@@ -3,7 +3,8 @@ package statsig
 import (
 	"context"
 	"fmt"
-	"terraform-provider-statsig/internal/resource_metric"
+
+	"github.com/statsig-io/terraform-provider-statsig/internal/resource_metric"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 )

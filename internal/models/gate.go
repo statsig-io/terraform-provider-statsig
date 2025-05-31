@@ -5,7 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
-	"terraform-provider-statsig/internal/resource_gate"
+
+	"github.com/statsig-io/terraform-provider-statsig/internal/resource_gate"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"

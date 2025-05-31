@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"terraform-provider-statsig/internal/resource_experiment"
+	"github.com/statsig-io/terraform-provider-statsig/internal/resource_experiment"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"

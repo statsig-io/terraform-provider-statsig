@@ -36,7 +36,7 @@ func TestAccGateFull(t *testing.T) {
 
 func verifyFullGateOutput(t *testing.T) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		o, _ := s.RootModule().Outputs["my_gate"]
+		o := s.RootModule().Outputs["my_gate"]
 
 		rules := o.Value.(map[string]interface{})["rules"].([]interface{})
 		mainRule := rules[0].(map[string]interface{})
@@ -77,7 +77,7 @@ func verifyFullGateOutput(t *testing.T) resource.TestCheckFunc {
 
 func verifyFullGateSetup(t *testing.T, name string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		rs, _ := s.RootModule().Resources[name]
+		rs := s.RootModule().Resources[name]
 		local := rs.Primary.Attributes
 
 		assert.Equal(t, "my_gate", local["id"])

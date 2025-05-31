@@ -22,8 +22,8 @@ func RefreshNoopPlanCheck() resource.TestStep {
 
 func DebugResourceCheckFunc(name string, localName string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		rs, _ := s.RootModule().Resources[name]
-		o, _ := s.RootModule().Outputs[localName]
+		rs := s.RootModule().Resources[name]
+		o := s.RootModule().Outputs[localName]
 		local := rs.Primary.Attributes
 		fmt.Printf("local: %+v\n", local)
 		fmt.Printf("output: %+v\n", o)

@@ -4,7 +4,8 @@ import (
 	"context"
 	"flag"
 	"log"
-	provider "terraform-provider-statsig/internal"
+
+	provider "github.com/statsig-io/terraform-provider-statsig/internal"
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
 )
