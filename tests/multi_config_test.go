@@ -39,8 +39,8 @@ func TestAccMultiConfig(t *testing.T) {
 func verifyMultiConfigSetup(t *testing.T) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		root := s.RootModule()
-		gatesOs, _ := root.Outputs["gates"]
-		experimentsOs, _ := root.Outputs["experiments"]
+		gatesOs := root.Outputs["gates"]
+		experimentsOs := root.Outputs["experiments"]
 
 		assert.Equal(t, 2, len(gatesOs.Value.([]interface{})))
 		assert.Equal(t, 1, len(experimentsOs.Value.([]interface{})))

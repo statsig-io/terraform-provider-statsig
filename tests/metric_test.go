@@ -34,7 +34,7 @@ func TestAccEventCountMetric(t *testing.T) {
 
 func verifyEventCountMetricSetup(t *testing.T, name string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		rs, _ := s.RootModule().Resources[name]
+		rs := s.RootModule().Resources[name]
 		local := rs.Primary.Attributes
 
 		assert.Equal(t, "A short description of this metric.", local["description"])
@@ -83,7 +83,7 @@ func TestAccWarehouseNativeMetric(t *testing.T) {
 
 func verifyWarehouseNativeMetricSetup(t *testing.T, name string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		rs, _ := s.RootModule().Resources[name]
+		rs := s.RootModule().Resources[name]
 		local := rs.Primary.Attributes
 
 		assert.Equal(t, "A short description of this metric.", local["description"])

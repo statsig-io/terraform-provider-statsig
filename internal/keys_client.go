@@ -2,7 +2,8 @@ package statsig
 
 import (
 	"context"
-	"terraform-provider-statsig/internal/resource_keys"
+
+	"github.com/statsig-io/terraform-provider-statsig/internal/resource_keys"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"

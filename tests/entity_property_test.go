@@ -34,7 +34,7 @@ func TestAccEntityPropertyFull(t *testing.T) {
 
 func verifyEntityPropertySetup(t *testing.T, name string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		rs, _ := s.RootModule().Resources[name]
+		rs := s.RootModule().Resources[name]
 		local := rs.Primary.Attributes
 
 		assert.Equal(t, "my_entity_property", local["name"])

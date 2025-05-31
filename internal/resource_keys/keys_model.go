@@ -2,9 +2,9 @@ package resource_keys
 
 import (
 	"context"
-	"terraform-provider-statsig/internal/utils"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/statsig-io/terraform-provider-statsig/internal/utils"
 )
 
 // API data model for KeysModel (NOTE: see if we can get Terraform to also codegen this from OpenAPI)

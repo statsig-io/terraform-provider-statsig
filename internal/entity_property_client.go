@@ -3,7 +3,8 @@ package statsig
 import (
 	"context"
 	"fmt"
-	"terraform-provider-statsig/internal/resource_entity_property"
+
+	"github.com/statsig-io/terraform-provider-statsig/internal/resource_entity_property"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"

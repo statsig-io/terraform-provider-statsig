@@ -58,7 +58,7 @@ func TestAccMetricSourceTable(t *testing.T) {
 
 func verifyMetricSourceBaseSetup(t *testing.T, name string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		rs, _ := s.RootModule().Resources[name]
+		rs := s.RootModule().Resources[name]
 		local := rs.Primary.Attributes
 
 		assert.Equal(t, "A short description of this metric source.", local["description"])
@@ -82,7 +82,7 @@ func verifyMetricSourceBaseSetup(t *testing.T, name string) resource.TestCheckFu
 
 func verifyMetricSourceQuerySetup(t *testing.T, name string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		rs, _ := s.RootModule().Resources[name]
+		rs := s.RootModule().Resources[name]
 		local := rs.Primary.Attributes
 
 		assert.Equal(t, "query_metric_source", local["name"])
@@ -97,7 +97,7 @@ func verifyMetricSourceQuerySetup(t *testing.T, name string) resource.TestCheckF
 
 func verifyMetricSourceTableSetup(t *testing.T, name string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		rs, _ := s.RootModule().Resources[name]
+		rs := s.RootModule().Resources[name]
 		local := rs.Primary.Attributes
 
 		assert.Equal(t, "table_metric_source", local["name"])
