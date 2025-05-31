@@ -1,4 +1,4 @@
-module terraform-provider-statsig
+module github.com/statsig-io/terraform-provider-statsig
 
 go 1.23.0
 
