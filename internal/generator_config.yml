@@ -1,4 +1,3 @@
-
 provider:
   name: statsig
 
@@ -150,6 +149,27 @@ resources:
       method: PATCH
     delete:
       path: /console/v1/tags/{id}
+      method: DELETE
+    schema:
+      ignores:
+        - message
+        - data
+      attributes:
+        aliases:
+          id: name
+
+  role:
+    read:
+      path: /console/v1/roles/{id}
+      method: GET
+    create:
+      path: /console/v1/roles
+      method: POST
+    update:
+      path: /console/v1/roles/{id}
+      method: PATCH
+    delete:
+      path: /console/v1/roles/{id}
       method: DELETE
     schema:
       ignores:

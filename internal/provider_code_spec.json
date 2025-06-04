@@ -2395,6 +2395,30 @@
 			}
 		},
 		{
+			"name": "role",
+			"schema": {
+				"attributes": [
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "The name of the role."
+						}
+					},
+					{
+						"name": "permissions",
+						"map": {
+							"computed_optional_required": "required",
+							"element_type": {
+								"bool": {}
+							},
+							"description": "The permissions of the role."
+						}
+					}
+				]
+			}
+		},
+		{
 			"name": "tag",
 			"schema": {
 				"attributes": [
