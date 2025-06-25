@@ -137,3 +137,24 @@ resources:
       ignores:
         - message
         - data
+
+  tag:
+    read:
+      path: /console/v1/tags/{id}
+      method: GET
+    create:
+      path: /console/v1/tags
+      method: POST
+    update:
+      path: /console/v1/tags/{id}
+      method: PATCH
+    delete:
+      path: /console/v1/tags/{id}
+      method: DELETE
+    schema:
+      ignores:
+        - message
+        - data
+      attributes:
+        aliases:
+          id: name
