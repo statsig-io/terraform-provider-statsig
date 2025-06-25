@@ -14768,6 +14768,939 @@
         ]
       }
     },
+    "/console/v1/roles": {
+        "get": {
+            "summary": "List Roles",
+            "parameters": [
+                {
+                    "name": "limit",
+                    "required": false,
+                    "in": "query",
+                    "description": "Results per page",
+                    "schema": {
+                        "example": 10,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "number"
+                            }
+                        ],
+                        "type": "integer"
+                    }
+                },
+                {
+                    "name": "page",
+                    "required": false,
+                    "in": "query",
+                    "description": "Page number",
+                    "schema": {
+                        "example": 1,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "number"
+                            }
+                        ],
+                        "type": "integer"
+                    }
+                },
+                {
+                    "name": "x-respect-review-settings",
+                    "in": "header",
+                    "description": "Optional header to respect review settings for mutation endpoints.",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "List Roles Response",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/PaginationResponseWithMessage"
+                                    },
+                                    {
+                                        "properties": {
+                                            "data": {
+                                                "type": "array",
+                                                "items": {
+                                                    "$ref": "#/components/schemas/RoleContractDto"
+                                                }
+                                            }
+                                        }
+                                    }
+                                ],
+                                "example": {
+                                    "message": "Roles listed successfully.",
+                                    "data": [
+                                        {
+                                            "name": "Custom Role",
+                                            "permissions": {
+                                                "invitation_access": false,
+                                                "create_configs": false,
+                                                "edit_or_delete_configs": false,
+                                                "launch_to_production": false,
+                                                "launch_or_disable_configs": false,
+                                                "start_experiments": false,
+                                                "create_or_edit_templates": false,
+                                                "create_or_edit_dashboards": false,
+                                                "create_teams": false,
+                                                "edit_dynamic_config_schemas": false,
+                                                "create_release_pipelines": false,
+                                                "approve_required_review_release_pipeline_phase": false,
+                                                "self_approve_review": false,
+                                                "approve_reviews": false,
+                                                "bypass_reviews_for_overrides": false,
+                                                "metric_management": false,
+                                                "verify_metrics": false,
+                                                "use_metrics_explorer": false,
+                                                "local_metrics": false,
+                                                "manage_alerts": false,
+                                                "integrations_edit_access": false,
+                                                "source_connection_and_creation": false,
+                                                "data_warehouse_ingestion_and_exports_edit_access": false,
+                                                "edit_and_tag_configs_with_core_tag": false,
+                                                "reset_experiments": false
+                                            }
+                                        }
+                                    ],
+                                    "pagination": {
+                                        "itemsPerPage": 100,
+                                        "pageNumber": 1,
+                                        "totalItems": 1,
+                                        "nextPage": null,
+                                        "previousPage": null,
+                                        "all": "/console/v1/roles"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "message": "Roles listed successfully.",
+                                "data": [
+                                    {
+                                        "name": "Custom Role",
+                                        "permissions": {
+                                            "invitation_access": false,
+                                            "create_configs": false,
+                                            "edit_or_delete_configs": false,
+                                            "launch_to_production": false,
+                                            "launch_or_disable_configs": false,
+                                            "start_experiments": false,
+                                            "create_or_edit_templates": false,
+                                            "create_or_edit_dashboards": false,
+                                            "create_teams": false,
+                                            "edit_dynamic_config_schemas": false,
+                                            "create_release_pipelines": false,
+                                            "approve_required_review_release_pipeline_phase": false,
+                                            "self_approve_review": false,
+                                            "approve_reviews": false,
+                                            "bypass_reviews_for_overrides": false,
+                                            "metric_management": false,
+                                            "verify_metrics": false,
+                                            "use_metrics_explorer": false,
+                                            "local_metrics": false,
+                                            "manage_alerts": false,
+                                            "integrations_edit_access": false,
+                                            "source_connection_and_creation": false,
+                                            "data_warehouse_ingestion_and_exports_edit_access": false,
+                                            "edit_and_tag_configs_with_core_tag": false,
+                                            "reset_experiments": false
+                                        }
+                                    }
+                                ],
+                                "pagination": {
+                                    "itemsPerPage": 100,
+                                    "pageNumber": 1,
+                                    "totalItems": 1,
+                                    "nextPage": null,
+                                    "previousPage": null,
+                                    "all": "/console/v1/roles"
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Invalid request. Please check the request input and try again.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            400
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Request": {
+                                    "value": {
+                                        "status": 400,
+                                        "message": "Invalid request. Please check the request input and try again."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            401
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Endpoint": {
+                                    "value": {
+                                        "status": 401,
+                                        "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "tags": [
+                "Roles",
+                "MCP"
+            ],
+            "security": [
+                {
+                    "STATSIG-API-KEY": []
+                }
+            ]
+        },
+        "post": {
+            "summary": "Create Role",
+            "parameters": [
+                {
+                    "name": "x-respect-review-settings",
+                    "in": "header",
+                    "description": "Optional header to respect review settings for mutation endpoints.",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/RoleContractDto"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "201": {
+                    "description": "Create Role Response",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/SingleDataResponse"
+                                    },
+                                    {
+                                        "properties": {
+                                            "data": {
+                                                "$ref": "#/components/schemas/RoleContractDto"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "example": {
+                                    "message": "Role created successfully.",
+                                    "data": {
+                                        "name": "Custom Role",
+                                        "permissions": {
+                                            "invitation_access": false,
+                                            "create_configs": false,
+                                            "edit_or_delete_configs": false,
+                                            "launch_to_production": false,
+                                            "launch_or_disable_configs": false,
+                                            "start_experiments": false,
+                                            "create_or_edit_templates": false,
+                                            "create_or_edit_dashboards": false,
+                                            "create_teams": false,
+                                            "edit_dynamic_config_schemas": false,
+                                            "create_release_pipelines": false,
+                                            "approve_required_review_release_pipeline_phase": false,
+                                            "self_approve_review": false,
+                                            "approve_reviews": false,
+                                            "bypass_reviews_for_overrides": false,
+                                            "metric_management": false,
+                                            "verify_metrics": false,
+                                            "use_metrics_explorer": false,
+                                            "local_metrics": false,
+                                            "manage_alerts": false,
+                                            "integrations_edit_access": false,
+                                            "source_connection_and_creation": false,
+                                            "data_warehouse_ingestion_and_exports_edit_access": false,
+                                            "edit_and_tag_configs_with_core_tag": false,
+                                            "reset_experiments": false
+                                        }
+                                    }
+                                }
+                            },
+                            "example": {
+                                "message": "Role created successfully.",
+                                "data": {
+                                    "name": "Custom Role",
+                                    "permissions": {
+                                        "invitation_access": false,
+                                        "create_configs": false,
+                                        "edit_or_delete_configs": false,
+                                        "launch_to_production": false,
+                                        "launch_or_disable_configs": false,
+                                        "start_experiments": false,
+                                        "create_or_edit_templates": false,
+                                        "create_or_edit_dashboards": false,
+                                        "create_teams": false,
+                                        "edit_dynamic_config_schemas": false,
+                                        "create_release_pipelines": false,
+                                        "approve_required_review_release_pipeline_phase": false,
+                                        "self_approve_review": false,
+                                        "approve_reviews": false,
+                                        "bypass_reviews_for_overrides": false,
+                                        "metric_management": false,
+                                        "verify_metrics": false,
+                                        "use_metrics_explorer": false,
+                                        "local_metrics": false,
+                                        "manage_alerts": false,
+                                        "integrations_edit_access": false,
+                                        "source_connection_and_creation": false,
+                                        "data_warehouse_ingestion_and_exports_edit_access": false,
+                                        "edit_and_tag_configs_with_core_tag": false,
+                                        "reset_experiments": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Invalid request. Please check the request input and try again.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            400
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Request": {
+                                    "value": {
+                                        "status": 400,
+                                        "message": "Invalid request. Please check the request input and try again."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            401
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Endpoint": {
+                                    "value": {
+                                        "status": 401,
+                                        "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "tags": [
+                "Roles",
+                "MCP"
+            ],
+            "security": [
+                {
+                    "STATSIG-API-KEY": []
+                }
+            ]
+        }
+    },
+    "/console/v1/roles/{id}": {
+        "get": {
+            "summary": "Get Role",
+            "parameters": [
+                {
+                    "name": "id",
+                    "required": true,
+                    "in": "path",
+                    "description": "id",
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "x-respect-review-settings",
+                    "in": "header",
+                    "description": "Optional header to respect review settings for mutation endpoints.",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Get Role Response",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/SingleDataResponse"
+                                    },
+                                    {
+                                        "properties": {
+                                            "data": {
+                                                "$ref": "#/components/schemas/RoleContractDto"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "example": {
+                                    "message": "Role read successfully.",
+                                    "data": {
+                                        "name": "Custom Role",
+                                        "permissions": {
+                                            "invitation_access": false,
+                                            "create_configs": false,
+                                            "edit_or_delete_configs": false,
+                                            "launch_to_production": false,
+                                            "launch_or_disable_configs": false,
+                                            "start_experiments": false,
+                                            "create_or_edit_templates": false,
+                                            "create_or_edit_dashboards": false,
+                                            "create_teams": false,
+                                            "edit_dynamic_config_schemas": false,
+                                            "create_release_pipelines": false,
+                                            "approve_required_review_release_pipeline_phase": false,
+                                            "self_approve_review": false,
+                                            "approve_reviews": false,
+                                            "bypass_reviews_for_overrides": false,
+                                            "metric_management": false,
+                                            "verify_metrics": false,
+                                            "use_metrics_explorer": false,
+                                            "local_metrics": false,
+                                            "manage_alerts": false,
+                                            "integrations_edit_access": false,
+                                            "source_connection_and_creation": false,
+                                            "data_warehouse_ingestion_and_exports_edit_access": false,
+                                            "edit_and_tag_configs_with_core_tag": false,
+                                            "reset_experiments": false
+                                        }
+                                    }
+                                }
+                            },
+                            "example": {
+                                "message": "Role read successfully.",
+                                "data": {
+                                    "name": "Custom Role",
+                                    "permissions": {
+                                        "invitation_access": false,
+                                        "create_configs": false,
+                                        "edit_or_delete_configs": false,
+                                        "launch_to_production": false,
+                                        "launch_or_disable_configs": false,
+                                        "start_experiments": false,
+                                        "create_or_edit_templates": false,
+                                        "create_or_edit_dashboards": false,
+                                        "create_teams": false,
+                                        "edit_dynamic_config_schemas": false,
+                                        "create_release_pipelines": false,
+                                        "approve_required_review_release_pipeline_phase": false,
+                                        "self_approve_review": false,
+                                        "approve_reviews": false,
+                                        "bypass_reviews_for_overrides": false,
+                                        "metric_management": false,
+                                        "verify_metrics": false,
+                                        "use_metrics_explorer": false,
+                                        "local_metrics": false,
+                                        "manage_alerts": false,
+                                        "integrations_edit_access": false,
+                                        "source_connection_and_creation": false,
+                                        "data_warehouse_ingestion_and_exports_edit_access": false,
+                                        "edit_and_tag_configs_with_core_tag": false,
+                                        "reset_experiments": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Invalid request. Please check the request input and try again.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            400
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Request": {
+                                    "value": {
+                                        "status": 400,
+                                        "message": "Invalid request. Please check the request input and try again."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            401
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Endpoint": {
+                                    "value": {
+                                        "status": 401,
+                                        "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "tags": [
+                "Roles",
+                "MCP"
+            ],
+            "security": [
+                {
+                    "STATSIG-API-KEY": []
+                }
+            ]
+        },
+        "patch": {
+            "summary": "Update Role",
+            "parameters": [
+                {
+                    "name": "id",
+                    "required": true,
+                    "in": "path",
+                    "description": "id",
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "x-respect-review-settings",
+                    "in": "header",
+                    "description": "Optional header to respect review settings for mutation endpoints.",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/RoleUpdateContractDto"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Update Role Response",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/SingleDataResponse"
+                                    },
+                                    {
+                                        "properties": {
+                                            "data": {
+                                                "$ref": "#/components/schemas/RoleContractDto"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "example": {
+                                    "message": "Role updated successfully.",
+                                    "data": {
+                                        "name": "Custom Role",
+                                        "permissions": {
+                                            "invitation_access": true,
+                                            "create_configs": false,
+                                            "edit_or_delete_configs": false,
+                                            "launch_to_production": false,
+                                            "launch_or_disable_configs": false,
+                                            "start_experiments": false,
+                                            "create_or_edit_templates": false,
+                                            "create_or_edit_dashboards": false,
+                                            "create_teams": false,
+                                            "edit_dynamic_config_schemas": false,
+                                            "create_release_pipelines": false,
+                                            "approve_required_review_release_pipeline_phase": false,
+                                            "self_approve_review": false,
+                                            "approve_reviews": false,
+                                            "bypass_reviews_for_overrides": false,
+                                            "metric_management": false,
+                                            "verify_metrics": false,
+                                            "use_metrics_explorer": false,
+                                            "local_metrics": false,
+                                            "manage_alerts": false,
+                                            "integrations_edit_access": false,
+                                            "source_connection_and_creation": false,
+                                            "data_warehouse_ingestion_and_exports_edit_access": false,
+                                            "edit_and_tag_configs_with_core_tag": false,
+                                            "reset_experiments": false
+                                        }
+                                    }
+                                }
+                            },
+                            "example": {
+                                "message": "Role updated successfully.",
+                                "data": {
+                                    "name": "Custom Role",
+                                    "permissions": {
+                                        "invitation_access": true,
+                                        "create_configs": false,
+                                        "edit_or_delete_configs": false,
+                                        "launch_to_production": false,
+                                        "launch_or_disable_configs": false,
+                                        "start_experiments": false,
+                                        "create_or_edit_templates": false,
+                                        "create_or_edit_dashboards": false,
+                                        "create_teams": false,
+                                        "edit_dynamic_config_schemas": false,
+                                        "create_release_pipelines": false,
+                                        "approve_required_review_release_pipeline_phase": false,
+                                        "self_approve_review": false,
+                                        "approve_reviews": false,
+                                        "bypass_reviews_for_overrides": false,
+                                        "metric_management": false,
+                                        "verify_metrics": false,
+                                        "use_metrics_explorer": false,
+                                        "local_metrics": false,
+                                        "manage_alerts": false,
+                                        "integrations_edit_access": false,
+                                        "source_connection_and_creation": false,
+                                        "data_warehouse_ingestion_and_exports_edit_access": false,
+                                        "edit_and_tag_configs_with_core_tag": false,
+                                        "reset_experiments": false
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Invalid request. Please check the request input and try again.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            400
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Request": {
+                                    "value": {
+                                        "status": 400,
+                                        "message": "Invalid request. Please check the request input and try again."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            401
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Endpoint": {
+                                    "value": {
+                                        "status": 401,
+                                        "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "tags": [
+                "Roles",
+                "MCP"
+            ],
+            "security": [
+                {
+                    "STATSIG-API-KEY": []
+                }
+            ]
+        },
+        "delete": {
+            "summary": "Delete Role",
+            "parameters": [
+                {
+                    "name": "id",
+                    "required": true,
+                    "in": "path",
+                    "description": "id",
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "x-respect-review-settings",
+                    "in": "header",
+                    "description": "Optional header to respect review settings for mutation endpoints.",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Delete Role Response",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "message": "Role deleted successfully."
+                                }
+                            },
+                            "example": {
+                                "message": "Role deleted successfully."
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Invalid request. Please check the request input and try again.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            400
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Request": {
+                                    "value": {
+                                        "status": 400,
+                                        "message": "Invalid request. Please check the request input and try again."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            401
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Endpoint": {
+                                    "value": {
+                                        "status": 401,
+                                        "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "tags": [
+                "Roles",
+                "MCP"
+            ],
+            "security": [
+                {
+                    "STATSIG-API-KEY": []
+                }
+            ]
+        }
+    },
     "/console/v1/segments": {
       "post": {
         "operationId": "ConsoleV1SegmentsController_genCreate",
@@ -36858,6 +37791,41 @@
           "reloadType",
           "turboMode"
         ]
+      },
+      "RoleContractDto": {
+          "type": "object",
+          "properties": {
+              "name": {
+                  "type": "string",
+                  "description": "The name of the role."
+              },
+              "permissions": {
+                  "type": "object",
+                  "additionalProperties": {
+                      "type": "boolean"
+                  },
+                  "description": "The permissions of the role."
+              }
+          },
+          "required": [
+              "name",
+              "permissions"
+          ]
+      },
+      "RoleUpdateContractDto": {
+          "type": "object",
+          "properties": {
+              "permissions": {
+                  "type": "object",
+                  "additionalProperties": {
+                      "type": "boolean"
+                  },
+                  "description": "The permissions of the role."
+              }
+          },
+          "required": [
+              "permissions"
+          ]
       },
       "RuleDto": {
         "type": "object",
