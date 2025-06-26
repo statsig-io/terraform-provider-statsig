@@ -17178,6 +17178,366 @@
         ]
       }
     },
+    "/console/v1/environments": {
+        "get": {
+            "summary": "Get Environments",
+            "parameters": [
+                {
+                    "name": "x-respect-review-settings",
+                    "in": "header",
+                    "description": "Optional header to respect review settings for mutation endpoints.",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Get Environments Response",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/SingleDataResponse"
+                                    },
+                                    {
+                                        "properties": {
+                                            "data": {
+                                                "$ref": "#/components/schemas/EnvironmentsContractDto"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "example": {
+                                    "message": "Environments read successfully.",
+                                    "data": {
+                                        "environments": [
+                                            {
+                                                "name": "development",
+                                                "id": "0.35629335902367476",
+                                                "isProduction": false,
+                                                "requiresReview": false,
+                                                "requiresReleasePipeline": true
+                                            },
+                                            {
+                                                "name": "staging",
+                                                "id": "0.015089163460661137",
+                                                "isProduction": false,
+                                                "requiresReview": false,
+                                                "requiresReleasePipeline": true
+                                            },
+                                            {
+                                                "name": "production",
+                                                "id": "0.4067426155658289",
+                                                "isProduction": true,
+                                                "requiresReview": true,
+                                                "requiresReleasePipeline": true
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            "example": {
+                                "message": "Environments read successfully.",
+                                "data": {
+                                    "environments": [
+                                        {
+                                            "name": "development",
+                                            "id": "0.35629335902367476",
+                                            "isProduction": false,
+                                            "requiresReview": false,
+                                            "requiresReleasePipeline": true
+                                        },
+                                        {
+                                            "name": "staging",
+                                            "id": "0.015089163460661137",
+                                            "isProduction": false,
+                                            "requiresReview": false,
+                                            "requiresReleasePipeline": true
+                                        },
+                                        {
+                                            "name": "production",
+                                            "id": "0.4067426155658289",
+                                            "isProduction": true,
+                                            "requiresReview": true,
+                                            "requiresReleasePipeline": true
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Invalid request. Please check the request input and try again.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            400
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Request": {
+                                    "value": {
+                                        "status": 400,
+                                        "message": "Invalid request. Please check the request input and try again."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            401
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Endpoint": {
+                                    "value": {
+                                        "status": 401,
+                                        "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "tags": [
+                "Environments"
+            ],
+            "security": [
+                {
+                    "STATSIG-API-KEY": []
+                }
+            ]
+        },
+        "post": {
+            "summary": "Update Environments",
+            "parameters": [
+                {
+                    "name": "x-respect-review-settings",
+                    "in": "header",
+                    "description": "Optional header to respect review settings for mutation endpoints.",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/EnvironmentsUpdateContractDto"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Update Environments Response",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/SingleDataResponse"
+                                    },
+                                    {
+                                        "properties": {
+                                            "data": {
+                                                "$ref": "#/components/schemas/EnvironmentsContractDto"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "example": {
+                                    "message": "Environments updated successfully.",
+                                    "data": {
+                                        "environments": [
+                                            {
+                                                "name": "development",
+                                                "id": "0.35629335902367476",
+                                                "isProduction": false,
+                                                "requiresReview": false,
+                                                "requiresReleasePipeline": true
+                                            },
+                                            {
+                                                "name": "latest",
+                                                "id": "0.08933465966698129",
+                                                "isProduction": false,
+                                                "requiresReview": false,
+                                                "requiresReleasePipeline": true
+                                            },
+                                            {
+                                                "name": "staging",
+                                                "id": "0.015089163460661137",
+                                                "isProduction": false,
+                                                "requiresReview": false,
+                                                "requiresReleasePipeline": true
+                                            },
+                                            {
+                                                "name": "production",
+                                                "id": "0.4067426155658289",
+                                                "isProduction": true,
+                                                "requiresReview": true,
+                                                "requiresReleasePipeline": true
+                                            }
+                                        ]
+                                    }
+                                }
+                            },
+                            "example": {
+                                "message": "Environments updated successfully.",
+                                "data": {
+                                    "environments": [
+                                        {
+                                            "name": "development",
+                                            "id": "0.35629335902367476",
+                                            "isProduction": false,
+                                            "requiresReview": false,
+                                            "requiresReleasePipeline": true
+                                        },
+                                        {
+                                            "name": "latest",
+                                            "id": "0.08933465966698129",
+                                            "isProduction": false,
+                                            "requiresReview": false,
+                                            "requiresReleasePipeline": true
+                                        },
+                                        {
+                                            "name": "staging",
+                                            "id": "0.015089163460661137",
+                                            "isProduction": false,
+                                            "requiresReview": false,
+                                            "requiresReleasePipeline": true
+                                        },
+                                        {
+                                            "name": "production",
+                                            "id": "0.4067426155658289",
+                                            "isProduction": true,
+                                            "requiresReview": true,
+                                            "requiresReleasePipeline": true
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Invalid request. Please check the request input and try again.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            400
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Request": {
+                                    "value": {
+                                        "status": 400,
+                                        "message": "Invalid request. Please check the request input and try again."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            401
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Endpoint": {
+                                    "value": {
+                                        "status": 401,
+                                        "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "tags": [
+                "Environments"
+            ],
+            "security": [
+                {
+                    "STATSIG-API-KEY": []
+                }
+            ]
+        }
+    },
     "/console/v1/events": {
       "get": {
         "operationId": "ConsoleV1EventsController_genList",
@@ -39895,6 +40255,99 @@
           "decisionReason": "Your reason for stopping early",
           "removeTargeting": false
         }
+      },
+      "EnvironmentsContractDto": {
+          "type": "object",
+          "properties": {
+              "environments": {
+                  "type": "array",
+                  "items": {
+                      "type": "object",
+                      "properties": {
+                          "name": {
+                              "type": "string",
+                              "description": "The name of the environment."
+                          },
+                          "id": {
+                              "type": "string",
+                              "description": "A unique identifier for the environment."
+                          },
+                          "isProduction": {
+                              "type": "boolean",
+                              "description": "Whether the environment is production."
+                          },
+                          "requiresReview": {
+                              "type": "boolean",
+                              "description": "Whether the environment requires review."
+                          },
+                          "requiredReviewGroupID": {
+                              "type": "string",
+                              "description": "The ID of the review group that the environment requires review from."
+                          },
+                          "requiresReleasePipeline": {
+                              "type": "boolean",
+                              "description": "Whether the environment requires a release pipeline."
+                          }
+                      },
+                      "required": [
+                          "name",
+                          "id",
+                          "isProduction",
+                          "requiresReview",
+                          "requiresReleasePipeline"
+                      ]
+                  }
+              }
+          },
+          "required": [
+              "environments"
+          ]
+      },
+      "EnvironmentsUpdateContractDto": {
+          "type": "object",
+          "properties": {
+              "environments": {
+                  "type": "array",
+                  "items": {
+                      "type": "object",
+                      "properties": {
+                          "name": {
+                              "type": "string",
+                              "description": "The name of the environment."
+                          },
+                          "id": {
+                              "type": "string",
+                              "description": "A unique identifier for the environment. If not provided, the associated environment will be treated as a newly created environment."
+                          },
+                          "isProduction": {
+                              "type": "boolean",
+                              "description": "Whether the environment is production."
+                          },
+                          "requiresReview": {
+                              "type": "boolean",
+                              "description": "Whether the environment requires review."
+                          },
+                          "requiredReviewGroupID": {
+                              "type": "string",
+                              "description": "The ID of the review group that the environment requires review from."
+                          },
+                          "requiresReleasePipeline": {
+                              "type": "boolean",
+                              "description": "Whether the environment requires a release pipeline."
+                          }
+                      },
+                      "required": [
+                          "name",
+                          "isProduction",
+                          "requiresReview",
+                          "requiresReleasePipeline"
+                      ]
+                  }
+              }
+          },
+          "required": [
+              "environments"
+          ]
       },
       "ExperimentAbandonDto": {
         "type": "object",
