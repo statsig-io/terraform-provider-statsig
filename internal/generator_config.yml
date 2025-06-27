@@ -178,3 +178,18 @@ resources:
       attributes:
         aliases:
           id: name
+
+  environments:
+    read:
+      path: /console/v1/environments
+      method: GET
+    create:
+      path: /console/v1/environments
+      method: POST
+    update:
+      path: /console/v1/environments
+      method: POST
+    schema:
+      ignores:
+        - message
+        - data
