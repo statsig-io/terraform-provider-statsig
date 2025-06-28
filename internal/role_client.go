@@ -45,6 +45,7 @@ func (c *roleClient) update(ctx context.Context, role *resource_role.RoleModel) 
 	}
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_role.RoleAPIModel
+		// TODO(DWest): double id in this endpoint??
 		endpoint := fmt.Sprintf("%s/%s", c.endpoint, role.Name.ValueString())
 		res, err := c.transport.Patch(endpoint, role.Name.ValueString(), resource_role.RoleToAPIModel(ctx, role), &data)
 		resource_role.RoleFromAPIModel(ctx, diags, role, data)
