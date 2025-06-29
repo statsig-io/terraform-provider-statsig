@@ -2,7 +2,6 @@ package statsig
 
 import (
 	"context"
-	"fmt"
 	"terraform-provider-statsig/internal/resource_role"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -45,9 +44,7 @@ func (c *roleClient) update(ctx context.Context, role *resource_role.RoleModel) 
 	}
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_role.RoleAPIModel
-		// TODO(DWest): double id in this endpoint??
-		endpoint := fmt.Sprintf("%s/%s", c.endpoint, role.Name.ValueString())
-		res, err := c.transport.Patch(endpoint, role.Name.ValueString(), resource_role.RoleToAPIModel(ctx, role), &data)
+		res, err := c.transport.Patch(c.endpoint, role.Name.ValueString(), resource_role.RoleToAPIModel(ctx, role), &data)
 		resource_role.RoleFromAPIModel(ctx, diags, role, data)
 		return res, err
 	})
