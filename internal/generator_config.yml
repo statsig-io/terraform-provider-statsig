@@ -193,3 +193,18 @@ resources:
       ignores:
         - message
         - data
+
+  settings_roles:
+    read:
+      path: /console/v1/settings/roles
+      method: GET
+    create:
+      path: /console/v1/settings/roles
+      method: POST
+    update:
+      path: /console/v1/settings/roles
+      method: POST
+    schema:
+      ignores:
+        - message
+        - data
