@@ -2478,6 +2478,48 @@
 			}
 		},
 		{
+			"name": "settings_reviews",
+			"schema": {
+				"attributes": [
+					{
+						"name": "is_config_review_required",
+						"bool": {
+							"computed_optional_required": "required",
+							"description": "Whether config reviews are required."
+						}
+					},
+					{
+						"name": "is_metric_review_required",
+						"bool": {
+							"computed_optional_required": "required",
+							"description": "Whether metric reviews are required."
+						}
+					},
+					{
+						"name": "is_metric_review_required_on_verified_only",
+						"bool": {
+							"computed_optional_required": "required",
+							"description": "Whether metric reviews are only required for verified metrics."
+						}
+					},
+					{
+						"name": "is_whn_analysis_only_review_required",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Whether analysis-only experiment reviews are required. Only applicable to WHN projects."
+						}
+					},
+					{
+						"name": "is_whn_source_review_required",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"description": "Whether metric/assignment/entity property source reviews are required. Only applicable to WHN projects."
+						}
+					}
+				]
+			}
+		},
+		{
 			"name": "settings_roles",
 			"schema": {
 				"attributes": [

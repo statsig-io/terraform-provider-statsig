@@ -208,3 +208,18 @@ resources:
       ignores:
         - message
         - data
+
+  settings_reviews:
+      read:
+        path: /console/v1/settings/reviews
+        method: GET
+      create:
+        path: /console/v1/settings/reviews
+        method: POST
+      update:
+        path: /console/v1/settings/reviews
+        method: POST
+      schema:
+        ignores:
+          - message
+          - data
