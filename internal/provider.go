@@ -131,5 +131,6 @@ func (p *StatsigProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewRoleResource,
 		NewEnvironmentsResource,
 		NewSettingsRolesResource,
+		NewSettingsReviewsResource,
 	}
 }
