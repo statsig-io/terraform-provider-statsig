@@ -52,6 +52,10 @@ func GateResourceSchema(ctx context.Context) schema.Schema {
 				Optional: true,
 				Computed: true,
 			},
+			"is_template": schema.BoolAttribute{
+				Optional: true,
+				Computed: true,
+			},
 			"measure_metric_lifts": schema.BoolAttribute{
 				Optional: true,
 				Computed: true,
@@ -237,6 +241,7 @@ type GateModel struct {
 	Id                 types.String `tfsdk:"id"`
 	IdType             types.String `tfsdk:"id_type"`
 	IsEnabled          types.Bool   `tfsdk:"is_enabled"`
+	IsTemplate         types.Bool   `tfsdk:"is_template"`
 	MeasureMetricLifts types.Bool   `tfsdk:"measure_metric_lifts"`
 	MonitoringMetrics  types.List   `tfsdk:"monitoring_metrics"`
 	Name               types.String `tfsdk:"name"`
