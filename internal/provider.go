@@ -24,6 +24,7 @@ const (
 type ConsoleAPITier string
 
 const (
+	LocalTier   ConsoleAPITier = "local"
 	LatestTier  ConsoleAPITier = "latest"
 	StagingTier ConsoleAPITier = "staging"
 	ProdTier    ConsoleAPITier = ""

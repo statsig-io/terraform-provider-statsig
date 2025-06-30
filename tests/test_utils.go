@@ -2,7 +2,6 @@ package tests
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"testing"
 
@@ -36,7 +35,7 @@ func getTestAPIKey(t *testing.T, opts TestOptions) string {
 
 	apiKey, ok := os.LookupEnv(apiKeyEnv)
 	if !ok {
-		t.Fatal(fmt.Sprintf("%s env var not provided", apiKeyEnv))
+		t.Fatalf("%s env var not provided", apiKeyEnv)
 	}
 	return apiKey
 }
@@ -52,6 +51,9 @@ func getTier(t *testing.T) provider.ConsoleAPITier {
 	if tier == string(provider.LatestTier) {
 		return provider.LatestTier
 	}
+	if tier == string(provider.LocalTier) {
+		return provider.LocalTier
+	}
 	t.Fatal("Invalid value provided for TIER env var")
 	return provider.ProdTier
 }
@@ -60,7 +62,7 @@ func testAccExtractResourceAttr(name string, attr string, res *string) resource.
 	return func(s *terraform.State) error {
 		resource, ok := s.RootModule().Resources[name]
 		if !ok || resource == nil {
-			return errors.New("Resource not found")
+			return errors.New("resource not found")
 		}
 		*res = resource.Primary.Attributes[attr]
 		return nil
