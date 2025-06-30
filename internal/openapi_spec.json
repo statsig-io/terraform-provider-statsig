@@ -37636,6 +37636,9 @@
             },
             "nullable": true
           },
+          "isTemplate": {
+            "type": "boolean"
+          },
           "isEnabled": {
             "type": "boolean"
           },
@@ -38006,6 +38009,9 @@
             "maxLength": 100,
             "minLength": 3,
             "pattern": "^[a-zA-Z0-9_-]*$"
+          },
+          "isTemplate": {
+            "type": "boolean"
           }
         },
         "description": "Create a new gate",
