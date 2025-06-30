@@ -916,6 +916,12 @@
 						}
 					},
 					{
+						"name": "is_template",
+						"bool": {
+							"computed_optional_required": "computed_optional"
+						}
+					},
+					{
 						"name": "measure_metric_lifts",
 						"bool": {
 							"computed_optional_required": "computed_optional"
