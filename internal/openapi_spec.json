@@ -35966,7 +35966,9 @@
                 },
                 "returnValue": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": {
+                    "type": "string"
+                  }
                 },
                 "returnValueJson5": {
                   "type": "string"
@@ -35982,7 +35984,9 @@
           },
           "defaultValue": {
             "type": "object",
-            "additionalProperties": true,
+            "additionalProperties": {
+              "type": "string"
+            },
             "description": "The fallback JSON object when no rules are triggered"
           },
           "defaultValueJson5": {
@@ -36030,6 +36034,9 @@
             "type": "string",
             "nullable": true,
             "description": "`schema` except with Json5 comments. Optional and should parse to same json as `schema`."
+          },
+          "isTemplate": {
+            "type": "boolean"
           }
         },
         "required": [
@@ -36148,7 +36155,9 @@
                 },
                 "returnValue": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": {
+                    "type": "string"
+                  }
                 },
                 "returnValueJson5": {
                   "type": "string"
@@ -36164,7 +36173,9 @@
           },
           "defaultValue": {
             "type": "object",
-            "additionalProperties": true,
+            "additionalProperties": {
+              "type": "string"
+            },
             "description": "The fallback JSON object when no rules are triggered"
           },
           "defaultValueJson5": {
@@ -36254,6 +36265,9 @@
             "maxLength": 100,
             "minLength": 3,
             "pattern": "^[a-zA-Z0-9_-]*$"
+          },
+          "isTemplate": {
+            "type": "boolean"
           }
         },
         "required": [
@@ -36365,7 +36379,9 @@
                 },
                 "returnValue": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": {
+                    "type": "string"
+                  }
                 },
                 "returnValueJson5": {
                   "type": "string"
@@ -36381,7 +36397,9 @@
           },
           "defaultValue": {
             "type": "object",
-            "additionalProperties": true,
+            "additionalProperties": {
+              "type": "string"
+            },
             "description": "The fallback JSON object when no rules are triggered"
           },
           "defaultValueJson5": {
@@ -36570,7 +36588,9 @@
                 },
                 "returnValue": {
                   "type": "object",
-                  "additionalProperties": true
+                  "additionalProperties": {
+                    "type": "string"
+                  }
                 },
                 "returnValueJson5": {
                   "type": "string"
@@ -36586,7 +36606,9 @@
           },
           "defaultValue": {
             "type": "object",
-            "additionalProperties": true,
+            "additionalProperties": {
+              "type": "string"
+            },
             "description": "The fallback JSON object when no rules are triggered"
           },
           "defaultValueJson5": {
