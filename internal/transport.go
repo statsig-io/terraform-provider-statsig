@@ -33,6 +33,7 @@ type APIResponse struct {
 const ProdAPI = "https://api.statsig.com/console/v1"
 const StagingAPI = "https://staging.api.statsig.com/console/v1"
 const LatestAPI = "https://latest.api.statsig.com/console/v1"
+const LocalAPI = "http://localhost:3006/console/v1"
 
 func getAPI(tier ConsoleAPITier) string {
 	var api string
@@ -43,6 +44,8 @@ func getAPI(tier ConsoleAPITier) string {
 		api = StagingAPI
 	case LatestTier:
 		api = LatestAPI
+	case LocalTier:
+		api = LocalAPI
 	}
 	return api
 }
