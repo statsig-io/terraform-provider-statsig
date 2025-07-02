@@ -2478,6 +2478,20 @@
 			}
 		},
 		{
+			"name": "settings_roles",
+			"schema": {
+				"attributes": [
+					{
+						"name": "default_project_role",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "The name of the default project role."
+						}
+					}
+				]
+			}
+		},
+		{
 			"name": "tag",
 			"schema": {
 				"attributes": [
