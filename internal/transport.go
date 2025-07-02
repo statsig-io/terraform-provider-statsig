@@ -60,6 +60,9 @@ func NewTransport(_ context.Context, apiKey string, version StatsigProviderVersi
 }
 
 func (t *Transport) Get(endpoint string, id string, resp interface{}) (*APIResponse, error) {
+	if id == "" {
+		return t.doRequest("GET", endpoint, nil, resp)
+	}
 	return t.doRequest("GET", fmt.Sprintf("%s/%s", endpoint, id), nil, resp)
 }
 
