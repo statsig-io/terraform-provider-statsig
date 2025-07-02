@@ -125,6 +125,65 @@
 			}
 		},
 		{
+			"name": "environments",
+			"schema": {
+				"attributes": [
+					{
+						"name": "environments",
+						"list_nested": {
+							"computed_optional_required": "required",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "id",
+										"string": {
+											"computed_optional_required": "computed_optional",
+											"description": "A unique identifier for the environment. If not provided, the associated environment will be treated as a newly created environment."
+										}
+									},
+									{
+										"name": "is_production",
+										"bool": {
+											"computed_optional_required": "required",
+											"description": "Whether the environment is production."
+										}
+									},
+									{
+										"name": "name",
+										"string": {
+											"computed_optional_required": "required",
+											"description": "The name of the environment."
+										}
+									},
+									{
+										"name": "required_review_group_id",
+										"string": {
+											"computed_optional_required": "computed_optional",
+											"description": "The ID of the review group that the environment requires review from."
+										}
+									},
+									{
+										"name": "requires_release_pipeline",
+										"bool": {
+											"computed_optional_required": "required",
+											"description": "Whether the environment requires a release pipeline."
+										}
+									},
+									{
+										"name": "requires_review",
+										"bool": {
+											"computed_optional_required": "required",
+											"description": "Whether the environment requires review."
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			}
+		},
+		{
 			"name": "experiment",
 			"schema": {
 				"attributes": [
