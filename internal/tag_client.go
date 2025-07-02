@@ -2,7 +2,6 @@ package statsig
 
 import (
 	"context"
-	"fmt"
 	"terraform-provider-statsig/internal/resource_tag"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -45,8 +44,7 @@ func (c *tagClient) update(ctx context.Context, tag *resource_tag.TagModel) diag
 	}
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_tag.TagAPIModel
-		endpoint := fmt.Sprintf("%s/%s", c.endpoint, tag.Name.ValueString())
-		res, err := c.transport.Patch(endpoint, tag.Name.ValueString(), resource_tag.TagToAPIModel(ctx, tag), &data)
+		res, err := c.transport.Patch(c.endpoint, tag.Name.ValueString(), resource_tag.TagToAPIModel(ctx, tag), &data)
 		resource_tag.TagFromAPIModel(ctx, diags, tag, data)
 		return res, err
 	})
