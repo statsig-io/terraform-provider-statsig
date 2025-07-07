@@ -4,6 +4,304 @@
 	},
 	"resources": [
 		{
+			"name": "dynamic_config",
+			"schema": {
+				"attributes": [
+					{
+						"name": "creator_email",
+						"string": {
+							"computed_optional_required": "computed_optional"
+						}
+					},
+					{
+						"name": "creator_id",
+						"string": {
+							"computed_optional_required": "computed_optional"
+						}
+					},
+					{
+						"name": "default_value",
+						"map": {
+							"computed_optional_required": "computed_optional",
+							"element_type": {
+								"string": {}
+							},
+							"description": "The fallback JSON object when no rules are triggered"
+						}
+					},
+					{
+						"name": "default_value_json5",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "Can include comments. If provided with defaultValue, must parse to the same JSON"
+						}
+					},
+					{
+						"name": "description",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.LengthAtMost(1000)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "id",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.LengthBetween(3, 100)"
+									}
+								},
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "regexp"
+											},
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.RegexMatches(regexp.MustCompile(\"^[a-zA-Z0-9_-]*$\"), \"\")"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "id_type",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The type of ID which the dynamic config is based on."
+						}
+					},
+					{
+						"name": "is_enabled",
+						"bool": {
+							"computed_optional_required": "computed_optional",
+							"default": {
+								"static": true
+							},
+							"description": "Is the dynamic config enabled"
+						}
+					},
+					{
+						"name": "is_template",
+						"bool": {
+							"computed_optional_required": "computed_optional"
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "id",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.LengthBetween(3, 100)"
+									}
+								},
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "regexp"
+											},
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.RegexMatches(regexp.MustCompile(\"^[a-zA-Z0-9_\\\\- ]*$\"), \"\")"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "rules",
+						"list_nested": {
+							"computed_optional_required": "computed_optional",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "base_id",
+										"string": {
+											"computed_optional_required": "computed_optional",
+											"description": "The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout"
+										}
+									},
+									{
+										"name": "conditions",
+										"list_nested": {
+											"computed_optional_required": "required",
+											"nested_object": {
+												"attributes": [
+													{
+														"name": "custom_id",
+														"string": {
+															"computed_optional_required": "computed_optional"
+														}
+													},
+													{
+														"name": "field",
+														"string": {
+															"computed_optional_required": "computed_optional"
+														}
+													},
+													{
+														"name": "operator",
+														"string": {
+															"computed_optional_required": "computed_optional"
+														}
+													},
+													{
+														"name": "target_value",
+														"list": {
+															"computed_optional_required": "computed_optional",
+															"element_type": {
+																"string": {}
+															}
+														}
+													},
+													{
+														"name": "type",
+														"string": {
+															"computed_optional_required": "required",
+															"validators": [
+																{
+																	"custom": {
+																		"imports": [
+																			{
+																				"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+																			}
+																		],
+																		"schema_definition": "stringvalidator.OneOf(\n\"app_version\",\n\"browser_name\",\n\"browser_version\",\n\"country\",\n\"custom_field\",\n\"email\",\n\"environment_tier\",\n\"fails_gate\",\n\"fails_segment\",\n\"ip_address\",\n\"locale\",\n\"os_name\",\n\"os_version\",\n\"passes_gate\",\n\"passes_segment\",\n\"public\",\n\"time\",\n\"unit_id\",\n\"user_id\",\n\"url\",\n\"javascript\",\n\"device_model\",\n\"target_app\",\n)"
+																	}
+																}
+															]
+														}
+													}
+												]
+											},
+											"description": "An array of Condition objects."
+										}
+									},
+									{
+										"name": "environments",
+										"list": {
+											"computed_optional_required": "computed_optional",
+											"element_type": {
+												"string": {}
+											}
+										}
+									},
+									{
+										"name": "id",
+										"string": {
+											"computed_optional_required": "computed_optional",
+											"description": "The Statsig ID of this rule."
+										}
+									},
+									{
+										"name": "name",
+										"string": {
+											"computed_optional_required": "required",
+											"description": "The name of this rule."
+										}
+									},
+									{
+										"name": "pass_percentage",
+										"number": {
+											"computed_optional_required": "required",
+											"description": "Of the users that meet the conditions of this rule, what percent should return true."
+										}
+									},
+									{
+										"name": "return_value",
+										"map": {
+											"computed_optional_required": "computed_optional",
+											"element_type": {
+												"string": {}
+											}
+										}
+									},
+									{
+										"name": "return_value_json5",
+										"string": {
+											"computed_optional_required": "computed_optional"
+										}
+									}
+								]
+							},
+							"description": "An array of Rule objects"
+						}
+					},
+					{
+						"name": "schema",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "A schema using JSON Schema Draft 2020-12 to enforce return values of this dynamic config's rules."
+						}
+					},
+					{
+						"name": "schema_json5",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "`schema` except with Json5 comments. Optional and should parse to same json as `schema`."
+						}
+					},
+					{
+						"name": "tags",
+						"list": {
+							"computed_optional_required": "computed_optional",
+							"element_type": {
+								"string": {}
+							},
+							"description": "The list of tag names attached to the dynamic config"
+						}
+					},
+					{
+						"name": "target_apps",
+						"list": {
+							"computed_optional_required": "computed_optional",
+							"element_type": {
+								"string": {}
+							}
+						}
+					},
+					{
+						"name": "team",
+						"string": {
+							"computed_optional_required": "computed_optional"
+						}
+					}
+				]
+			}
+		},
+		{
 			"name": "entity_property",
 			"schema": {
 				"attributes": [

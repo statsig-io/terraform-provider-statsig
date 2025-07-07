@@ -65,6 +65,27 @@ resources:
         aliases:
           id: name
 
+  dynamic_config:
+    read:
+      path: /console/v1/dynamic_configs/{id}
+      method: GET
+    create:
+      path: /console/v1/dynamic_configs
+      method: POST
+    update:
+      path: /console/v1/dynamic_configs/{id}
+      method: PATCH
+    delete:
+      path: /console/v1/dynamic_configs/{id}
+      method: DELETE
+    schema:
+      ignores:
+        - message
+        - data
+      attributes:
+        aliases:
+          id: name
+
   entity_property:
     read:
       path: /console/v1/experiments/entity_property/{name}
@@ -210,16 +231,16 @@ resources:
         - data
 
   settings_reviews:
-      read:
-        path: /console/v1/settings/reviews
-        method: GET
-      create:
-        path: /console/v1/settings/reviews
-        method: POST
-      update:
-        path: /console/v1/settings/reviews
-        method: POST
-      schema:
-        ignores:
-          - message
-          - data
+    read:
+      path: /console/v1/settings/reviews
+      method: GET
+    create:
+      path: /console/v1/settings/reviews
+      method: POST
+    update:
+      path: /console/v1/settings/reviews
+      method: POST
+    schema:
+      ignores:
+        - message
+        - data
