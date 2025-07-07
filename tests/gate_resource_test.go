@@ -19,7 +19,7 @@ func TestAccGateFull(t *testing.T) {
 				ConfigFile: config.StaticFile("test_resources/gate_full.tf"),
 				Check: resource.ComposeTestCheckFunc(
 					verifyFullGateSetup(t, "statsig_gate.my_gate"),
-					verifyFullGateOutput(t),
+					verifyGateOutput(t, "my_gate"),
 				),
 			},
 			{
@@ -34,9 +34,9 @@ func TestAccGateFull(t *testing.T) {
 	})
 }
 
-func verifyFullGateOutput(t *testing.T) resource.TestCheckFunc {
+func verifyGateOutput(t *testing.T, name string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		o, _ := s.RootModule().Outputs["my_gate"]
+		o, _ := s.RootModule().Outputs[name]
 
 		rules := o.Value.(map[string]interface{})["rules"].([]interface{})
 		mainRule := rules[0].(map[string]interface{})
@@ -100,6 +100,61 @@ func verifyFullGateSetup(t *testing.T, name string) resource.TestCheckFunc {
 		assert.Equal(t, "", local["rules.0.conditions.1.field"])
 
 		assert.Equal(t, "true", local["measure_metric_lifts"])
+
+		return nil
+	}
+}
+
+func TestAccGateTemplate(t *testing.T) {
+	resource.Test(t, resource.TestCase{
+		ProtoV6ProviderFactories: testAccProviders(t, TestOptions{}),
+		Steps: []resource.TestStep{
+			{
+				ConfigFile: config.StaticFile("test_resources/gate_template.tf"),
+				Check: resource.ComposeTestCheckFunc(
+					verifyGateTemplateSetup(t, "statsig_gate.my_gate_template"),
+					verifyGateOutput(t, "my_gate_template"),
+				),
+			},
+			{
+				ConfigFile: config.StaticFile("test_resources/gate_template.tf"),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+		},
+	})
+}
+
+func verifyGateTemplateSetup(t *testing.T, name string) resource.TestCheckFunc {
+	return func(s *terraform.State) error {
+		rs, _ := s.RootModule().Resources[name]
+		local := rs.Primary.Attributes
+
+		assert.Equal(t, "my_gate_template", local["id"])
+
+		assert.Equal(t, "my_gate_template", local["name"])
+
+		assert.Equal(t, "A short description of what this Gate is used for.", local["description"])
+
+		assert.Equal(t, "userID", local["id_type"])
+
+		assert.Equal(t, "public", local["rules.0.conditions.0.type"])
+		assert.Equal(t, "", local["rules.0.conditions.0.target_value"])
+		assert.Equal(t, "", local["rules.0.conditions.0.operator"])
+		assert.Equal(t, "", local["rules.0.conditions.0.field"])
+
+		assert.Equal(t, "user_id", local["rules.0.conditions.1.type"])
+		assert.Equal(t, "1", local["rules.0.conditions.1.target_value.0"])
+		assert.Equal(t, "2", local["rules.0.conditions.1.target_value.1"])
+		assert.Equal(t, "any", local["rules.0.conditions.1.operator"])
+		assert.Equal(t, "", local["rules.0.conditions.1.field"])
+
+		assert.Equal(t, "true", local["measure_metric_lifts"])
+
+		assert.Equal(t, "true", local["is_template"])
 
 		return nil
 	}

@@ -20,6 +20,7 @@ type GateAPIModel struct {
 	IdType             string                     `json:"idType,omitempty"`
 	Description        string                     `json:"description"`
 	IsEnabled          bool                       `json:"isEnabled"`
+	IsTemplate         *bool                      `json:"isTemplate,omitempty"`
 	MeasureMetricLifts *bool                      `json:"measureMetricLifts,omitempty"`
 	MonitoringMetrics  []MonitoringMetricAPIModel `json:"monitoringMetrics,omitempty"`
 	Rules              []RuleAPIModel             `json:"rules"`
@@ -38,6 +39,7 @@ func GateToAPIModel(ctx context.Context, gate *GateModel) GateAPIModel {
 		IdType:             gate.IdType.ValueString(),
 		Description:        gate.Description.ValueString(),
 		IsEnabled:          utils.BoolFromBoolValue(gate.IsEnabled),
+		IsTemplate:         utils.NilableBoolFromBoolValue(gate.IsTemplate),
 		MeasureMetricLifts: utils.NilableBoolFromBoolValue(gate.MeasureMetricLifts),
 		MonitoringMetrics:  MonitoringMetricsToAPIModel(ctx, gate.MonitoringMetrics),
 		Rules:              RulesToAPIModel(ctx, gate.Rules),
@@ -56,6 +58,7 @@ func GateFromAPIModel(ctx context.Context, diags diag.Diagnostics, gate *GateMod
 	gate.IdType = utils.StringToNilableValue(res.IdType)
 	gate.Description = utils.StringToNilableValue(res.Description)
 	gate.IsEnabled = utils.BoolToBoolValue(res.IsEnabled)
+	gate.IsTemplate = utils.NilableBoolToBoolValue(res.IsTemplate)
 	gate.MeasureMetricLifts = utils.NilableBoolToBoolValue(res.MeasureMetricLifts)
 	gate.MonitoringMetrics = MonitoringMetricsFromAPIModel(ctx, diags, res.MonitoringMetrics)
 	gate.Rules = RulesFromAPIModel(ctx, diags, res.Rules)
