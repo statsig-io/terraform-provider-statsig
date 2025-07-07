@@ -2838,6 +2838,20 @@
 			}
 		},
 		{
+			"name": "settings_teams",
+			"schema": {
+				"attributes": [
+					{
+						"name": "require_teams_on_configs",
+						"bool": {
+							"computed_optional_required": "required",
+							"description": "Whether a team is required on each new config."
+						}
+					}
+				]
+			}
+		},
+		{
 			"name": "tag",
 			"schema": {
 				"attributes": [

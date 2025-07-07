@@ -244,3 +244,18 @@ resources:
       ignores:
         - message
         - data
+
+  settings_teams:
+    read:
+      path: /console/v1/settings/teams
+      method: GET
+    create:
+      path: /console/v1/settings/teams
+      method: POST
+    update:
+      path: /console/v1/settings/teams
+      method: POST
+    schema:
+      ignores:
+        - message
+        - data
