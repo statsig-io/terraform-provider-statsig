@@ -2,10 +2,10 @@ package statsig
 
 import (
 	"context"
+	"fmt"
+	"terraform-provider-statsig/internal/resource_settings_teams"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 )
 
 var _ resource.Resource = (*settingsTeamsResource)(nil)
@@ -14,10 +14,25 @@ func NewSettingsTeamsResource() resource.Resource {
 	return &settingsTeamsResource{}
 }
 
-type settingsTeamsResource struct{}
+type settingsTeamsResource struct{
+	data   *StatsigResourceData
+	client *settingsTeamsClient
+}
 
-type settingsTeamsResourceModel struct {
-	Id types.String `tfsdk:"id"`
+func (r *settingsTeamsResource) Configure(ctx context.Context, req resource.ConfigureRequest, resp *resource.ConfigureResponse) {
+	if req.ProviderData == nil {
+		return
+	}
+	data, ok := req.ProviderData.(*StatsigResourceData)
+	if !ok {
+		resp.Diagnostics.AddError(
+			"Unexpected Resource Configure Type",
+			fmt.Sprintf("Expected *httpClient, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+		)
+		return
+	}
+	r.data = data
+	r.client = newSettingsTeamsClient(data.transport)
 }
 
 func (r *settingsTeamsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
@@ -25,68 +40,59 @@ func (r *settingsTeamsResource) Metadata(ctx context.Context, req resource.Metad
 }
 
 func (r *settingsTeamsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
-	resp.Schema = schema.Schema{
-		Attributes: map[string]schema.Attribute{
-			"id": schema.StringAttribute{
-				Computed: true,
-			},
-		},
-	}
+	resp.Schema = resource_settings_teams.SettingsTeamsResourceSchema(ctx)
 }
 
 func (r *settingsTeamsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var data settingsTeamsResourceModel
+	var data resource_settings_teams.SettingsTeamsModel
 
-	// Read Terraform plan data into the model
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
-
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...) 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	// Create API call logic
+	resp.Diagnostics.Append(r.client.update(ctx, &data)...) 
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
-	// Example data value setting
-	data.Id = types.StringValue("example-id")
-
-	// Save data into Terraform state
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...) 
 }
 
 func (r *settingsTeamsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var data settingsTeamsResourceModel
+	var data resource_settings_teams.SettingsTeamsModel
 
-	// Read Terraform prior state data into the model
-	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
-
+	resp.Diagnostics.Append(req.State.Get(ctx, &data)...) 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	// Read API call logic
+	resp.Diagnostics.Append(r.client.read(ctx, &data)...) 
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
-	// Save updated data into Terraform state
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...) 
 }
 
 func (r *settingsTeamsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var data settingsTeamsResourceModel
+	var data resource_settings_teams.SettingsTeamsModel
 
-	// Read Terraform plan data into the model
-	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...)
-
+	resp.Diagnostics.Append(req.Plan.Get(ctx, &data)...) 
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	// Update API call logic
+	resp.Diagnostics.Append(r.client.update(ctx, &data)...) 
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
-	// Save updated data into Terraform state
-	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, &data)...) 
 }
 
 func (r *settingsTeamsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var data settingsTeamsResourceModel
+	var data resource_settings_teams.SettingsTeamsModel
 
 	// Read Terraform prior state data into the model
 	resp.Diagnostics.Append(req.State.Get(ctx, &data)...)
@@ -96,4 +102,5 @@ func (r *settingsTeamsResource) Delete(ctx context.Context, req resource.DeleteR
 	}
 
 	// Delete API call logic
+	// NO-OP
 }
