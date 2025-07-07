@@ -154,7 +154,7 @@ func MapFromMapValue(ctx context.Context, value basetypes.MapValue) map[string]i
 }
 
 func MapToMapValue(ctx context.Context, diags diag.Diagnostics, value map[string]interface{}) basetypes.MapValue {
-	var attrType attr.Type
+	var attrType attr.Type = types.StringType
 	attributes := make(map[string]attr.Value, len(value))
 	for key, val := range value {
 		v := InterfaceToValue(ctx, diags, val)
