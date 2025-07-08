@@ -28408,6 +28408,272 @@
         ]
       }
     },
+    "/console/v1/settings/project": {
+        "get": {
+            "summary": "Get Project Settings",
+            "parameters": [
+                {
+                    "name": "x-respect-review-settings",
+                    "in": "header",
+                    "description": "Optional header to respect review settings for mutation endpoints.",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Get Project Settings Response",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/SingleDataResponse"
+                                    },
+                                    {
+                                        "properties": {
+                                            "data": {
+                                                "$ref": "#/components/schemas/SettingsProjectContractDto"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "example": {
+                                    "message": "Settings read successfully.",
+                                    "data": {
+                                        "name": "Test Project",
+                                        "visibility": "CLOSED",
+                                        "default_unit_type": "user_id"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "message": "Settings read successfully.",
+                                "data": {
+                                    "name": "Test Project",
+                                    "visibility": "CLOSED",
+                                    "default_unit_type": "user_id"
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Invalid request. Please check the request input and try again.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            400
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Request": {
+                                    "value": {
+                                        "status": 400,
+                                        "message": "Invalid request. Please check the request input and try again."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            401
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Endpoint": {
+                                    "value": {
+                                        "status": 401,
+                                        "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "tags": [
+                "Settings"
+            ],
+            "security": [
+                {
+                    "STATSIG-API-KEY": []
+                }
+            ]
+        },
+        "post": {
+            "summary": "Update Project Settings",
+            "parameters": [
+                {
+                    "name": "x-respect-review-settings",
+                    "in": "header",
+                    "description": "Optional header to respect review settings for mutation endpoints.",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/SettingsProjectContractDto"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Update Project Settings Response",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/SingleDataResponse"
+                                    },
+                                    {
+                                        "properties": {
+                                            "data": {
+                                                "$ref": "#/components/schemas/SettingsProjectContractDto"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "example": {
+                                    "message": "Settings read successfully.",
+                                    "data": {
+                                        "name": "Test Project",
+                                        "visibility": "closed",
+                                        "default_unit_type": "stable_id"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "message": "Settings read successfully.",
+                                "data": {
+                                    "name": "Test Project",
+                                    "visibility": "closed",
+                                    "default_unit_type": "stable_id"
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Invalid request. Please check the request input and try again.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            400
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Request": {
+                                    "value": {
+                                        "status": 400,
+                                        "message": "Invalid request. Please check the request input and try again."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            401
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Endpoint": {
+                                    "value": {
+                                        "status": 401,
+                                        "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "tags": [
+                "Settings"
+            ],
+            "security": [
+                {
+                    "STATSIG-API-KEY": []
+                }
+            ]
+        }
+    },
     "/console/v1/settings/reviews": {
         "get": {
             "summary": "Get Reviews Settings",
@@ -35978,6 +36244,32 @@
           "condition",
           "tags"
         ]
+      },
+      "SettingsProjectContractDto": {
+          "type": "object",
+          "properties": {
+              "name": {
+                  "type": "string",
+                  "description": "The name of the project."
+              },
+              "visibility": {
+                  "type": "string",
+                  "enum": [
+                      "OPEN",
+                      "CLOSED",
+                      "EXTERNAL"
+                  ],
+                  "description": "The visibility type of the project."
+              },
+              "default_unit_type": {
+                  "type": "string",
+                  "description": "The default unit ID type of the project for newly created gates, experiments, and metrics. If not provided, there will be no default unit type."
+              }
+          },
+          "required": [
+              "name",
+              "visibility"
+          ]
       },
       "SettingsReviewsContractDto": {
           "type": "object",
