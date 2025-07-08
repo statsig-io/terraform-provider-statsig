@@ -215,6 +215,21 @@ resources:
         - message
         - data
 
+  settings_project:
+    read:
+      path: /console/v1/settings/project
+      method: GET
+    create:
+      path: /console/v1/settings/project
+      method: POST
+    update:
+      path: /console/v1/settings/project
+      method: POST
+    schema:
+      ignores:
+        - message
+        - data
+
   settings_roles:
     read:
       path: /console/v1/settings/roles
