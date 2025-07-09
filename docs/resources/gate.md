@@ -29,6 +29,7 @@ resource "statsig_gate" "full" {
   name        = "full_gate"
   description = "A short description of what this Gate is used for."
   is_enabled  = true
+  is_template = true
   id_type     = "userID"
   rules = [
     {
@@ -164,6 +165,7 @@ resource "statsig_gate" "simple" {
 - `description` (String)
 - `id_type` (String)
 - `is_enabled` (Boolean)
+- `is_template` (Boolean)
 - `measure_metric_lifts` (Boolean)
 - `monitoring_metrics` (Attributes List) (see [below for nested schema](#nestedatt--monitoring_metrics))
 - `name` (String) id
