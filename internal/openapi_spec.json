@@ -26474,6 +26474,660 @@
         ]
       }
     },
+    "/console/v1/unit_id_types": {
+        "get": {
+            "summary": "List Unit ID Types",
+            "parameters": [
+                {
+                    "name": "limit",
+                    "required": false,
+                    "in": "query",
+                    "description": "Results per page",
+                    "schema": {
+                        "example": 10,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "number"
+                            }
+                        ],
+                        "type": "integer"
+                    }
+                },
+                {
+                    "name": "page",
+                    "required": false,
+                    "in": "query",
+                    "description": "Page number",
+                    "schema": {
+                        "example": 1,
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "number"
+                            }
+                        ],
+                        "type": "integer"
+                    }
+                },
+                {
+                    "name": "x-respect-review-settings",
+                    "in": "header",
+                    "description": "Optional header to respect review settings for mutation endpoints.",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "List Unit ID Types Response",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/PaginationResponseWithMessage"
+                                    },
+                                    {
+                                        "properties": {
+                                            "data": {
+                                                "type": "array",
+                                                "items": {
+                                                    "$ref": "#/components/schemas/UnitIdTypeContractDto"
+                                                }
+                                            }
+                                        }
+                                    }
+                                ],
+                                "example": {
+                                    "message": "Unit ID Types listed successfully.",
+                                    "data": [
+                                        {
+                                            "name": "testID",
+                                            "description": "My test ID type."
+                                        }
+                                    ],
+                                    "pagination": {
+                                        "itemsPerPage": 100,
+                                        "pageNumber": 1,
+                                        "totalItems": 1,
+                                        "nextPage": null,
+                                        "previousPage": null,
+                                        "all": "/console/v1/unit_id_types"
+                                    }
+                                }
+                            },
+                            "example": {
+                                "message": "Unit ID Types listed successfully.",
+                                "data": [
+                                    {
+                                        "name": "testID",
+                                        "description": "My test ID type."
+                                    }
+                                ],
+                                "pagination": {
+                                    "itemsPerPage": 100,
+                                    "pageNumber": 1,
+                                    "totalItems": 1,
+                                    "nextPage": null,
+                                    "previousPage": null,
+                                    "all": "/console/v1/unit_id_types"
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Invalid request. Please check the request input and try again.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            400
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Request": {
+                                    "value": {
+                                        "status": 400,
+                                        "message": "Invalid request. Please check the request input and try again."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            401
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Endpoint": {
+                                    "value": {
+                                        "status": 401,
+                                        "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "tags": [
+                "Unit ID Types"
+            ],
+            "security": [
+                {
+                    "STATSIG-API-KEY": []
+                }
+            ]
+        },
+        "post": {
+            "summary": "Create Unit ID Type",
+            "parameters": [
+                {
+                    "name": "x-respect-review-settings",
+                    "in": "header",
+                    "description": "Optional header to respect review settings for mutation endpoints.",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/UnitIdTypeContractDto"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "201": {
+                    "description": "Create Unit ID Type Response",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/SingleDataResponse"
+                                    },
+                                    {
+                                        "properties": {
+                                            "data": {
+                                                "$ref": "#/components/schemas/UnitIdTypeContractDto"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "example": {
+                                    "message": "Unit ID Type created successfully.",
+                                    "data": {
+                                        "name": "newTestID",
+                                        "description": "My new test ID type."
+                                    }
+                                }
+                            },
+                            "example": {
+                                "message": "Unit ID Type created successfully.",
+                                "data": {
+                                    "name": "newTestID",
+                                    "description": "My new test ID type."
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Invalid request. Please check the request input and try again.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            400
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Request": {
+                                    "value": {
+                                        "status": 400,
+                                        "message": "Invalid request. Please check the request input and try again."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            401
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Endpoint": {
+                                    "value": {
+                                        "status": 401,
+                                        "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "tags": [
+                "Unit ID Types"
+            ],
+            "security": [
+                {
+                    "STATSIG-API-KEY": []
+                }
+            ]
+        }
+    },
+    "/console/v1/unit_id_types/{id}": {
+        "get": {
+            "summary": "Get Unit ID Type",
+            "parameters": [
+                {
+                    "name": "id",
+                    "required": true,
+                    "in": "path",
+                    "description": "id",
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "x-respect-review-settings",
+                    "in": "header",
+                    "description": "Optional header to respect review settings for mutation endpoints.",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Get Unit ID Type Response",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/SingleDataResponse"
+                                    },
+                                    {
+                                        "properties": {
+                                            "data": {
+                                                "$ref": "#/components/schemas/UnitIdTypeContractDto"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "example": {
+                                    "message": "Unit ID Type read successfully.",
+                                    "data": {
+                                        "name": "testID",
+                                        "description": "My test ID type."
+                                    }
+                                }
+                            },
+                            "example": {
+                                "message": "Unit ID Type read successfully.",
+                                "data": {
+                                    "name": "testID",
+                                    "description": "My test ID type."
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Invalid request. Please check the request input and try again.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            400
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Request": {
+                                    "value": {
+                                        "status": 400,
+                                        "message": "Invalid request. Please check the request input and try again."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            401
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Endpoint": {
+                                    "value": {
+                                        "status": 401,
+                                        "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "tags": [
+                "Unit ID Types"
+            ],
+            "security": [
+                {
+                    "STATSIG-API-KEY": []
+                }
+            ]
+        },
+        "patch": {
+            "summary": "Update Unit ID Type",
+            "parameters": [
+                {
+                    "name": "id",
+                    "required": true,
+                    "in": "path",
+                    "description": "id",
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "x-respect-review-settings",
+                    "in": "header",
+                    "description": "Optional header to respect review settings for mutation endpoints.",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/UnitIdTypeUpdateContractDto"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Update Unit ID Type Response",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/SingleDataResponse"
+                                    },
+                                    {
+                                        "properties": {
+                                            "data": {
+                                                "$ref": "#/components/schemas/UnitIdTypeContractDto"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "example": {
+                                    "message": "Unit ID Type updated successfully.",
+                                    "data": {
+                                        "name": "testID",
+                                        "description": "My new description of my ID type."
+                                    }
+                                }
+                            },
+                            "example": {
+                                "message": "Unit ID Type updated successfully.",
+                                "data": {
+                                    "name": "testID",
+                                    "description": "My new description of my ID type."
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Invalid request. Please check the request input and try again.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            400
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Request": {
+                                    "value": {
+                                        "status": 400,
+                                        "message": "Invalid request. Please check the request input and try again."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "tags": [
+                "Unit ID Types"
+            ],
+            "security": [
+                {
+                    "STATSIG-API-KEY": []
+                }
+            ]
+        },
+        "delete": {
+            "summary": "Delete Unit ID Type",
+            "parameters": [
+                {
+                    "name": "id",
+                    "required": true,
+                    "in": "path",
+                    "description": "id",
+                    "schema": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "name": "x-respect-review-settings",
+                    "in": "header",
+                    "description": "Optional header to respect review settings for mutation endpoints.",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Delete Unit ID Type Response",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "message": "Unit ID Type deleted successfully."
+                                }
+                            },
+                            "example": {
+                                "message": "Unit ID Type deleted successfully."
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Invalid request. Please check the request input and try again.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            400
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Request": {
+                                    "value": {
+                                        "status": 400,
+                                        "message": "Invalid request. Please check the request input and try again."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "tags": [
+                "Unit ID Types"
+            ],
+            "security": [
+                {
+                    "STATSIG-API-KEY": []
+                }
+            ]
+        }
+    },
     "/console/v1/users": {
       "get": {
         "operationId": "ConsoleV1UsersController_genList",
@@ -44214,6 +44868,34 @@
           "environmentOverrides"
         ],
         "description": "Contract for overrides"
+      },
+      "UnitIdTypeContractDto": {
+          "type": "object",
+          "properties": {
+              "name": {
+                  "type": "string",
+                  "description": "The name of the unit id type."
+              },
+              "description": {
+                  "type": "string",
+                  "description": "The description of the unit id type."
+              }
+          },
+          "required": [
+              "name"
+          ]
+      },
+      "UnitIdTypeUpdateContractDto": {
+          "type": "object",
+          "properties": {
+              "description": {
+                  "type": "string",
+                  "description": "The description of the unit id type."
+              }
+          },
+          "required": [
+              "description"
+          ]
       },
       "UpdateOverridesContractDto": {
         "oneOf": [
