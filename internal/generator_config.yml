@@ -274,3 +274,24 @@ resources:
       ignores:
         - message
         - data
+
+  unit_id_type:
+    read:
+      path: /console/v1/unit_id_types/{id}
+      method: GET
+    create:
+      path: /console/v1/unit_id_types
+      method: POST
+    update:
+      path: /console/v1/unit_id_types/{id}
+      method: PATCH
+    delete:
+      path: /console/v1/unit_id_types/{id}
+      method: DELETE
+    schema:
+      ignores:
+        - message
+        - data
+      attributes:
+        aliases:
+          id: name

@@ -2943,6 +2943,27 @@
 					}
 				]
 			}
+		},
+		{
+			"name": "unit_id_type",
+			"schema": {
+				"attributes": [
+					{
+						"name": "description",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "The description of the unit id type."
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "The name of the unit id type."
+						}
+					}
+				]
+			}
 		}
 	],
 	"version": "0.1"
