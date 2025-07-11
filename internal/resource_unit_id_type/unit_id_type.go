@@ -2,9 +2,9 @@ package resource_unit_id_type
 
 import (
 	"context"
-	"terraform-provider-statsig/internal/utils"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/statsig-io/terraform-provider-statsig/internal/utils"
 )
 
 // API data model for UnitIdTypeModel

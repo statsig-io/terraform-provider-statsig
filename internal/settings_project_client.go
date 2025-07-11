@@ -2,9 +2,9 @@ package statsig
 
 import (
 	"context"
-	"terraform-provider-statsig/internal/resource_settings_project"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/statsig-io/terraform-provider-statsig/internal/resource_settings_project"
 )
 
 type settingsProjectClient struct {

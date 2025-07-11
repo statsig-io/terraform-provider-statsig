@@ -3,10 +3,10 @@ package statsig
 import (
 	"context"
 	"fmt"
-	"terraform-provider-statsig/internal/resource_dynamic_config"
 
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/statsig-io/terraform-provider-statsig/internal/resource_dynamic_config"
 )
 
 var _ resource.Resource = (*dynamicConfigResource)(nil)

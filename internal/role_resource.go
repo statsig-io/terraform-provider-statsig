@@ -3,9 +3,9 @@ package statsig
 import (
 	"context"
 	"fmt"
-	"terraform-provider-statsig/internal/resource_role"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/statsig-io/terraform-provider-statsig/internal/resource_role"
 )
 
 var _ resource.Resource = (*roleResource)(nil)

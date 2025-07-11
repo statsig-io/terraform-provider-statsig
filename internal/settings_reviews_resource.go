@@ -3,9 +3,9 @@ package statsig
 import (
 	"context"
 	"fmt"
-	"terraform-provider-statsig/internal/resource_settings_reviews"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/statsig-io/terraform-provider-statsig/internal/resource_settings_reviews"
 )
 
 var _ resource.Resource = (*settingsReviewsResource)(nil)

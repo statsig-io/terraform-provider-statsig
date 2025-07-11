@@ -3,10 +3,10 @@ package statsig
 import (
 	"context"
 	"fmt"
-	"terraform-provider-statsig/internal/resource_qualifying_event"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/statsig-io/terraform-provider-statsig/internal/resource_qualifying_event"
 )
 
 type qualifyingEventClient struct {

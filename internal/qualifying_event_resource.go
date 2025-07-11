@@ -3,9 +3,9 @@ package statsig
 import (
 	"context"
 	"fmt"
-	"terraform-provider-statsig/internal/resource_qualifying_event"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource"
+	"github.com/statsig-io/terraform-provider-statsig/internal/resource_qualifying_event"
 )
 
 var _ resource.Resource = (*qualifyingEventResource)(nil)

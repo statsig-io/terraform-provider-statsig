@@ -2,9 +2,9 @@ package statsig
 
 import (
 	"context"
-	"terraform-provider-statsig/internal/resource_settings_roles"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/statsig-io/terraform-provider-statsig/internal/resource_settings_roles"
 )
 
 type settingsRolesClient struct {

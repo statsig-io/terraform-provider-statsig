@@ -2,12 +2,12 @@ package resource_metric_source
 
 import (
 	"context"
-	"terraform-provider-statsig/internal/utils"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
+	"github.com/statsig-io/terraform-provider-statsig/internal/utils"
 )
 
 // API data model for MetricSourceModel
