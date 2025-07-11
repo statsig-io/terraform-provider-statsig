@@ -11,6 +11,7 @@ resource "statsig_gate" "full" {
   name        = "full_gate"
   description = "A short description of what this Gate is used for."
   is_enabled  = true
+  is_template = true
   id_type     = "userID"
   rules = [
     {
