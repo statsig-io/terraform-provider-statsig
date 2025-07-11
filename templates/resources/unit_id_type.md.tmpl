@@ -1,0 +1,20 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{.Name}} ({{.Type}})
+
+This resource allows you to configure Custom Unit ID Types for your Statsig project.
+
+To learn more about Custom Unit ID Types, see [Custom Unit ID Types Documentation](https://docs.statsig.com/guides/experiment-on-custom-id-types)
+
+To learn more about the API powering this resource, see [Custom Unit ID Types API Documentation](https://docs.statsig.com/console-api/all-endpoints-generated#post-/console/v1/unit_id_types)
+
+## Example Usage
+
+{{ tffile (printf "examples/resources/%s/resource.tf" .Name)}}
+
+{{ .SchemaMarkdown | trimspace }}
