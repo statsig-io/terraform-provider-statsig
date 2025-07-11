@@ -28932,6 +28932,264 @@
             ]
         }
     },
+    "/console/v1/settings/teams": {
+        "get": {
+            "summary": "Get Teams Settings",
+            "parameters": [
+                {
+                    "name": "x-respect-review-settings",
+                    "in": "header",
+                    "description": "Optional header to respect review settings for mutation endpoints.",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "responses": {
+                "200": {
+                    "description": "Get Teams Settings Response",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/SingleDataResponse"
+                                    },
+                                    {
+                                        "properties": {
+                                            "data": {
+                                                "$ref": "#/components/schemas/SettingsTeamsContractDto"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "example": {
+                                    "message": "Settings read successfully.",
+                                    "data": {
+                                        "require_teams_on_configs": true
+                                    }
+                                }
+                            },
+                            "example": {
+                                "message": "Settings read successfully.",
+                                "data": {
+                                    "require_teams_on_configs": true
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Invalid request. Please check the request input and try again.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            400
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Request": {
+                                    "value": {
+                                        "status": 400,
+                                        "message": "Invalid request. Please check the request input and try again."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            401
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Endpoint": {
+                                    "value": {
+                                        "status": 401,
+                                        "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "tags": [
+                "Settings"
+            ],
+            "security": [
+                {
+                    "STATSIG-API-KEY": []
+                }
+            ]
+        },
+        "post": {
+            "summary": "Update Teams Settings",
+            "parameters": [
+                {
+                    "name": "x-respect-review-settings",
+                    "in": "header",
+                    "description": "Optional header to respect review settings for mutation endpoints.",
+                    "required": false,
+                    "schema": {
+                        "type": "string"
+                    }
+                }
+            ],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/SettingsTeamsContractDto"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Update Teams Settings Response",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/SingleDataResponse"
+                                    },
+                                    {
+                                        "properties": {
+                                            "data": {
+                                                "$ref": "#/components/schemas/SettingsTeamsContractDto"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "example": {
+                                    "message": "Settings updated successfully.",
+                                    "data": {
+                                        "require_teams_on_configs": false
+                                    }
+                                }
+                            },
+                            "example": {
+                                "message": "Settings updated successfully.",
+                                "data": {
+                                    "require_teams_on_configs": false
+                                }
+                            }
+                        }
+                    }
+                },
+                "400": {
+                    "description": "Invalid request. Please check the request input and try again.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            400
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Request": {
+                                    "value": {
+                                        "status": 400,
+                                        "message": "Invalid request. Please check the request input and try again."
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "401": {
+                    "description": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "status": {
+                                        "type": "integer",
+                                        "enum": [
+                                            401
+                                        ]
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "status",
+                                    "message"
+                                ]
+                            },
+                            "examples": {
+                                "Invalid Endpoint": {
+                                    "value": {
+                                        "status": 401,
+                                        "message": "This endpoint only accepts an active CONSOLE key, but an invalid key was sent. Key: console-xxxXXXxxxXXXxxx"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "tags": [
+                "Settings"
+            ],
+            "security": [
+                {
+                    "STATSIG-API-KEY": []
+                }
+            ]
+        }
+    },
     "/console/v1/tags/{id}": {
       "get": {
         "operationId": "ConsoleV1TagsController_genRead",
@@ -35761,6 +36019,18 @@
           },
           "required": [
               "default_project_role"
+          ]
+      },
+      "SettingsTeamsContractDto": {
+          "type": "object",
+          "properties": {
+              "require_teams_on_configs": {
+                  "type": "boolean",
+                  "description": "Whether a team is required on each new config."
+              }
+          },
+          "required": [
+              "require_teams_on_configs"
           ]
       },
       "SingleDataResponse": {
