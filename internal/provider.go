@@ -53,7 +53,7 @@ type StatsigProvider struct {
 }
 
 type StatsigProviderModel struct {
-	apiKey types.String `tfsdk:"console_api_key"`
+	ApiKey types.String `tfsdk:"console_api_key"`
 }
 
 type StatsigResourceData struct {
@@ -87,13 +87,12 @@ func (p *StatsigProvider) Configure(ctx context.Context, req provider.ConfigureR
 
 	// Read configuration data into model
 	// TODO: figure out how to mute this for acceptance tests which must provide this via env variable
-	// resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
-	req.Config.Get(ctx, &data)
+	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
 
 	// Check configuration data, which should take precedence over
 	// environment variable data, if found.
-	if data.apiKey.ValueString() != "" {
-		p.APIKey = data.apiKey.ValueString()
+	if data.ApiKey.ValueString() != "" {
+		p.APIKey = data.ApiKey.ValueString()
 	}
 
 	if p.APIKey == "" {
