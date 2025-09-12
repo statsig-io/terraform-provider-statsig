@@ -58,6 +58,7 @@
 						"name": "id",
 						"string": {
 							"computed_optional_required": "computed_optional",
+							"description": "The dynamic config name ID",
 							"validators": [
 								{
 									"custom": {
@@ -112,7 +113,7 @@
 						"name": "name",
 						"string": {
 							"computed_optional_required": "required",
-							"description": "id",
+							"description": "The dynamic config display name",
 							"validators": [
 								{
 									"custom": {
@@ -783,6 +784,7 @@
 						"name": "id",
 						"string": {
 							"computed_optional_required": "computed_optional",
+							"description": "The experiment name ID",
 							"validators": [
 								{
 									"custom": {
@@ -867,7 +869,7 @@
 						"name": "name",
 						"string": {
 							"computed_optional_required": "required",
-							"description": "The name of the new experiment",
+							"description": "The experiment display name",
 							"validators": [
 								{
 									"custom": {
@@ -1174,6 +1176,7 @@
 						"name": "id",
 						"string": {
 							"computed_optional_required": "computed_optional",
+							"description": "The gate name ID",
 							"validators": [
 								{
 									"custom": {
@@ -1251,7 +1254,7 @@
 						"name": "name",
 						"string": {
 							"computed_optional_required": "computed_optional",
-							"description": "id",
+							"description": "The gate display name",
 							"validators": [
 								{
 									"custom": {
@@ -1273,7 +1276,7 @@
 												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 											}
 										],
-										"schema_definition": "stringvalidator.RegexMatches(regexp.MustCompile(\"^[a-zA-Z0-9_\\\\- ]*$\"), \"\")"
+										"schema_definition": "stringvalidator.RegexMatches(regexp.MustCompile(\"^[a-zA-Z0-9_\\\\-. ]*$\"), \"\")"
 									}
 								}
 							]

@@ -227,8 +227,10 @@ func ExperimentResourceSchema(ctx context.Context) schema.Schema {
 				MarkdownDescription: "A statement that will be tested by this experiment",
 			},
 			"id": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
+				Optional:            true,
+				Computed:            true,
+				Description:         "The experiment name ID",
+				MarkdownDescription: "The experiment name ID",
 				Validators: []validator.String{
 					stringvalidator.LengthBetween(3, 100),
 					stringvalidator.RegexMatches(regexp.MustCompile("^[a-zA-Z0-9_-]*$"), ""),
@@ -286,8 +288,8 @@ func ExperimentResourceSchema(ctx context.Context) schema.Schema {
 			},
 			"name": schema.StringAttribute{
 				Required:            true,
-				Description:         "The name of the new experiment",
-				MarkdownDescription: "The name of the new experiment",
+				Description:         "The experiment display name",
+				MarkdownDescription: "The experiment display name",
 				Validators: []validator.String{
 					stringvalidator.LengthBetween(3, 100),
 					stringvalidator.RegexMatches(regexp.MustCompile("^[a-zA-Z0-9_\\- ]*$"), ""),

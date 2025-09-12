@@ -51,8 +51,10 @@ func DynamicConfigResourceSchema(ctx context.Context) schema.Schema {
 				},
 			},
 			"id": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
+				Optional:            true,
+				Computed:            true,
+				Description:         "The dynamic config name ID",
+				MarkdownDescription: "The dynamic config name ID",
 				Validators: []validator.String{
 					stringvalidator.LengthBetween(3, 100),
 					stringvalidator.RegexMatches(regexp.MustCompile("^[a-zA-Z0-9_-]*$"), ""),
@@ -77,8 +79,8 @@ func DynamicConfigResourceSchema(ctx context.Context) schema.Schema {
 			},
 			"name": schema.StringAttribute{
 				Required:            true,
-				Description:         "id",
-				MarkdownDescription: "id",
+				Description:         "The dynamic config display name",
+				MarkdownDescription: "The dynamic config display name",
 				Validators: []validator.String{
 					stringvalidator.LengthBetween(3, 100),
 					stringvalidator.RegexMatches(regexp.MustCompile("^[a-zA-Z0-9_\\- ]*$"), ""),

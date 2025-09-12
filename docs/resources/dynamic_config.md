@@ -156,7 +156,7 @@ resource "statsig_dynamic_config" "full" {
 
 ### Required
 
-- `name` (String) id
+- `name` (String) The dynamic config display name
 
 ### Optional
 
@@ -165,6 +165,7 @@ resource "statsig_dynamic_config" "full" {
 - `default_value` (Map of String) The fallback JSON object when no rules are triggered
 - `default_value_json5` (String) Can include comments. If provided with defaultValue, must parse to the same JSON
 - `description` (String)
+- `id` (String) The dynamic config name ID
 - `id_type` (String) The type of ID which the dynamic config is based on.
 - `is_enabled` (Boolean) Is the dynamic config enabled
 - `is_template` (Boolean)
@@ -174,10 +175,6 @@ resource "statsig_dynamic_config" "full" {
 - `tags` (List of String) The list of tag names attached to the dynamic config
 - `target_apps` (List of String)
 - `team` (String)
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
 
 <a id="nestedatt--rules"></a>
 ### Nested Schema for `rules`

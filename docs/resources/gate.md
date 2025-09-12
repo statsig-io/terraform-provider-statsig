@@ -163,21 +163,18 @@ resource "statsig_gate" "simple" {
 - `creator_email` (String)
 - `creator_id` (String)
 - `description` (String)
+- `id` (String) The gate name ID
 - `id_type` (String)
 - `is_enabled` (Boolean)
 - `is_template` (Boolean)
 - `measure_metric_lifts` (Boolean)
 - `monitoring_metrics` (Attributes List) (see [below for nested schema](#nestedatt--monitoring_metrics))
-- `name` (String) id
+- `name` (String) The gate display name
 - `rules` (Attributes List) (see [below for nested schema](#nestedatt--rules))
 - `tags` (List of String)
 - `target_apps` (List of String)
 - `team` (String)
 - `type` (String)
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
 
 <a id="nestedatt--monitoring_metrics"></a>
 ### Nested Schema for `monitoring_metrics`

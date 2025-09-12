@@ -37,8 +37,10 @@ func GateResourceSchema(ctx context.Context) schema.Schema {
 				},
 			},
 			"id": schema.StringAttribute{
-				Optional: true,
-				Computed: true,
+				Optional:            true,
+				Computed:            true,
+				Description:         "The gate name ID",
+				MarkdownDescription: "The gate name ID",
 				Validators: []validator.String{
 					stringvalidator.LengthBetween(3, 100),
 					stringvalidator.RegexMatches(regexp.MustCompile("^[a-zA-Z0-9_-]*$"), ""),
@@ -84,11 +86,11 @@ func GateResourceSchema(ctx context.Context) schema.Schema {
 			"name": schema.StringAttribute{
 				Optional:            true,
 				Computed:            true,
-				Description:         "id",
-				MarkdownDescription: "id",
+				Description:         "The gate display name",
+				MarkdownDescription: "The gate display name",
 				Validators: []validator.String{
 					stringvalidator.LengthBetween(3, 100),
-					stringvalidator.RegexMatches(regexp.MustCompile("^[a-zA-Z0-9_\\- ]*$"), ""),
+					stringvalidator.RegexMatches(regexp.MustCompile("^[a-zA-Z0-9_\\-. ]*$"), ""),
 				},
 			},
 			"rules": schema.ListNestedAttribute{

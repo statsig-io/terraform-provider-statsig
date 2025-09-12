@@ -50,7 +50,7 @@ resource "statsig_experiment" "simple" {
 
 ### Required
 
-- `name` (String) The name of the new experiment
+- `name` (String) The experiment display name
 
 ### Optional
 
@@ -77,6 +77,7 @@ resource "statsig_experiment" "simple" {
 - `fixed_analysis_duration` (Number) Fixed analysis duration in days
 - `groups` (Attributes List) The test groups for your experiment (see [below for nested schema](#nestedatt--groups))
 - `hypothesis` (String) A statement that will be tested by this experiment
+- `id` (String) The experiment name ID
 - `id_type` (String) The idType the experiment will be performed on
 - `is_analysis_only` (Boolean) For Warehouse Native
 - `launched_group_id` (String) ID of the launched group, null otherwise
@@ -96,10 +97,6 @@ resource "statsig_experiment" "simple" {
 - `target_exposures` (Number) Target exposures for the experiment
 - `targeting_gate_id` (String) Restrict your experiment to users passing the selected feature gate
 - `team` (String) Enterprise only
-
-### Read-Only
-
-- `id` (String) The ID of this resource.
 
 <a id="nestedatt--groups"></a>
 ### Nested Schema for `groups`

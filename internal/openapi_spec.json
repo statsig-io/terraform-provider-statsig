@@ -37474,13 +37474,16 @@
             "type": "string",
             "maxLength": 100,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_\\- ]*$"
+            "pattern": "^[a-zA-Z0-9_\\- ]*$",
+            "description": "The dynamic config display name",
+            "example": "my_config"
           },
           "id": {
             "type": "string",
             "maxLength": 100,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_-]*$"
+            "pattern": "^[a-zA-Z0-9_-]*$",
+            "description": "The dynamic config name ID"
           },
           "isTemplate": {
             "type": "boolean"
@@ -37702,6 +37705,14 @@
       "DynamicConfigFullUpdateDto": {
         "type": "object",
         "properties": {
+          "name": {
+              "type": "string",
+              "maxLength": 100,
+              "minLength": 3,
+              "pattern": "^[a-zA-Z0-9_\\-. ]*$",
+              "description": "Optional name for the configuration.",
+              "example": "my_config"
+          },
           "isEnabled": {
             "type": "boolean",
             "description": "Is the dynamic config enabled",
@@ -38736,7 +38747,10 @@
           },
           "name": {
             "type": "string",
-            "description": "Optional name for the configuration."
+            "maxLength": 100,
+            "minLength": 3,
+            "pattern": "^[a-zA-Z0-9_\\-. ]*$",
+            "description": "The gate display name"
           },
           "idType": {
             "type": "string"
@@ -39240,13 +39254,15 @@
             "type": "string",
             "maxLength": 100,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_\\- ]*$"
+            "pattern": "^[a-zA-Z0-9_\\-. ]*$",
+            "description": "The gate display name"
           },
           "id": {
             "type": "string",
             "maxLength": 100,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_-]*$"
+            "pattern": "^[a-zA-Z0-9_-]*$",
+            "description": "The gate name ID"
           },
           "isTemplate": {
             "type": "boolean"
@@ -39389,6 +39405,13 @@
       "GatePartialUpdateDto": {
         "type": "object",
         "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 3,
+            "pattern": "^[a-zA-Z0-9_\\-. ]*$",
+            "description": "The gate display name"
+          },
           "isEnabled": {
             "type": "boolean"
           },
@@ -39558,6 +39581,13 @@
       "GateFullUpdateDto": {
         "type": "object",
         "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 3,
+            "pattern": "^[a-zA-Z0-9_\\-. ]*$",
+            "description": "The gate display name"
+          },
           "isEnabled": {
             "type": "boolean"
           },
@@ -41190,13 +41220,14 @@
             "maxLength": 100,
             "minLength": 3,
             "pattern": "^[a-zA-Z0-9_\\- ]*$",
-            "description": "The name of the new experiment"
+            "description": "The experiment display name"
           },
           "id": {
             "type": "string",
             "maxLength": 100,
             "minLength": 3,
-            "pattern": "^[a-zA-Z0-9_-]*$"
+            "pattern": "^[a-zA-Z0-9_-]*$",
+            "description": "The experiment name ID"
           },
           "layerID": {
             "type": "string",
