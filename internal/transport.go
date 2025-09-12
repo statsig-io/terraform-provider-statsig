@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -87,8 +86,8 @@ func (t *Transport) doRequest(method, endpoint string, body interface{}, resp in
 	if err != nil {
 		return nil, err
 	}
-	if r.StatusCode < 200 || r.StatusCode >= 300 {
-		return nil, errors.New(fmt.Sprintf("Failed %s request to %s with status code %d.", method, req.URL, r.StatusCode))
+	if r.StatusCode < 200 || r.StatusCode >= 500 || (r.StatusCode >= 300 && r.StatusCode < 400) {
+		return nil, fmt.Errorf("failed %s request to %s with status code %d", method, req.URL, r.StatusCode)
 	}
 	defer r.Body.Close()
 
