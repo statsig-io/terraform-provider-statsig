@@ -74,8 +74,8 @@ func DynamicConfigFromAPIModel(ctx context.Context, diags diag.Diagnostics, dyna
 }
 
 type RuleAPIModel struct {
-	Id               string                 `json:"id"`
-	BaseId           string                 `json:"baseID"`
+	Id               string                 `json:"id,omitempty"`
+	BaseId           string                 `json:"baseID,omitempty"`
 	Name             string                 `json:"name"`
 	PassPercentage   int                    `json:"passPercentage"`
 	Conditions       []ConditionAPIModel    `json:"conditions"`
@@ -86,13 +86,13 @@ type RuleAPIModel struct {
 
 func RuleToAPIModel(ctx context.Context, rule *RulesValue) RuleAPIModel {
 	return RuleAPIModel{
-		Id:             utils.StringFromNilableValue(rule.Id),
-		BaseId:         utils.StringFromNilableValue(rule.BaseId),
-		Name:           utils.StringFromNilableValue(rule.Name),
-		PassPercentage: utils.IntFromNumberValue(rule.PassPercentage),
-		Conditions:     ConditionsToAPIModel(ctx, rule.Conditions),
-		Environments:   utils.StringSliceFromListValue(ctx, rule.Environments),
-		ReturnValue:    utils.MapFromMapValue(ctx, rule.ReturnValue),
+		Id:               utils.StringFromNilableValue(rule.Id),
+		BaseId:           utils.StringFromNilableValue(rule.BaseId),
+		Name:             utils.StringFromNilableValue(rule.Name),
+		PassPercentage:   utils.IntFromNumberValue(rule.PassPercentage),
+		Conditions:       ConditionsToAPIModel(ctx, rule.Conditions),
+		Environments:     utils.StringSliceFromListValue(ctx, rule.Environments),
+		ReturnValue:      utils.MapFromMapValue(ctx, rule.ReturnValue),
 		ReturnValueJson5: utils.StringFromNilableValue(rule.ReturnValueJson5),
 	}
 }

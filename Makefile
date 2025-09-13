@@ -35,7 +35,7 @@ setup-test-projects:
 	cd tests/setup && go install && go run main.go && cd ../..
 
 testacc: install
-	TF_ACC=1 TIER=$(TIER) go test -v ./... -timeout 120m
+	TF_ACC=1 TIER=$(TIER) go test ./tests -v ./... -timeout 120m
 
 sweep:
 	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."
