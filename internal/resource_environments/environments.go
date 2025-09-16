@@ -12,7 +12,7 @@ import (
 
 // API data model for EnvironmentsModel
 type EnvironmentsAPIModel struct {
-	Environments	[]EnvironmentAPIModel	`json:"environments"`
+	Environments []EnvironmentAPIModel `json:"environments"`
 }
 
 func EnvironmentsToAPIModel(ctx context.Context, environments *EnvironmentsModel) EnvironmentsAPIModel {
@@ -26,22 +26,22 @@ func EnvironmentsFromAPIModel(ctx context.Context, diags diag.Diagnostics, envir
 }
 
 type EnvironmentAPIModel struct {
-	ID						string			`json:"id"`
-	Name					string			`json:"name"`
-	IsProduction			bool			`json:"isProduction"`
-	RequiredReviewGroupID	string			`json:"requiredReviewGroupID"`
-	RequiresReleasePipeline	bool			`json:"requiresReleasePipeline"`
-	RequiresReview			bool			`json:"requiresReview"`
+	ID                      string `json:"id"`
+	Name                    string `json:"name"`
+	IsProduction            bool   `json:"isProduction"`
+	RequiredReviewGroupID   string `json:"requiredReviewGroupID,omitempty"`
+	RequiresReleasePipeline bool   `json:"requiresReleasePipeline"`
+	RequiresReview          bool   `json:"requiresReview"`
 }
 
 func EnvironmentToAPIModel(ctx context.Context, environment *EnvironmentsValue) EnvironmentAPIModel {
 	return EnvironmentAPIModel{
-		ID:							utils.StringFromNilableValue(environment.Id),
-		Name:						utils.StringFromNilableValue(environment.Name),
-		IsProduction:				utils.BoolFromBoolValue(environment.IsProduction),
-		RequiredReviewGroupID:		utils.StringFromNilableValue(environment.RequiredReviewGroupId),
-		RequiresReleasePipeline:	utils.BoolFromBoolValue(environment.RequiresReleasePipeline),
-		RequiresReview:				utils.BoolFromBoolValue(environment.RequiresReview),
+		ID:                      utils.StringFromNilableValue(environment.Id),
+		Name:                    utils.StringFromNilableValue(environment.Name),
+		IsProduction:            utils.BoolFromBoolValue(environment.IsProduction),
+		RequiredReviewGroupID:   utils.StringFromNilableValue(environment.RequiredReviewGroupId),
+		RequiresReleasePipeline: utils.BoolFromBoolValue(environment.RequiresReleasePipeline),
+		RequiresReview:          utils.BoolFromBoolValue(environment.RequiresReview),
 	}
 }
 
