@@ -37,24 +37,24 @@ func verifyEnvironmentsSetup(t *testing.T, name string) resource.TestCheckFunc {
 		rs, _ := s.RootModule().Resources[name]
 		local := rs.Primary.Attributes
 
-		assert.Equal(t, "development",			local["environments.0.name"])
-		assert.Equal(t, "0.35629335902367476",	local["environments.0.id"])
-		assert.Equal(t, "false",				local["environments.0.is_production"])
-		assert.Equal(t, "false",				local["environments.0.requires_review"])
-		assert.Equal(t, "true",					local["environments.0.requires_release_pipeline"])
-		
-		assert.Equal(t, "staging",				local["environments.1.name"])
+		assert.Equal(t, "development", local["environments.0.name"])
+		assert.Equal(t, "0.35629335902367476", local["environments.0.id"])
+		assert.Equal(t, "false", local["environments.0.is_production"])
+		assert.Equal(t, "false", local["environments.0.requires_review"])
+		assert.Equal(t, "true", local["environments.0.requires_release_pipeline"])
+
+		assert.Equal(t, "staging", local["environments.1.name"])
 		assert.Equal(t, "0.015089163460661137", local["environments.1.id"])
-		assert.Equal(t, "false",				local["environments.1.is_production"])
-		assert.Equal(t, "false",				local["environments.1.requires_review"])
-		assert.Equal(t, "true",					local["environments.1.requires_release_pipeline"])
-		
-		assert.Equal(t, "production",			local["environments.2.name"])
-		assert.Equal(t, "0.4067426155658289",	local["environments.2.id"])
-		assert.Equal(t, "true",					local["environments.2.is_production"])
-		assert.Equal(t, "true",					local["environments.2.requires_review"])
-		assert.Equal(t, "true",					local["environments.2.requires_release_pipeline"])
-		
+		assert.Equal(t, "false", local["environments.1.is_production"])
+		assert.Equal(t, "false", local["environments.1.requires_review"])
+		assert.Equal(t, "true", local["environments.1.requires_release_pipeline"])
+
+		assert.Equal(t, "production", local["environments.2.name"])
+		assert.Equal(t, "0.4067426155658289", local["environments.2.id"])
+		assert.Equal(t, "true", local["environments.2.is_production"])
+		assert.Equal(t, "false", local["environments.2.requires_review"])
+		assert.Equal(t, "true", local["environments.2.requires_release_pipeline"])
+
 		return nil
 	}
 }
