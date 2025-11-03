@@ -52,7 +52,7 @@ func verifyEnvironmentsSetup(t *testing.T, name string) resource.TestCheckFunc {
 		assert.Equal(t, "production", local["environments.2.name"])
 		assert.Equal(t, "0.4067426155658289", local["environments.2.id"])
 		assert.Equal(t, "true", local["environments.2.is_production"])
-		assert.Equal(t, "false", local["environments.2.requires_review"])
+		assert.Equal(t, "true", local["environments.2.requires_review"])
 		assert.Equal(t, "true", local["environments.2.requires_release_pipeline"])
 
 		return nil

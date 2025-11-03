@@ -18,7 +18,7 @@ resource "statsig_environments" "example" {
       name                      = "production"
       id                        = "0.4067426155658289"
       is_production             = true
-      requires_review           = false
+      requires_review           = true
       requires_release_pipeline = true
     },
   ]

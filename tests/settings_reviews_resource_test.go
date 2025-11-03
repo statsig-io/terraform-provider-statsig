@@ -37,7 +37,7 @@ func verifySettingsReviewsSetup(t *testing.T, name string) resource.TestCheckFun
 		rs, _ := s.RootModule().Resources[name]
 		local := rs.Primary.Attributes
 
-		assert.Equal(t, "true", local["is_config_review_required"])
+		assert.Equal(t, "false", local["is_config_review_required"])
 		assert.Equal(t, "true", local["is_metric_review_required"])
 		assert.Equal(t, "true", local["is_metric_review_required_on_verified_only"])
 
@@ -47,7 +47,7 @@ func verifySettingsReviewsSetup(t *testing.T, name string) resource.TestCheckFun
 
 func TestAccSettingsReviewsWHN(t *testing.T) {
 	resource.Test(t, resource.TestCase{
-		ProtoV6ProviderFactories: testAccProviders(t, TestOptions{ isWHN: true }),
+		ProtoV6ProviderFactories: testAccProviders(t, TestOptions{isWHN: true}),
 		Steps: []resource.TestStep{
 			{
 				ConfigFile: config.StaticFile("test_resources/settings_reviews_whn.tf"),
@@ -72,7 +72,7 @@ func verifySettingsReviewsSetupWHN(t *testing.T, name string) resource.TestCheck
 		rs, _ := s.RootModule().Resources[name]
 		local := rs.Primary.Attributes
 
-		assert.Equal(t, "true", local["is_config_review_required"])
+		assert.Equal(t, "false", local["is_config_review_required"])
 		assert.Equal(t, "true", local["is_metric_review_required"])
 		assert.Equal(t, "true", local["is_metric_review_required_on_verified_only"])
 		assert.Equal(t, "true", local["is_whn_analysis_only_review_required"])
