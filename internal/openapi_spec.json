@@ -15790,7 +15790,6 @@
                         "lastModifierName": "CONSOLE API",
                         "lastModifierID": "ahKwUoaNauHu9AmJPc2",
                         "type": "id_list",
-                        "count": 0,
                         "tags": [
                           "a tag"
                         ]
@@ -15802,7 +15801,6 @@
                         "lastModifierName": "CONSOLE API",
                         "lastModifierID": "ahKwUoaNauHu9AmJPc2",
                         "type": "rule_based",
-                        "count": 0,
                         "rules": {
                           "name": "All Conditions",
                           "passPercentage": 10,
@@ -15836,7 +15834,6 @@
                       "lastModifierName": "CONSOLE API",
                       "lastModifierID": "ahKwUoaNauHu9AmJPc2",
                       "type": "id_list",
-                      "count": 0,
                       "tags": [
                         "a tag"
                       ]
@@ -15848,7 +15845,6 @@
                       "lastModifierName": "CONSOLE API",
                       "lastModifierID": "ahKwUoaNauHu9AmJPc2",
                       "type": "rule_based",
-                      "count": 0,
                       "rules": {
                         "name": "All Conditions",
                         "passPercentage": 10,
@@ -15959,7 +15955,6 @@
                         "lastModifierName": "CONSOLE API",
                         "lastModifierID": "ahKwUoaNauHu9AmJPc2",
                         "type": "id_list",
-                        "count": 0,
                         "tags": [
                           "a tag"
                         ]
@@ -15977,7 +15972,6 @@
                         "lastModifierName": "CONSOLE API",
                         "lastModifierID": "ahKwUoaNauHu9AmJPc2",
                         "type": "rule_based",
-                        "count": 0,
                         "rules": {
                           "name": "All Conditions",
                           "passPercentage": 10,
@@ -16089,7 +16083,6 @@
                         "lastModifierName": "CONSOLE API",
                         "lastModifierID": "ahKwUoaNauHu9AmJPc2",
                         "type": "id_list",
-                        "count": 0,
                         "tags": [
                           "a tag"
                         ]
@@ -16104,7 +16097,6 @@
                         "lastModifierName": "CONSOLE API",
                         "lastModifierID": "ahKwUoaNauHu9AmJPc2",
                         "type": "rule_based",
-                        "count": 0,
                         "rules": {
                           "name": "All Conditions",
                           "passPercentage": 10,
@@ -16138,7 +16130,6 @@
                       "lastModifierName": "CONSOLE API",
                       "lastModifierID": "ahKwUoaNauHu9AmJPc2",
                       "type": "id_list",
-                      "count": 0,
                       "tags": [
                         "a tag"
                       ]
@@ -16153,7 +16144,6 @@
                       "lastModifierName": "CONSOLE API",
                       "lastModifierID": "ahKwUoaNauHu9AmJPc2",
                       "type": "rule_based",
-                      "count": 0,
                       "rules": {
                         "name": "All Conditions",
                         "passPercentage": 10,
@@ -16865,7 +16855,6 @@
                     "message": "Segments listed successfully.",
                     "data": {
                       "name": "small_id_list",
-                      "count": 3,
                       "ids": [
                         "1, 2, 3"
                       ]
@@ -16876,7 +16865,6 @@
                   "message": "Segments listed successfully.",
                   "data": {
                     "name": "small_id_list",
-                    "count": 3,
                     "ids": [
                       "1, 2, 3"
                     ]
@@ -43328,11 +43316,6 @@
               "user_store_id_list"
             ]
           },
-          "count": {
-            "type": "number",
-            "description": "For id_list segments: the length of the ID list",
-            "format": "double"
-          },
           "rules": {
             "type": "array",
             "items": {
@@ -43760,12 +43743,6 @@
             "description": "The name associated with the list of IDs",
             "example": "Example List"
           },
-          "count": {
-            "type": "number",
-            "description": "The count of IDs in the list",
-            "example": 5,
-            "format": "double"
-          },
           "ids": {
             "type": "array",
             "items": {
@@ -43783,13 +43760,11 @@
         },
         "required": [
           "name",
-          "count",
           "ids"
         ],
         "description": "Schema for a list of IDs with a name and count",
         "example": {
           "name": "Example List",
-          "count": 5,
           "ids": [
             "id1",
             "id2",
