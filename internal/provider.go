@@ -135,5 +135,6 @@ func (p *StatsigProvider) Resources(ctx context.Context) []func() resource.Resou
 		NewSettingsTeamsResource,
 		NewDynamicConfigResource,
 		NewUnitIdTypeResource,
+		NewSegmentResource,
 	}
 }
