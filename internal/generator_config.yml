@@ -86,6 +86,27 @@ resources:
         aliases:
           id: name
 
+  segment:
+    read:
+      path: /console/v1/segments/{id}
+      method: GET
+    create:
+      path: /console/v1/segments
+      method: POST
+    update:
+      path: /console/v1/segments/{id}/conditional
+      method: POST
+    delete:
+      path: /console/v1/segments/{id}
+      method: DELETE
+    schema:
+      ignores:
+        - message
+        - data
+      attributes:
+        aliases:
+          id: name
+
   entity_property:
     read:
       path: /console/v1/experiments/entity_property/{name}

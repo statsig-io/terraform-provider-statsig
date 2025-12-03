@@ -2785,6 +2785,397 @@
 			}
 		},
 		{
+			"name": "segment",
+			"schema": {
+				"attributes": [
+					{
+						"name": "creator_email",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "the email of the creator of this experiment"
+						}
+					},
+					{
+						"name": "creator_id",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "the Statsig ID of the creator of this experiment"
+						}
+					},
+					{
+						"name": "description",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "description of the segment",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.LengthAtMost(1000)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "id",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "optional id of the segment (defaults to name)",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.LengthBetween(3, 100)"
+									}
+								},
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "regexp"
+											},
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.RegexMatches(regexp.MustCompile(\"^[a-zA-Z0-9_-]*$\"), \"\")"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "id_type",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"default": {
+								"static": "userID"
+							},
+							"description": "type of id"
+						}
+					},
+					{
+						"name": "name",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "name of the segment",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.LengthBetween(3, 100)"
+									}
+								},
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "regexp"
+											},
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.RegexMatches(regexp.MustCompile(\"^[a-zA-Z0-9_\\\\- ]*$\"), \"\")"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "rules",
+						"list_nested": {
+							"computed_optional_required": "computed_optional",
+							"nested_object": {
+								"attributes": [
+									{
+										"name": "base_id",
+										"string": {
+											"computed_optional_required": "computed_optional",
+											"description": "The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout"
+										}
+									},
+									{
+										"name": "completed_automated_rollouts",
+										"list_nested": {
+											"computed_optional_required": "computed_optional",
+											"nested_object": {
+												"attributes": [
+													{
+														"name": "pass_percent",
+														"number": {
+															"computed_optional_required": "required"
+														}
+													},
+													{
+														"name": "time",
+														"number": {
+															"computed_optional_required": "required"
+														}
+													}
+												]
+											},
+											"description": "Read-only: Automated rollout phases that have already completed."
+										}
+									},
+									{
+										"name": "conditions",
+										"list_nested": {
+											"computed_optional_required": "required",
+											"nested_object": {
+												"attributes": [
+													{
+														"name": "custom_id",
+														"string": {
+															"computed_optional_required": "computed_optional"
+														}
+													},
+													{
+														"name": "field",
+														"string": {
+															"computed_optional_required": "computed_optional"
+														}
+													},
+													{
+														"name": "operator",
+														"string": {
+															"computed_optional_required": "computed_optional"
+														}
+													},
+													{
+														"name": "target_value",
+														"list": {
+															"computed_optional_required": "computed_optional",
+															"element_type": {
+																"string": {}
+															}
+														}
+													},
+													{
+														"name": "type",
+														"string": {
+															"computed_optional_required": "required",
+															"validators": [
+																{
+																	"custom": {
+																		"imports": [
+																			{
+																				"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+																			}
+																		],
+																		"schema_definition": "stringvalidator.OneOf(\n\"app_version\",\n\"browser_name\",\n\"browser_version\",\n\"country\",\n\"custom_field\",\n\"email\",\n\"environment_tier\",\n\"fails_segment\",\n\"ip_address\",\n\"os_name\",\n\"os_version\",\n\"passes_segment\",\n\"unit_id\",\n\"user_id\",\n)"
+																	}
+																}
+															]
+														}
+													}
+												]
+											},
+											"description": "An array of Condition objects."
+										}
+									},
+									{
+										"name": "environments",
+										"list": {
+											"computed_optional_required": "computed_optional",
+											"element_type": {
+												"string": {}
+											},
+											"description": "The environments this rule is enabled for."
+										}
+									},
+									{
+										"name": "id",
+										"string": {
+											"computed_optional_required": "computed_optional",
+											"description": "The Statsig ID of this rule."
+										}
+									},
+									{
+										"name": "name",
+										"string": {
+											"computed_optional_required": "required",
+											"description": "The name of this rule."
+										}
+									},
+									{
+										"name": "pass_percentage",
+										"number": {
+											"computed_optional_required": "required",
+											"description": "Of the users that meet the conditions of this rule, what percent should return true."
+										}
+									},
+									{
+										"name": "pending_automated_rollouts",
+										"list_nested": {
+											"computed_optional_required": "computed_optional",
+											"nested_object": {
+												"attributes": [
+													{
+														"name": "pass_percent",
+														"number": {
+															"computed_optional_required": "required"
+														}
+													},
+													{
+														"name": "time",
+														"number": {
+															"computed_optional_required": "required"
+														}
+													}
+												]
+											},
+											"description": "Read-only: Automated rollout phases that are scheduled but not yet complete."
+										}
+									},
+									{
+										"name": "return_value",
+										"single_nested": {
+											"computed_optional_required": "computed_optional",
+											"description": "The return value of the rule."
+										}
+									}
+								]
+							},
+							"description": "Rule Object"
+						}
+					},
+					{
+						"name": "tags",
+						"list": {
+							"computed_optional_required": "computed_optional",
+							"element_type": {
+								"string": {}
+							},
+							"description": "optional tags for categorization"
+						}
+					},
+					{
+						"name": "team",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "optional name identifier for the responsible team (enterprise only)"
+						}
+					},
+					{
+						"name": "team_id",
+						"string": {
+							"computed_optional_required": "computed_optional",
+							"description": "optional identifier for the responsible team (enterprise only)"
+						}
+					},
+					{
+						"name": "type",
+						"string": {
+							"computed_optional_required": "required",
+							"description": "type of the segment",
+							"validators": [
+								{
+									"custom": {
+										"imports": [
+											{
+												"path": "github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+											}
+										],
+										"schema_definition": "stringvalidator.OneOf(\n\"id_list\",\n\"rule_based\",\n\"analysis_list\",\n\"user_store_id_list\",\n)"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "created_time",
+						"float64": {
+							"computed_optional_required": "computed",
+							"description": "Timestamp when the entity was created."
+						}
+					},
+					{
+						"name": "creator_name",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "Name of the creator."
+						}
+					},
+					{
+						"name": "holdout_ids",
+						"list": {
+							"computed_optional_required": "computed",
+							"element_type": {
+								"string": {}
+							},
+							"description": "Holdouts applied to this configuration."
+						}
+					},
+					{
+						"name": "is_enabled",
+						"bool": {
+							"computed_optional_required": "computed",
+							"description": "Is the segment enabled."
+						}
+					},
+					{
+						"name": "last_modified_time",
+						"float64": {
+							"computed_optional_required": "computed",
+							"description": "Time of the last modification."
+						}
+					},
+					{
+						"name": "last_modifier_email",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "Email of the last modifier."
+						}
+					},
+					{
+						"name": "last_modifier_id",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "ID of the last modifier."
+						}
+					},
+					{
+						"name": "last_modifier_name",
+						"string": {
+							"computed_optional_required": "computed",
+							"description": "Name of the last modifier."
+						}
+					},
+					{
+						"name": "target_apps",
+						"list": {
+							"computed_optional_required": "computed",
+							"element_type": {
+								"string": {}
+							},
+							"description": "List of target applications associated with this configuration."
+						}
+					},
+					{
+						"name": "version",
+						"float64": {
+							"computed_optional_required": "computed",
+							"description": "Version number"
+						}
+					}
+				]
+			}
+		},
+		{
 			"name": "settings_project",
 			"schema": {
 				"attributes": [
