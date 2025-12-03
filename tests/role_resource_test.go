@@ -53,6 +53,7 @@ func verifyRoleSetup(t *testing.T, name string) resource.TestCheckFunc {
 		assert.Equal(t, "false", local["permissions.self_approve_review"])
 		assert.Equal(t, "false", local["permissions.approve_reviews"])
 		assert.Equal(t, "false", local["permissions.bypass_reviews_for_overrides"])
+		assert.Equal(t, "false", local["permissions.bypass_precommit_webhook"])
 		assert.Equal(t, "false", local["permissions.metric_management"])
 		assert.Equal(t, "false", local["permissions.verify_metrics"])
 		assert.Equal(t, "false", local["permissions.use_metrics_explorer"])

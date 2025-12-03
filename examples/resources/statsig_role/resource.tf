@@ -25,6 +25,7 @@ resource "statsig_role" "example" {
     self_approve_review                              = false
     approve_reviews                                  = false
     bypass_reviews_for_overrides                     = false
+    bypass_precommit_webhook                         = false
     metric_management                                = false
     verify_metrics                                   = false
     use_metrics_explorer                             = false
