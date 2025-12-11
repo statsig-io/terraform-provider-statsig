@@ -66,6 +66,7 @@ func verifyRoleSetup(t *testing.T, name string) resource.TestCheckFunc {
 		assert.Equal(t, "false", local["permissions.reset_experiments"])
 		assert.Equal(t, "false", local["permissions.event_dimensions_access"])
 		assert.Equal(t, "false", local["permissions.manual_whn_reload"])
+		assert.Equal(t, "false", local["permissions.whn_connection"])
 
 		return nil
 	}

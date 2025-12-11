@@ -54,6 +54,9 @@ resource "statsig_role" "example" {
     data_warehouse_ingestion_and_exports_edit_access    = false
     edit_and_tag_configs_with_core_tag                  = false
     reset_experiments                                   = false
+    event_dimensions_access                             = false
+    manual_whn_reload                                   = false
+    whn_connection                                      = false
   }
 }
 ```

@@ -14870,7 +14870,10 @@
                           "source_connection_and_creation": false,
                           "data_warehouse_ingestion_and_exports_edit_access": false,
                           "edit_and_tag_configs_with_core_tag": false,
-                          "reset_experiments": false
+                          "reset_experiments": false,
+                          "event_dimensions_access": false,
+                          "manual_whn_reload": false,
+                          "whn_connection": false
                         }
                       }
                     ],
@@ -14915,7 +14918,10 @@
                         "source_connection_and_creation": false,
                         "data_warehouse_ingestion_and_exports_edit_access": false,
                         "edit_and_tag_configs_with_core_tag": false,
-                        "reset_experiments": false
+                        "reset_experiments": false,
+                        "event_dimensions_access": false,
+                        "manual_whn_reload": false,
+                        "whn_connection": false
                       }
                     }
                   ],
@@ -15079,7 +15085,10 @@
                         "source_connection_and_creation": false,
                         "data_warehouse_ingestion_and_exports_edit_access": false,
                         "edit_and_tag_configs_with_core_tag": false,
-                        "reset_experiments": false
+                        "reset_experiments": false,
+                        "event_dimensions_access": false,
+                        "manual_whn_reload": false,
+                        "whn_connection": false
                       }
                     }
                   }
@@ -15114,7 +15123,10 @@
                       "source_connection_and_creation": false,
                       "data_warehouse_ingestion_and_exports_edit_access": false,
                       "edit_and_tag_configs_with_core_tag": false,
-                      "reset_experiments": false
+                      "reset_experiments": false,
+                      "event_dimensions_access": false,
+                      "manual_whn_reload": false,
+                      "whn_connection": false
                     }
                   }
                 }
@@ -15270,7 +15282,10 @@
                         "source_connection_and_creation": false,
                         "data_warehouse_ingestion_and_exports_edit_access": false,
                         "edit_and_tag_configs_with_core_tag": false,
-                        "reset_experiments": false
+                        "reset_experiments": false,
+                        "event_dimensions_access": false,
+                        "manual_whn_reload": false,
+                        "whn_connection": false
                       }
                     }
                   }
@@ -15305,7 +15320,10 @@
                       "source_connection_and_creation": false,
                       "data_warehouse_ingestion_and_exports_edit_access": false,
                       "edit_and_tag_configs_with_core_tag": false,
-                      "reset_experiments": false
+                      "reset_experiments": false,
+                      "event_dimensions_access": false,
+                      "manual_whn_reload": false,
+                      "whn_connection": false
                     }
                   }
                 }
@@ -15469,7 +15487,10 @@
                         "source_connection_and_creation": false,
                         "data_warehouse_ingestion_and_exports_edit_access": false,
                         "edit_and_tag_configs_with_core_tag": false,
-                        "reset_experiments": false
+                        "reset_experiments": false,
+                        "event_dimensions_access": false,
+                        "manual_whn_reload": false,
+                        "whn_connection": false
                       }
                     }
                   }
@@ -15504,7 +15525,10 @@
                       "source_connection_and_creation": false,
                       "data_warehouse_ingestion_and_exports_edit_access": false,
                       "edit_and_tag_configs_with_core_tag": false,
-                      "reset_experiments": false
+                      "reset_experiments": false,
+                      "event_dimensions_access": false,
+                      "manual_whn_reload": false,
+                      "whn_connection": false
                     }
                   }
                 }

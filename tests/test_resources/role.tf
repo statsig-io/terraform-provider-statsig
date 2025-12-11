@@ -29,5 +29,6 @@ resource "statsig_role" "example" {
     reset_experiments                                = false
     event_dimensions_access                          = false
     manual_whn_reload                                = false
+    whn_connection                                   = false
   }
 }
