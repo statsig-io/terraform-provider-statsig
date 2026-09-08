@@ -7,6 +7,9 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+	"github.com/hashicorp/terraform-plugin-testing/knownvalue"
+	"github.com/hashicorp/terraform-plugin-testing/statecheck"
+	"github.com/hashicorp/terraform-plugin-testing/tfjsonpath"
 )
 
 func TestAccServerKey(t *testing.T) {
@@ -178,6 +181,87 @@ resource "statsig_keys" "regression" {
 					resource.TestCheckResourceAttr(name, "secondary_target_app_ids.#", "1"),
 					resource.TestCheckResourceAttr(name, "secondary_target_app_ids.0", secondaryTargetAppId),
 				),
+			},
+		},
+	})
+}
+
+// Dropping the two target app attributes from a config leaves them unknown in
+// the plan, the request omits them, and Statsig keeps the apps assigned. State
+// has to keep the assigned IDs rather than claim the key has no target app.
+func TestAccKeysKeepsTargetAppsWhenConfigDropsThem(t *testing.T) {
+	const targetAppId = "4SRgGcr8uWNVW3c2OGWFZC"
+	const secondaryTargetAppId = "2Kd9hLpQzXcVbNmR4TsYuI"
+
+	startFakeConsoleAPI(t)
+
+	withTargetApps := fmt.Sprintf(`
+resource "statsig_keys" "regression" {
+  description              = "edge server key"
+  type                     = "SERVER"
+  target_app_id            = %q
+  secondary_target_app_ids = [%q]
+  environments             = ["production"]
+  scopes                   = []
+}
+`, targetAppId, secondaryTargetAppId)
+
+	withoutTargetApps := `
+resource "statsig_keys" "regression" {
+  description  = "edge server key, renamed"
+  type         = "SERVER"
+  environments = ["production"]
+  scopes       = []
+}
+`
+
+	name := "statsig_keys.regression"
+
+	resource.Test(t, resource.TestCase{
+		ProtoV6ProviderFactories: testAccLocalProviders(),
+		Steps: []resource.TestStep{
+			{Config: withTargetApps},
+			{
+				Config: withoutTargetApps,
+				ConfigStateChecks: []statecheck.StateCheck{
+					statecheck.ExpectKnownValue(name, tfjsonpath.New("target_app_id"),
+						knownvalue.StringExact(targetAppId)),
+					statecheck.ExpectKnownValue(name, tfjsonpath.New("secondary_target_app_ids"),
+						knownvalue.ListExact([]knownvalue.Check{knownvalue.StringExact(secondaryTargetAppId)})),
+				},
+			},
+		},
+	})
+}
+
+// A create has no prior state for the plan to reuse, so an omitted
+// secondary_target_app_ids still resolves to an empty list. A null list there
+// breaks length() and for_each in a working configuration.
+func TestAccKeysCreatesEmptySecondaryTargetAppIds(t *testing.T) {
+	startFakeConsoleAPI(t)
+
+	config := `
+resource "statsig_keys" "regression" {
+  description  = "server key with no target app"
+  type         = "SERVER"
+  environments = ["production"]
+  scopes       = []
+}
+`
+
+	name := "statsig_keys.regression"
+
+	resource.Test(t, resource.TestCase{
+		ProtoV6ProviderFactories: testAccLocalProviders(),
+		Steps: []resource.TestStep{
+			{
+				Config: config,
+				ConfigStateChecks: []statecheck.StateCheck{
+					statecheck.ExpectKnownValue(name, tfjsonpath.New("secondary_target_app_ids"),
+						knownvalue.ListSizeExact(0)),
+					statecheck.ExpectKnownValue(name, tfjsonpath.New("target_app_id"),
+						knownvalue.Null()),
+				},
 			},
 		},
 	})
