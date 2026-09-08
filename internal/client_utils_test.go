@@ -6,6 +6,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // The Console API answers 4xx with {message, status} and never sends an
@@ -29,7 +30,7 @@ func TestRunWithDiagnosticsSurfacesClientErrors(t *testing.T) {
 				return transport.Get("gates", "a_gate", &data)
 			})
 
-			assert.True(t, diags.HasError(), "a %d must produce an error diagnostic", status)
+			require.True(t, diags.HasError(), "a %d must produce an error diagnostic", status)
 			assert.Contains(t, diags.Errors()[0].Summary(), http.StatusText(status))
 		})
 	}
