@@ -89,3 +89,22 @@ func verifyRuleBasedSegmentSetup(t *testing.T, name string) resource.TestCheckFu
 		return nil
 	}
 }
+
+// statsig_segment had no ImportState, so an existing segment could not be
+// brought under Terraform management. Runs against the fake Console API.
+func TestAccSegmentImportState(t *testing.T) {
+	startFakeConsoleAPI(t)
+
+	resource.Test(t, resource.TestCase{
+		ProtoV6ProviderFactories: testAccLocalProviders(),
+		Steps: []resource.TestStep{
+			{Config: segmentConfig("rule one")},
+			{
+				ResourceName:      "statsig_segment.regression",
+				ImportState:       true,
+				ImportStateId:     "regression_segment",
+				ImportStateVerify: true,
+			},
+		},
+	})
+}
