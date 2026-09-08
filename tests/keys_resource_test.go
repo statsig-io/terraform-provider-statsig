@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"regexp"
@@ -10,6 +11,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-testing/knownvalue"
 	"github.com/hashicorp/terraform-plugin-testing/statecheck"
 	"github.com/hashicorp/terraform-plugin-testing/tfjsonpath"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestAccServerKey(t *testing.T) {
@@ -186,25 +189,40 @@ resource "statsig_keys" "regression" {
 	})
 }
 
-// Dropping the two target app attributes from a config leaves them unknown in
-// the plan, the request omits them, and Statsig keeps the apps assigned. State
-// has to keep the assigned IDs rather than claim the key has no target app.
-func TestAccKeysKeepsTargetAppsWhenConfigDropsThem(t *testing.T) {
-	const targetAppId = "4SRgGcr8uWNVW3c2OGWFZC"
-	const secondaryTargetAppId = "2Kd9hLpQzXcVbNmR4TsYuI"
+const keysTargetAppId = "4SRgGcr8uWNVW3c2OGWFZC"
+const keysSecondaryTargetAppId = "2Kd9hLpQzXcVbNmR4TsYuI"
 
-	startFakeConsoleAPI(t)
-
-	withTargetApps := fmt.Sprintf(`
+func keysWithTargetAppsConfig(description string) string {
+	return fmt.Sprintf(`
 resource "statsig_keys" "regression" {
-  description              = "edge server key"
+  description              = %q
   type                     = "SERVER"
   target_app_id            = %q
   secondary_target_app_ids = [%q]
   environments             = ["production"]
   scopes                   = []
 }
-`, targetAppId, secondaryTargetAppId)
+`, description, keysTargetAppId, keysSecondaryTargetAppId)
+}
+
+// patchedKeyFields decodes the body of the one PATCH the fake Console API saw,
+// so a test can tell an absent field from a null one.
+func patchedKeyFields(t *testing.T, api *fakeConsoleAPI) map[string]json.RawMessage {
+	t.Helper()
+
+	bodies := api.requestBodiesFor("PATCH /console/v1/keys/" + fakeGeneratedKey)
+	require.Len(t, bodies, 1, "the key must have been updated exactly once")
+
+	var body map[string]json.RawMessage
+	require.NoError(t, json.Unmarshal(bodies[0], &body))
+	return body
+}
+
+// The Console API leaves a target app assigned when the field is absent from the
+// request, so dropping the attributes from a config must send a PATCH that omits
+// them. Without this an unrelated description edit unassigns a live target app.
+func TestAccKeysOmitsTargetAppsWhenConfigDropsThem(t *testing.T) {
+	api := startFakeConsoleAPI(t)
 
 	withoutTargetApps := `
 resource "statsig_keys" "regression" {
@@ -215,23 +233,49 @@ resource "statsig_keys" "regression" {
 }
 `
 
-	name := "statsig_keys.regression"
+	resource.Test(t, resource.TestCase{
+		ProtoV6ProviderFactories: testAccLocalProviders(),
+		Steps: []resource.TestStep{
+			{Config: keysWithTargetAppsConfig("edge server key")},
+			{Config: withoutTargetApps},
+		},
+	})
+
+	body := patchedKeyFields(t, api)
+	assert.NotContains(t, body, "targetAppID", "an absent field is what leaves the assignment alone")
+	assert.NotContains(t, body, "secondaryTargetAppIDs", "an absent field is what leaves the assignment alone")
+}
+
+// An explicitly empty value is the one way to unassign a target app from
+// Terraform. The API reads null and an empty array as a clear, and never reads
+// an empty string that way.
+func TestAccKeysClearsTargetAppsWhenConfigIsExplicitlyEmpty(t *testing.T) {
+	api := startFakeConsoleAPI(t)
+
+	emptyTargetApps := `
+resource "statsig_keys" "regression" {
+  description              = "edge server key"
+  type                     = "SERVER"
+  target_app_id            = ""
+  secondary_target_app_ids = []
+  environments             = ["production"]
+  scopes                   = []
+}
+`
 
 	resource.Test(t, resource.TestCase{
 		ProtoV6ProviderFactories: testAccLocalProviders(),
 		Steps: []resource.TestStep{
-			{Config: withTargetApps},
-			{
-				Config: withoutTargetApps,
-				ConfigStateChecks: []statecheck.StateCheck{
-					statecheck.ExpectKnownValue(name, tfjsonpath.New("target_app_id"),
-						knownvalue.StringExact(targetAppId)),
-					statecheck.ExpectKnownValue(name, tfjsonpath.New("secondary_target_app_ids"),
-						knownvalue.ListExact([]knownvalue.Check{knownvalue.StringExact(secondaryTargetAppId)})),
-				},
-			},
+			{Config: keysWithTargetAppsConfig("edge server key")},
+			{Config: emptyTargetApps},
 		},
 	})
+
+	body := patchedKeyFields(t, api)
+	assert.JSONEq(t, "null", string(body["targetAppID"]))
+	assert.JSONEq(t, "[]", string(body["secondaryTargetAppIDs"]))
+	assert.NotEqual(t, `""`, string(body["targetAppID"]),
+		"the API stores an empty string as an identifier instead of clearing the assignment")
 }
 
 // A create has no prior state for the plan to reuse, so an omitted

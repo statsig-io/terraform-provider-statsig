@@ -4,20 +4,43 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"sync"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
+// requestRecorder collects the requests that reach the test server. The handler
+// runs on the server's goroutine and the assertions on the test's, so the log
+// needs a lock.
+type requestRecorder struct {
+	mu       sync.Mutex
+	requests []string
+}
+
+func (r *requestRecorder) record(req *http.Request) {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	r.requests = append(r.requests, req.Method+" "+req.URL.Path)
+}
+
+func (r *requestRecorder) requestLog() []string {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	return append([]string(nil), r.requests...)
+}
+
 // newTestTransport points a Transport at a local server instead of a tier and
 // records the path of every request that reaches it.
-func newTestTransport(t *testing.T, handler http.HandlerFunc) (*Transport, *[]string) {
+func newTestTransport(t *testing.T, handler http.HandlerFunc) (*Transport, *requestRecorder) {
 	t.Helper()
 
-	var seen []string
+	recorder := &requestRecorder{}
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		seen = append(seen, r.Method+" "+r.URL.Path)
+		recorder.record(r)
 		handler(w, r)
 	}))
 	t.Cleanup(srv.Close)
@@ -26,7 +49,7 @@ func newTestTransport(t *testing.T, handler http.HandlerFunc) (*Transport, *[]st
 		api:    srv.URL + "/console/v1",
 		apiKey: "console-test-key",
 		client: srv.Client(),
-	}, &seen
+	}, recorder
 }
 
 func writeConsoleResponse(w http.ResponseWriter, status int, body map[string]interface{}) {
@@ -52,7 +75,7 @@ func TestTransportRefusesEmptyId(t *testing.T) {
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "resource id is empty")
 
-	assert.Empty(t, *seen, "no request should reach the API")
+	assert.Empty(t, seen.requestLog(), "no request should reach the API")
 }
 
 func TestTransportSendsItemUrlForNonEmptyId(t *testing.T) {
@@ -74,7 +97,7 @@ func TestTransportSendsItemUrlForNonEmptyId(t *testing.T) {
 	assert.Equal(t, []string{
 		"PATCH /console/v1/gates/a_gate",
 		"DELETE /console/v1/gates/a_gate",
-	}, *seen)
+	}, seen.requestLog())
 }
 
 // statsig_metric and statsig_segment update through a POST to a path they
@@ -95,7 +118,7 @@ func TestTransportRefusesPostToAnUnaddressedItem(t *testing.T) {
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "resource id is empty")
 
-	assert.Empty(t, *seen, "no request should reach the API")
+	assert.Empty(t, seen.requestLog(), "no request should reach the API")
 }
 
 // The guard must leave the two shapes a client legitimately posts to alone: the
@@ -119,7 +142,7 @@ func TestTransportPostsCollectionAndSubResourceUrls(t *testing.T) {
 	assert.Equal(t, []string{
 		"POST /console/v1/metrics",
 		"POST /console/v1/segments/a_segment/conditional",
-	}, *seen)
+	}, seen.requestLog())
 }
 
 // Get is the collection and singleton read: environments and the settings_*
@@ -136,7 +159,7 @@ func TestTransportGetFallsBackToCollectionForEmptyId(t *testing.T) {
 	_, err := transport.Get("environments", "", &data)
 	require.NoError(t, err)
 
-	assert.Equal(t, []string{"GET /console/v1/environments"}, *seen)
+	assert.Equal(t, []string{"GET /console/v1/environments"}, seen.requestLog())
 }
 
 // GetItem is the read every other resource uses, and there an empty id is a
@@ -154,10 +177,10 @@ func TestTransportGetItemRefusesEmptyId(t *testing.T) {
 	_, err := transport.GetItem("gates", "", &data)
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "resource id is empty")
-	assert.Empty(t, *seen, "no request should reach the API")
+	assert.Empty(t, seen.requestLog(), "no request should reach the API")
 
 	_, err = transport.GetItem("gates", "a_gate", &data)
 	require.NoError(t, err)
 
-	assert.Equal(t, []string{"GET /console/v1/gates/a_gate"}, *seen)
+	assert.Equal(t, []string{"GET /console/v1/gates/a_gate"}, seen.requestLog())
 }

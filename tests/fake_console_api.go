@@ -1,7 +1,9 @@
 package tests
 
 import (
+	"bytes"
 	"encoding/json"
+	"io"
 	"net"
 	"net/http"
 	"net/url"
@@ -17,12 +19,23 @@ import (
 )
 
 // fakeConsoleAPI stands in for the Statsig Console API so a test can drive real
-// Terraform without credentials. It records the method and path of every
-// request, which is how the update-path tests check the URL the provider built.
+// Terraform without credentials. It records every request, which is how the
+// update-path tests check the URL the provider built and how the keys tests
+// check which fields the body carries.
 type fakeConsoleAPI struct {
 	mu       sync.Mutex
-	requests []string
+	requests []recordedRequest
 	records  map[string]map[string]map[string]interface{}
+}
+
+type recordedRequest struct {
+	method string
+	path   string
+	body   []byte
+}
+
+func (r recordedRequest) entry() string {
+	return r.method + " " + r.path
 }
 
 // createFunc turns a POST body into a stored record and the id it is filed under.
@@ -195,14 +208,36 @@ func (f *fakeConsoleAPI) requestLog() []string {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 
-	return append([]string(nil), f.requests...)
+	log := make([]string, 0, len(f.requests))
+	for _, request := range f.requests {
+		log = append(log, request.entry())
+	}
+	return log
 }
 
-func (f *fakeConsoleAPI) record(r *http.Request) {
+// requestBodiesFor returns the body of every request matching "METHOD /path",
+// in order.
+func (f *fakeConsoleAPI) requestBodiesFor(entry string) [][]byte {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 
-	f.requests = append(f.requests, r.Method+" "+r.URL.Path)
+	var bodies [][]byte
+	for _, request := range f.requests {
+		if request.entry() == entry {
+			bodies = append(bodies, request.body)
+		}
+	}
+	return bodies
+}
+
+func (f *fakeConsoleAPI) record(r *http.Request) {
+	body, _ := io.ReadAll(r.Body)
+	r.Body = io.NopCloser(bytes.NewReader(body))
+
+	f.mu.Lock()
+	defer f.mu.Unlock()
+
+	f.requests = append(f.requests, recordedRequest{method: r.Method, path: r.URL.Path, body: body})
 }
 
 func (f *fakeConsoleAPI) list(name string) []interface{} {

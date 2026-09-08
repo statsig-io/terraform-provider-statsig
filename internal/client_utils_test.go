@@ -58,7 +58,7 @@ func TestGateClientReadRefusesAnEmptyId(t *testing.T) {
 	detail := diags.Errors()[0].Detail()
 	assert.Contains(t, detail, "cannot GET gates: resource id is empty")
 	assert.NotContains(t, detail, "json: cannot unmarshal array into Go struct field Response.Data of type resource_gate.GateAPIModel")
-	assert.Empty(t, *seen, "the collection must not be read in place of the resource")
+	assert.Empty(t, seen.requestLog(), "the collection must not be read in place of the resource")
 }
 
 func TestRunWithDiagnosticsAcceptsSuccess(t *testing.T) {
