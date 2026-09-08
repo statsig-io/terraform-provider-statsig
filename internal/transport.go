@@ -70,10 +70,16 @@ func (t *Transport) Post(endpoint string, body interface{}, resp interface{}) (*
 }
 
 func (t *Transport) Patch(endpoint string, id string, body interface{}, resp interface{}) (*APIResponse, error) {
+	if id == "" {
+		return nil, fmt.Errorf("cannot PATCH %s: resource id is empty", endpoint)
+	}
 	return t.doRequest("PATCH", fmt.Sprintf("%s/%s", endpoint, id), body, resp)
 }
 
 func (t *Transport) Delete(endpoint string, id string, resp interface{}) (*APIResponse, error) {
+	if id == "" {
+		return nil, fmt.Errorf("cannot DELETE %s: resource id is empty", endpoint)
+	}
 	return t.doRequest("DELETE", fmt.Sprintf("%s/%s", endpoint, id), nil, resp)
 }
 
