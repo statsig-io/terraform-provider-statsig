@@ -60,9 +60,24 @@ func NewTransport(_ context.Context, apiKey string, version StatsigProviderVersi
 	}
 }
 
+// Get reads a collection or a singleton. statsig_environments and the four
+// statsig_settings_* resources have no item URL at all, so they pass an empty id
+// on purpose and this is the read they need.
 func (t *Transport) Get(endpoint string, id string, resp interface{}) (*APIResponse, error) {
 	if id == "" {
 		return t.doRequest("GET", endpoint, nil, resp)
+	}
+	return t.doRequest("GET", fmt.Sprintf("%s/%s", endpoint, id), nil, resp)
+}
+
+// GetItem reads one resource. Every other resource reads through this method,
+// where an empty id means the id is missing rather than that the collection was
+// wanted, so it is refused the way Patch and Delete refuse it. Reading the
+// collection instead decodes an array into a single-resource model and reports a
+// JSON error that says nothing about the missing id.
+func (t *Transport) GetItem(endpoint string, id string, resp interface{}) (*APIResponse, error) {
+	if id == "" {
+		return nil, fmt.Errorf("cannot GET %s: resource id is empty", endpoint)
 	}
 	return t.doRequest("GET", fmt.Sprintf("%s/%s", endpoint, id), nil, resp)
 }

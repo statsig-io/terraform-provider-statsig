@@ -27,7 +27,7 @@ func (c *metricSourceClient) read(ctx context.Context, metricSource *resource_me
 	}
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_metric_source.MetricSourceAPIModel
-		res, err := c.transport.Get(c.endpoint, metricSource.Name.ValueString(), &data)
+		res, err := c.transport.GetItem(c.endpoint, metricSource.Name.ValueString(), &data)
 		resource_metric_source.MetricSourceFromAPIModel(ctx, diags, metricSource, data)
 		return res, err
 	})

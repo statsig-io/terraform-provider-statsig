@@ -28,7 +28,7 @@ func (c *gateClient) read(ctx context.Context, gate *resource_gate.GateModel) di
 
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_gate.GateAPIModel
-		res, err := c.transport.Get(c.endpoint, gate.Id.ValueString(), &data)
+		res, err := c.transport.GetItem(c.endpoint, gate.Id.ValueString(), &data)
 		resource_gate.GateFromAPIModel(ctx, diags, gate, data)
 		return res, err
 	})

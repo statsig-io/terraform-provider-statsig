@@ -29,7 +29,7 @@ func (c *segmentClient) read(ctx context.Context, segment *resource_segment.Segm
 
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_segment.SegmentAPIModel
-		res, err := c.transport.Get(c.endpoint, segment.Id.ValueString(), &data)
+		res, err := c.transport.GetItem(c.endpoint, segment.Id.ValueString(), &data)
 		resource_segment.SegmentFromAPIModel(ctx, diags, segment, data)
 		return res, err
 	})

@@ -28,7 +28,7 @@ func (c *experimentClient) read(ctx context.Context, experiment *resource_experi
 
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_experiment.ExperimentAPIModel
-		res, err := c.transport.Get(c.endpoint, experiment.Id.ValueString(), &data)
+		res, err := c.transport.GetItem(c.endpoint, experiment.Id.ValueString(), &data)
 		resource_experiment.ExperimentFromAPIModel(ctx, diags, experiment, data)
 		return res, err
 	})

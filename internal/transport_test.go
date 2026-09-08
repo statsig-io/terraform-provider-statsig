@@ -122,8 +122,8 @@ func TestTransportPostsCollectionAndSubResourceUrls(t *testing.T) {
 	}, *seen)
 }
 
-// Get keeps its collection fallback: environments and the settings_* singletons
-// pass an empty id on purpose.
+// Get is the collection and singleton read: environments and the settings_*
+// resources have no item URL and pass an empty id on purpose.
 func TestTransportGetFallsBackToCollectionForEmptyId(t *testing.T) {
 	transport, seen := newTestTransport(t, func(w http.ResponseWriter, _ *http.Request) {
 		writeConsoleResponse(w, http.StatusOK, map[string]interface{}{
@@ -137,4 +137,27 @@ func TestTransportGetFallsBackToCollectionForEmptyId(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.Equal(t, []string{"GET /console/v1/environments"}, *seen)
+}
+
+// GetItem is the read every other resource uses, and there an empty id is a
+// missing id rather than a request for the collection.
+func TestTransportGetItemRefusesEmptyId(t *testing.T) {
+	transport, seen := newTestTransport(t, func(w http.ResponseWriter, _ *http.Request) {
+		writeConsoleResponse(w, http.StatusOK, map[string]interface{}{
+			"message": "ok",
+			"data":    map[string]interface{}{},
+		})
+	})
+
+	var data map[string]interface{}
+
+	_, err := transport.GetItem("gates", "", &data)
+	require.Error(t, err)
+	assert.Contains(t, err.Error(), "resource id is empty")
+	assert.Empty(t, *seen, "no request should reach the API")
+
+	_, err = transport.GetItem("gates", "a_gate", &data)
+	require.NoError(t, err)
+
+	assert.Equal(t, []string{"GET /console/v1/gates/a_gate"}, *seen)
 }

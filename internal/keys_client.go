@@ -28,7 +28,7 @@ func (c *keysClient) read(ctx context.Context, key *resource_keys.KeysModel) dia
 
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_keys.KeysAPIOutputModel
-		res, err := c.transport.Get(c.endpoint, key.Key.ValueString(), &data)
+		res, err := c.transport.GetItem(c.endpoint, key.Key.ValueString(), &data)
 		resource_keys.KeyFromAPIInputModel(ctx, diags, key, data)
 		return res, err
 	})

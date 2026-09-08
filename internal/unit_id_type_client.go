@@ -26,7 +26,7 @@ func (c *unitIdTypeClient) read(ctx context.Context, unitIdType *resource_unit_i
 	}
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_unit_id_type.UnitIdTypeAPIModel
-		res, err := c.transport.Get(c.endpoint, unitIdType.Name.ValueString(), &data)
+		res, err := c.transport.GetItem(c.endpoint, unitIdType.Name.ValueString(), &data)
 		resource_unit_id_type.UnitIdTypeFromAPIModel(ctx, diags, unitIdType, data)
 		return res, err
 	})

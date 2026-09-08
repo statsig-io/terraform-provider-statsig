@@ -27,7 +27,7 @@ func (c *dynamicConfigClient) read(ctx context.Context, dynamicConfig *resource_
 
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_dynamic_config.DynamicConfigAPIModel
-		res, err := c.transport.Get(c.endpoint, dynamicConfig.Id.ValueString(), &data)
+		res, err := c.transport.GetItem(c.endpoint, dynamicConfig.Id.ValueString(), &data)
 		resource_dynamic_config.DynamicConfigFromAPIModel(ctx, diags, dynamicConfig, data)
 		return res, err
 	})

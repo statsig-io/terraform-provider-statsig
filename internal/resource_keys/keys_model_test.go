@@ -36,7 +36,9 @@ func TestKeyFromAPIInputModelKeepsConfiguredTargetApps(t *testing.T) {
 }
 
 // Both target app attributes are computed, so an unknown left by the plan still
-// has to be resolved before the value is written to state.
+// has to be resolved before the value is written to state. secondary_target_app_ids
+// resolves to an empty list, not null: the API's empty secondaryTargetApps array
+// used to produce an empty list, and length() and for_each error on a null one.
 func TestKeyFromAPIInputModelResolvesUnknownTargetApps(t *testing.T) {
 	key := &KeysModel{
 		TargetAppId:           types.StringUnknown(),
@@ -49,5 +51,6 @@ func TestKeyFromAPIInputModelResolvesUnknownTargetApps(t *testing.T) {
 	})
 
 	assert.True(t, key.TargetAppId.IsNull())
-	assert.True(t, key.SecondaryTargetAppIds.IsNull())
+	assert.False(t, key.SecondaryTargetAppIds.IsNull(), "a null list breaks length() and for_each")
+	assert.Equal(t, types.ListValueMust(types.StringType, []attr.Value{}), key.SecondaryTargetAppIds)
 }

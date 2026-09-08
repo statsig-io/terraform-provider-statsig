@@ -3,6 +3,7 @@ package resource_keys
 import (
 	"context"
 
+	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/statsig-io/terraform-provider-statsig/internal/utils"
@@ -53,11 +54,13 @@ func KeyFromAPIInputModel(ctx context.Context, diags diag.Diagnostics, key *Keys
 	// Keep whatever the plan holds for the target app attributes: writing the
 	// response's display names over configured IDs makes the applied state
 	// inconsistent with the plan and fails the apply. Both attributes are
-	// computed, so an unknown still has to be resolved to null.
+	// computed, so an unknown still has to be resolved. An unset list resolves to
+	// an empty list, the shape the API's empty secondaryTargetApps used to
+	// produce, so length() and for_each over it keep working.
 	if key.TargetAppId.IsUnknown() {
 		key.TargetAppId = types.StringNull()
 	}
 	if key.SecondaryTargetAppIds.IsUnknown() {
-		key.SecondaryTargetAppIds = types.ListNull(types.StringType)
+		key.SecondaryTargetAppIds = types.ListValueMust(types.StringType, []attr.Value{})
 	}
 }

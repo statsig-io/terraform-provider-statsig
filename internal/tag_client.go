@@ -25,7 +25,7 @@ func (c *tagClient) read(ctx context.Context, tag *resource_tag.TagModel) diag.D
 	}
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_tag.TagAPIModel
-		res, err := c.transport.Get(c.endpoint, tag.Name.ValueString(), &data)
+		res, err := c.transport.GetItem(c.endpoint, tag.Name.ValueString(), &data)
 		resource_tag.TagFromAPIModel(ctx, diags, tag, data)
 		return res, err
 	})

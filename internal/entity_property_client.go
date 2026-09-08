@@ -27,7 +27,7 @@ func (c *entityPropertyClient) read(ctx context.Context, entityProperty *resourc
 	}
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_entity_property.EntityPropertyAPIModel
-		res, err := c.transport.Get(c.endpoint, entityProperty.Name.ValueString(), &data)
+		res, err := c.transport.GetItem(c.endpoint, entityProperty.Name.ValueString(), &data)
 		resource_entity_property.EntityPropertyFromAPIModel(ctx, diags, entityProperty, data)
 		return res, err
 	})

@@ -26,7 +26,7 @@ func (c *qualifyingEventClient) read(ctx context.Context, qualifyingEvent *resou
 	}
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_qualifying_event.QualifyingEventAPIModel
-		res, err := c.transport.Get(c.endpoint, qualifyingEvent.Name.ValueString(), &data)
+		res, err := c.transport.GetItem(c.endpoint, qualifyingEvent.Name.ValueString(), &data)
 		resource_qualifying_event.QualifyingEventFromAPIModel(ctx, diags, qualifyingEvent, data)
 		return res, err
 	})

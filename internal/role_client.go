@@ -25,7 +25,7 @@ func (c *roleClient) read(ctx context.Context, role *resource_role.RoleModel) di
 	}
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_role.RoleAPIModel
-		res, err := c.transport.Get(c.endpoint, role.Name.ValueString(), &data)
+		res, err := c.transport.GetItem(c.endpoint, role.Name.ValueString(), &data)
 		resource_role.RoleFromAPIModel(ctx, diags, role, data)
 		return res, err
 	})
