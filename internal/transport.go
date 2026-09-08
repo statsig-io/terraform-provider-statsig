@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"slices"
+	"strings"
 	"time"
 )
 
@@ -84,6 +86,9 @@ func (t *Transport) Delete(endpoint string, id string, resp interface{}) (*APIRe
 }
 
 func (t *Transport) doRequest(method, endpoint string, body interface{}, resp interface{}) (*APIResponse, error) {
+	if err := checkAddressesResource(method, endpoint); err != nil {
+		return nil, err
+	}
 	req, err := t.buildRequest(method, endpoint, body)
 	if err != nil {
 		return nil, err
@@ -109,6 +114,16 @@ func (t *Transport) doRequest(method, endpoint string, body interface{}, resp in
 		StatusCode: r.StatusCode,
 		Response:   response,
 	}, nil
+}
+
+// checkAddressesResource rejects a path with an empty segment. Clients that
+// compose an item URL themselves reach doRequest as a POST, and an empty id
+// leaves the request aimed at the collection.
+func checkAddressesResource(method, endpoint string) error {
+	if slices.Contains(strings.Split(endpoint, "/"), "") {
+		return fmt.Errorf("cannot %s %s: resource id is empty", method, endpoint)
+	}
+	return nil
 }
 
 func (t *Transport) buildRequest(method, endpoint string, body interface{}) (*http.Request, error) {

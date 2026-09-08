@@ -2,6 +2,7 @@ package tests
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 	"testing"
 
@@ -65,6 +66,27 @@ resource "statsig_keys" "regression" {
   scopes       = []
 }
 `, description)
+}
+
+func metricConfig(id string, description string) string {
+	return fmt.Sprintf(`
+resource "statsig_metric" "regression" {
+  id                   = %q
+  name                 = "Regression Metric"
+  description          = %q
+  type                 = "event_count_custom"
+  custom_roll_up_end   = 14
+  custom_roll_up_start = 0
+  rollup_time_window   = "custom"
+  unit_types           = ["userID"]
+  metric_events = [
+    {
+      criteria = []
+      name     = "regression_event"
+    }
+  ]
+}
+`, id, description)
 }
 
 func tagConfig(description string) string {
@@ -156,6 +178,29 @@ func TestAccUpdatePathAddressesTheResource(t *testing.T) {
 			assertAddressedResources(t, log)
 		})
 	}
+}
+
+// statsig_metric.id carries no length validator, so a config can set it to the
+// empty string and the plan value stays known. The update then composes
+// "metrics/" and posts the whole metric to the collection, which the Console API
+// reads as a create.
+func TestAccMetricUpdateRefusesAnEmptyId(t *testing.T) {
+	api := startFakeConsoleAPI(t)
+
+	resource.Test(t, resource.TestCase{
+		ProtoV6ProviderFactories: testAccLocalProviders(),
+		Steps: []resource.TestStep{
+			{Config: metricConfig("regression_metric", "first")},
+			{
+				Config:      metricConfig("", "second"),
+				ExpectError: regexp.MustCompile("resource id is empty"),
+			},
+		},
+	})
+
+	log := api.requestLog()
+	assert.Contains(t, log, "POST /console/v1/metrics", "the metric was never created")
+	assertAddressedResources(t, log)
 }
 
 // assertAddressedResources fails on any request aimed at a collection where a

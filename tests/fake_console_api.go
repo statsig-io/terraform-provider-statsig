@@ -38,6 +38,7 @@ type fakeCollection struct {
 var fakeCollections = map[string]fakeCollection{
 	"gates":    {create: echoCreate},
 	"segments": {create: echoCreate},
+	"metrics":  {create: echoCreate},
 	"tags":     {create: nameKeyedCreate},
 	"keys":     {create: keysCreate, requestOnly: []string{"targetAppID", "secondaryTargetAppIDs"}},
 }

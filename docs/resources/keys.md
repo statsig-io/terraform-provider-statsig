@@ -15,6 +15,8 @@ To learn more about the API powering this resource, see [Keys API Documentation]
 
 -> Note: This resource requires a Console API Key with the following scope: `can access other keys`
 
+-> Note: The Console API does not return `target_app_id` or `secondary_target_app_ids`, so Terraform keeps the values from your configuration. Removing either attribute does not unassign the target app. Use the Statsig Console to unassign it. Terraform also cannot detect a target app change made in the Console, so a clean plan does not confirm that the assignment matches your configuration.
+
 ## Example Usage
 
 ```terraform
