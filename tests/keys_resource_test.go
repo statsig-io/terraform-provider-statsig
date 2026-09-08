@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"fmt"
 	"os"
 	"regexp"
 	"testing"
@@ -137,6 +138,45 @@ func TestAccConsoleKey(t *testing.T) {
 					resource.TestCheckResourceAttr(name, "scopes.0", "omni_read_write"),
 					resource.TestCheckNoResourceAttr(name, "target_app_id"),
 					resource.TestCheckResourceAttr(name, "secondary_target_app_ids.#", "0"),
+				),
+			},
+		},
+	})
+}
+
+// POST /console/v1/keys takes targetAppID and answers with primaryTargetApp, a
+// display name, so no response can supply the value target_app_id holds.
+// Overwriting the attribute from the response made the applied state differ
+// from the plan, which aborts the apply. This case runs against the fake
+// Console API and needs no Statsig credentials.
+func TestAccKeysKeepsConfiguredTargetApps(t *testing.T) {
+	const targetAppId = "4SRgGcr8uWNVW3c2OGWFZC"
+	const secondaryTargetAppId = "2Kd9hLpQzXcVbNmR4TsYuI"
+
+	startFakeConsoleAPI(t)
+
+	config := fmt.Sprintf(`
+resource "statsig_keys" "regression" {
+  description              = "edge server key"
+  type                     = "SERVER"
+  target_app_id            = %q
+  secondary_target_app_ids = [%q]
+  environments             = ["production"]
+  scopes                   = []
+}
+`, targetAppId, secondaryTargetAppId)
+
+	name := "statsig_keys.regression"
+
+	resource.Test(t, resource.TestCase{
+		ProtoV6ProviderFactories: testAccLocalProviders(),
+		Steps: []resource.TestStep{
+			{
+				Config: config,
+				Check: resource.ComposeAggregateTestCheckFunc(
+					resource.TestCheckResourceAttr(name, "target_app_id", targetAppId),
+					resource.TestCheckResourceAttr(name, "secondary_target_app_ids.#", "1"),
+					resource.TestCheckResourceAttr(name, "secondary_target_app_ids.0", secondaryTargetAppId),
 				),
 			},
 		},

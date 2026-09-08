@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/statsig-io/terraform-provider-statsig/internal/utils"
 )
 
@@ -17,6 +18,10 @@ type KeysAPIInputModel struct {
 	Type                  string   `json:"type"`
 }
 
+// The keys endpoints take targetAppID / secondaryTargetAppIDs on the way in but
+// answer with primaryTargetApp / secondaryTargetApps, which are display names.
+// No response carries the IDs back, so those two fields are read but not mapped
+// into state. See KeyFromAPIInputModel.
 type KeysAPIOutputModel struct {
 	Description         string   `json:"description"`
 	Environments        []string `json:"environments"`
@@ -42,8 +47,17 @@ func KeyFromAPIInputModel(ctx context.Context, diags diag.Diagnostics, key *Keys
 	key.Key = utils.StringToNilableValue(res.Key)
 	key.Type = utils.StringToNilableValue(res.Type)
 	key.Description = utils.StringToNilableValue(res.Description)
-	key.TargetAppId = utils.StringToNilableValue(res.PrimaryTargetApp)
 	key.Environments = utils.StringSliceToListValue(ctx, diags, res.Environments)
 	key.Scopes = utils.StringSliceToListValue(ctx, diags, res.Scopes)
-	key.SecondaryTargetAppIds = utils.StringSliceToListValue(ctx, diags, res.SecondaryTargetApps)
+
+	// Keep whatever the plan holds for the target app attributes: writing the
+	// response's display names over configured IDs makes the applied state
+	// inconsistent with the plan and fails the apply. Both attributes are
+	// computed, so an unknown still has to be resolved to null.
+	if key.TargetAppId.IsUnknown() {
+		key.TargetAppId = types.StringNull()
+	}
+	if key.SecondaryTargetAppIds.IsUnknown() {
+		key.SecondaryTargetAppIds = types.ListNull(types.StringType)
+	}
 }
