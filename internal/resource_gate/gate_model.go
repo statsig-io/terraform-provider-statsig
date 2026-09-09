@@ -32,23 +32,43 @@ type GateAPIModel struct {
 	Team               string                     `json:"team,omitempty"`
 }
 
-func GateToAPIModel(ctx context.Context, gate *GateModel) GateAPIModel {
-	return GateAPIModel{
-		Id:                 gate.Id.ValueString(),
-		Name:               gate.Name.ValueString(),
-		IdType:             gate.IdType.ValueString(),
-		Description:        gate.Description.ValueString(),
-		IsEnabled:          utils.BoolFromBoolValue(gate.IsEnabled),
-		IsTemplate:         utils.NilableBoolFromBoolValue(gate.IsTemplate),
-		MeasureMetricLifts: utils.NilableBoolFromBoolValue(gate.MeasureMetricLifts),
-		MonitoringMetrics:  MonitoringMetricsToAPIModel(ctx, gate.MonitoringMetrics),
-		Rules:              RulesToAPIModel(ctx, gate.Rules),
-		Tags:               utils.StringSliceFromListValue(ctx, gate.Tags),
-		Type:               gate.Type.ValueString(),
-		TargetApps:         utils.StringSliceFromListValue(ctx, gate.TargetApps),
-		CreatorId:          gate.CreatorId.ValueString(),
-		CreatorEmail:       gate.CreatorEmail.ValueString(),
-		Team:               gate.Team.ValueString(),
+// Every field is raw JSON so the request can leave out an attribute the
+// configuration never mentioned. See utils.APIField.
+type GateAPIInputModel struct {
+	Id                 json.RawMessage `json:"id,omitempty"`   // (Name)
+	Name               json.RawMessage `json:"name,omitempty"` // (Display name)
+	IdType             json.RawMessage `json:"idType,omitempty"`
+	Description        json.RawMessage `json:"description,omitempty"`
+	IsEnabled          json.RawMessage `json:"isEnabled,omitempty"`
+	IsTemplate         json.RawMessage `json:"isTemplate,omitempty"`
+	MeasureMetricLifts json.RawMessage `json:"measureMetricLifts,omitempty"`
+	MonitoringMetrics  json.RawMessage `json:"monitoringMetrics,omitempty"`
+	Rules              json.RawMessage `json:"rules,omitempty"`
+	Tags               json.RawMessage `json:"tags,omitempty"`
+	Type               json.RawMessage `json:"type,omitempty"`
+	TargetApps         json.RawMessage `json:"targetApps,omitempty"`
+	CreatorId          json.RawMessage `json:"creatorID,omitempty"`
+	CreatorEmail       json.RawMessage `json:"creatorEmail,omitempty"`
+	Team               json.RawMessage `json:"team,omitempty"`
+}
+
+func GateToAPIInputModel(ctx context.Context, gate *GateModel) GateAPIInputModel {
+	return GateAPIInputModel{
+		Id:                 utils.StringAPIField(gate.Id),
+		Name:               utils.StringAPIField(gate.Name),
+		IdType:             utils.StringAPIField(gate.IdType),
+		Description:        utils.StringAPIField(gate.Description),
+		IsEnabled:          utils.BoolAPIField(gate.IsEnabled),
+		IsTemplate:         utils.BoolAPIField(gate.IsTemplate),
+		MeasureMetricLifts: utils.BoolAPIField(gate.MeasureMetricLifts),
+		MonitoringMetrics:  utils.APIField(gate.MonitoringMetrics, MonitoringMetricsToAPIModel(ctx, gate.MonitoringMetrics)),
+		Rules:              utils.APIField(gate.Rules, RulesToAPIModel(ctx, gate.Rules)),
+		Tags:               utils.StringSliceAPIField(ctx, gate.Tags),
+		Type:               utils.StringAPIField(gate.Type),
+		TargetApps:         utils.StringSliceAPIField(ctx, gate.TargetApps),
+		CreatorId:          utils.StringAPIField(gate.CreatorId),
+		CreatorEmail:       utils.StringAPIField(gate.CreatorEmail),
+		Team:               utils.StringAPIField(gate.Team),
 	}
 }
 

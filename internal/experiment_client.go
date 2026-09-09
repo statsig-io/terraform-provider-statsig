@@ -37,7 +37,7 @@ func (c *experimentClient) read(ctx context.Context, experiment *resource_experi
 func (c *experimentClient) create(ctx context.Context, experiment *resource_experiment.ExperimentModel) diag.Diagnostics {
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_experiment.ExperimentAPIModel
-		res, err := c.transport.Post(c.endpoint, resource_experiment.ExperimentToAPIModel(ctx, experiment), &data)
+		res, err := c.transport.Post(c.endpoint, resource_experiment.ExperimentToAPIInputModel(ctx, experiment), &data)
 		resource_experiment.ExperimentFromAPIModel(ctx, diags, experiment, data)
 		return res, err
 	})
@@ -50,7 +50,7 @@ func (c *experimentClient) update(ctx context.Context, experiment *resource_expe
 
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_experiment.ExperimentAPIModel
-		res, err := c.transport.Patch(c.endpoint, experiment.Id.ValueString(), resource_experiment.ExperimentToAPIModel(ctx, experiment), &data)
+		res, err := c.transport.Patch(c.endpoint, experiment.Id.ValueString(), resource_experiment.ExperimentToAPIInputModel(ctx, experiment), &data)
 		resource_experiment.ExperimentFromAPIModel(ctx, diags, experiment, data)
 		return res, err
 	})

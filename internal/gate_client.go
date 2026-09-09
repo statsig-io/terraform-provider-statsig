@@ -37,7 +37,7 @@ func (c *gateClient) read(ctx context.Context, gate *resource_gate.GateModel) di
 func (c *gateClient) create(ctx context.Context, gate *resource_gate.GateModel) diag.Diagnostics {
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_gate.GateAPIModel
-		res, err := c.transport.Post(c.endpoint, resource_gate.GateToAPIModel(ctx, gate), &data)
+		res, err := c.transport.Post(c.endpoint, resource_gate.GateToAPIInputModel(ctx, gate), &data)
 		resource_gate.GateFromAPIModel(ctx, diags, gate, data)
 		return res, err
 	})
@@ -50,7 +50,7 @@ func (c *gateClient) update(ctx context.Context, gate *resource_gate.GateModel) 
 
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_gate.GateAPIModel
-		res, err := c.transport.Patch(c.endpoint, gate.Id.ValueString(), resource_gate.GateToAPIModel(ctx, gate), &data)
+		res, err := c.transport.Patch(c.endpoint, gate.Id.ValueString(), resource_gate.GateToAPIInputModel(ctx, gate), &data)
 		resource_gate.GateFromAPIModel(ctx, diags, gate, data)
 		return res, err
 	})

@@ -2,6 +2,7 @@ package resource_experiment
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/statsig-io/terraform-provider-statsig/internal/utils"
 
@@ -59,52 +60,101 @@ type ExperimentAPIModel struct {
 	Team                           string                     `json:"team,omitempty"`
 }
 
-func ExperimentToAPIModel(ctx context.Context, experiment *ExperimentModel) ExperimentAPIModel {
-	return ExperimentAPIModel{
-		Allocation:                     utils.FloatFromFloatValue(experiment.Allocation),
-		AllocationDuration:             utils.NilableInt64FromInt64Value(experiment.AllocationDuration),
-		AnalysisEndTime:                utils.StringFromNilableValue(experiment.AnalysisEndTime),
-		AnalyticsType:                  utils.StringFromNilableValue(experiment.AnalyticsType),
-		AssignmentSourceExperimentName: utils.StringFromNilableValue(experiment.AssignmentSourceExperimentName),
-		AssignmentSourceName:           utils.StringFromNilableValue(experiment.AssignmentSourceName),
-		BenjaminiHochbergPerMetric:     utils.NilableBoolFromBoolValue(experiment.BenjaminiHochbergPerMetric),
-		BenjaminiHochbergPerVariant:    utils.NilableBoolFromBoolValue(experiment.BenjaminiHochbergPerVariant),
-		BenjaminiPrimaryMetricsOnly:    utils.NilableBoolFromBoolValue(experiment.BenjaminiPrimaryMetricsOnly),
-		BonferroniCorrection:           utils.BoolFromBoolValue(experiment.BonferroniCorrection),
-		BonferroniCorrectionPerMetric:  utils.NilableBoolFromBoolValue(experiment.BonferroniCorrectionPerMetric),
-		CohortWaitUntilEndToInclude:    utils.NilableBoolFromBoolValue(experiment.CohortWaitUntilEndToInclude),
-		CohortedAnalysisDuration:       utils.NilableInt64FromInt64Value(experiment.CohortedAnalysisDuration),
-		CohortedMetricsMatureAfterEnd:  utils.NilableBoolFromBoolValue(experiment.CohortedMetricsMatureAfterEnd),
-		ControlGroupId:                 utils.StringFromNilableValue(experiment.ControlGroupId),
-		CreatorEmail:                   utils.StringFromNilableValue(experiment.CreatorEmail),
-		CreatorId:                      utils.StringFromNilableValue(experiment.CreatorId),
-		DefaultConfidenceInterval:      utils.StringFromNilableValue(experiment.DefaultConfidenceInterval),
-		Description:                    utils.StringFromNilableValue(experiment.Description),
-		Duration:                       utils.NilableInt64FromInt64Value(experiment.Duration),
-		FixedAnalysisDuration:          utils.NilableInt64FromInt64Value(experiment.FixedAnalysisDuration),
-		Groups:                         GroupsToAPIModel(ctx, experiment.Groups),
-		Hypothesis:                     utils.StringFromNilableValue(experiment.Hypothesis),
-		Id:                             utils.StringFromNilableValue(experiment.Id),
-		IdType:                         utils.StringFromNilableValue(experiment.IdType),
-		IsAnalysisOnly:                 utils.NilableBoolFromBoolValue(experiment.IsAnalysisOnly),
-		LaunchedGroupId:                utils.StringFromNilableValue(experiment.LaunchedGroupId),
-		LayerId:                        utils.StringFromNilableValue(experiment.LayerId),
-		Links:                          LinksToAPIModel(ctx, experiment.Links),
-		Name:                           utils.StringFromNilableValue(experiment.Name),
-		PrimaryMetricTags:              utils.StringSliceFromListValue(ctx, experiment.PrimaryMetricTags),
-		PrimaryMetrics:                 MetricsToAPIModel(ctx, experiment.PrimaryMetrics),
-		ScheduledReloadHour:            utils.NilableInt64FromInt64Value(experiment.ScheduledReloadHour),
-		ScheduledReloadType:            utils.StringFromNilableValue(experiment.ScheduledReloadType),
-		SecondaryIdtype:                utils.StringFromNilableValue(experiment.SecondaryIdtype),
-		SecondaryMetricTags:            utils.StringSliceFromListValue(ctx, experiment.SecondaryMetricTags),
-		SecondaryMetrics:               MetricsToAPIModel(ctx, experiment.SecondaryMetrics),
-		SequentialTesting:              utils.NilableBoolFromBoolValue(experiment.SequentialTesting),
-		Status:                         utils.StringFromNilableValue(experiment.Status),
-		Tags:                           utils.StringSliceFromListValue(ctx, experiment.Tags),
-		TargetApps:                     utils.StringSliceFromListValue(ctx, experiment.TargetApps),
-		TargetExposures:                utils.NilableInt64FromInt64Value(experiment.TargetExposures),
-		TargetingGateId:                utils.StringFromNilableValue(experiment.TargetingGateId),
-		Team:                           utils.StringFromNilableValue(experiment.Team),
+// Every field is raw JSON so the request can leave out an attribute the
+// configuration never mentioned. See utils.APIField.
+type ExperimentAPIInputModel struct {
+	Allocation                     json.RawMessage `json:"allocation,omitempty"`
+	AllocationDuration             json.RawMessage `json:"allocationDuration,omitempty"`
+	AnalysisEndTime                json.RawMessage `json:"analysisEndTime,omitempty"`
+	AnalyticsType                  json.RawMessage `json:"analyticsType,omitempty"`
+	AssignmentSourceExperimentName json.RawMessage `json:"assignmentSourceExperimentName,omitempty"`
+	AssignmentSourceName           json.RawMessage `json:"assignmentSourceName,omitempty"`
+	BenjaminiHochbergPerMetric     json.RawMessage `json:"benjaminiHochbergPerMetric,omitempty"`
+	BenjaminiHochbergPerVariant    json.RawMessage `json:"benjaminiHochbergPerVariant,omitempty"`
+	BenjaminiPrimaryMetricsOnly    json.RawMessage `json:"benjaminiPrimaryMetricsOnly,omitempty"`
+	BonferroniCorrection           json.RawMessage `json:"bonferroniCorrection,omitempty"`
+	BonferroniCorrectionPerMetric  json.RawMessage `json:"bonferroniCorrectionPerMetric,omitempty"`
+	CohortWaitUntilEndToInclude    json.RawMessage `json:"cohortWaitUntilEndToInclude,omitempty"`
+	CohortedAnalysisDuration       json.RawMessage `json:"cohortedAnalysisDuration,omitempty"`
+	CohortedMetricsMatureAfterEnd  json.RawMessage `json:"cohortedMetricsMatureAfterEnd,omitempty"`
+	ControlGroupId                 json.RawMessage `json:"controlGroupID,omitempty"`
+	CreatorEmail                   json.RawMessage `json:"creatorEmail,omitempty"`
+	CreatorId                      json.RawMessage `json:"creatorID,omitempty"`
+	DefaultConfidenceInterval      json.RawMessage `json:"defaultConfidenceInterval,omitempty"`
+	Description                    json.RawMessage `json:"description,omitempty"`
+	Duration                       json.RawMessage `json:"duration,omitempty"`
+	FixedAnalysisDuration          json.RawMessage `json:"fixedAnalysisDuration,omitempty"`
+	Groups                         json.RawMessage `json:"groups,omitempty"`
+	Hypothesis                     json.RawMessage `json:"hypothesis,omitempty"`
+	Id                             json.RawMessage `json:"id,omitempty"`
+	IdType                         json.RawMessage `json:"idType,omitempty"`
+	IsAnalysisOnly                 json.RawMessage `json:"isAnalysisOnly,omitempty"`
+	LaunchedGroupId                json.RawMessage `json:"launchedGroupID,omitempty"`
+	LayerId                        json.RawMessage `json:"layerID,omitempty"`
+	Links                          json.RawMessage `json:"links,omitempty"`
+	Name                           json.RawMessage `json:"name,omitempty"`
+	PrimaryMetricTags              json.RawMessage `json:"primaryMetricTags,omitempty"`
+	PrimaryMetrics                 json.RawMessage `json:"primaryMetrics,omitempty"`
+	ScheduledReloadHour            json.RawMessage `json:"scheduledReloadHour,omitempty"`
+	ScheduledReloadType            json.RawMessage `json:"scheduledReloadType,omitempty"`
+	SecondaryIdtype                json.RawMessage `json:"secondaryIDType,omitempty"`
+	SecondaryMetricTags            json.RawMessage `json:"secondaryMetricTags,omitempty"`
+	SecondaryMetrics               json.RawMessage `json:"secondaryMetrics,omitempty"`
+	SequentialTesting              json.RawMessage `json:"sequentialTesting,omitempty"`
+	Status                         json.RawMessage `json:"status,omitempty"`
+	Tags                           json.RawMessage `json:"tags,omitempty"`
+	TargetApps                     json.RawMessage `json:"targetApps,omitempty"`
+	TargetExposures                json.RawMessage `json:"targetExposures,omitempty"`
+	TargetingGateId                json.RawMessage `json:"targetingGateID,omitempty"`
+	Team                           json.RawMessage `json:"team,omitempty"`
+}
+
+func ExperimentToAPIInputModel(ctx context.Context, experiment *ExperimentModel) ExperimentAPIInputModel {
+	return ExperimentAPIInputModel{
+		Allocation:                     utils.FloatAPIField(experiment.Allocation),
+		AllocationDuration:             utils.Int64APIField(experiment.AllocationDuration),
+		AnalysisEndTime:                utils.StringAPIField(experiment.AnalysisEndTime),
+		AnalyticsType:                  utils.StringAPIField(experiment.AnalyticsType),
+		AssignmentSourceExperimentName: utils.StringAPIField(experiment.AssignmentSourceExperimentName),
+		AssignmentSourceName:           utils.StringAPIField(experiment.AssignmentSourceName),
+		BenjaminiHochbergPerMetric:     utils.BoolAPIField(experiment.BenjaminiHochbergPerMetric),
+		BenjaminiHochbergPerVariant:    utils.BoolAPIField(experiment.BenjaminiHochbergPerVariant),
+		BenjaminiPrimaryMetricsOnly:    utils.BoolAPIField(experiment.BenjaminiPrimaryMetricsOnly),
+		BonferroniCorrection:           utils.BoolAPIField(experiment.BonferroniCorrection),
+		BonferroniCorrectionPerMetric:  utils.BoolAPIField(experiment.BonferroniCorrectionPerMetric),
+		CohortWaitUntilEndToInclude:    utils.BoolAPIField(experiment.CohortWaitUntilEndToInclude),
+		CohortedAnalysisDuration:       utils.Int64APIField(experiment.CohortedAnalysisDuration),
+		CohortedMetricsMatureAfterEnd:  utils.BoolAPIField(experiment.CohortedMetricsMatureAfterEnd),
+		ControlGroupId:                 utils.StringAPIField(experiment.ControlGroupId),
+		CreatorEmail:                   utils.StringAPIField(experiment.CreatorEmail),
+		CreatorId:                      utils.StringAPIField(experiment.CreatorId),
+		DefaultConfidenceInterval:      utils.StringAPIField(experiment.DefaultConfidenceInterval),
+		Description:                    utils.StringAPIField(experiment.Description),
+		Duration:                       utils.Int64APIField(experiment.Duration),
+		FixedAnalysisDuration:          utils.Int64APIField(experiment.FixedAnalysisDuration),
+		Groups:                         utils.APIField(experiment.Groups, GroupsToAPIModel(ctx, experiment.Groups)),
+		Hypothesis:                     utils.StringAPIField(experiment.Hypothesis),
+		Id:                             utils.StringAPIField(experiment.Id),
+		IdType:                         utils.StringAPIField(experiment.IdType),
+		IsAnalysisOnly:                 utils.BoolAPIField(experiment.IsAnalysisOnly),
+		LaunchedGroupId:                utils.StringAPIField(experiment.LaunchedGroupId),
+		LayerId:                        utils.StringAPIField(experiment.LayerId),
+		Links:                          utils.APIField(experiment.Links, LinksToAPIModel(ctx, experiment.Links)),
+		Name:                           utils.StringAPIField(experiment.Name),
+		PrimaryMetricTags:              utils.StringSliceAPIField(ctx, experiment.PrimaryMetricTags),
+		PrimaryMetrics:                 utils.APIField(experiment.PrimaryMetrics, MetricsToAPIModel(ctx, experiment.PrimaryMetrics)),
+		ScheduledReloadHour:            utils.Int64APIField(experiment.ScheduledReloadHour),
+		ScheduledReloadType:            utils.StringAPIField(experiment.ScheduledReloadType),
+		SecondaryIdtype:                utils.StringAPIField(experiment.SecondaryIdtype),
+		SecondaryMetricTags:            utils.StringSliceAPIField(ctx, experiment.SecondaryMetricTags),
+		SecondaryMetrics:               utils.APIField(experiment.SecondaryMetrics, MetricsToAPIModel(ctx, experiment.SecondaryMetrics)),
+		SequentialTesting:              utils.BoolAPIField(experiment.SequentialTesting),
+		Status:                         utils.StringAPIField(experiment.Status),
+		Tags:                           utils.StringSliceAPIField(ctx, experiment.Tags),
+		TargetApps:                     utils.StringSliceAPIField(ctx, experiment.TargetApps),
+		TargetExposures:                utils.Int64APIField(experiment.TargetExposures),
+		TargetingGateId:                utils.StringAPIField(experiment.TargetingGateId),
+		Team:                           utils.StringAPIField(experiment.Team),
 	}
 }
 

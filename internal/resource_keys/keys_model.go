@@ -12,16 +12,15 @@ import (
 
 // API data model for KeysModel (NOTE: see if we can get Terraform to also codegen this from OpenAPI)
 //
-// The two target app fields are raw JSON because the keys endpoints read three
-// distinct requests from them, and a plain Go string can only express two. See
-// targetAppIdToAPIField.
+// Every field is raw JSON so the request can leave out an attribute the
+// configuration never mentioned. See utils.APIField.
 type KeysAPIInputModel struct {
-	Description           string          `json:"description"`
-	Environments          []string        `json:"environments"`
-	Scopes                []string        `json:"scopes"`
+	Description           json.RawMessage `json:"description,omitempty"`
+	Environments          json.RawMessage `json:"environments,omitempty"`
+	Scopes                json.RawMessage `json:"scopes,omitempty"`
 	SecondaryTargetAppIds json.RawMessage `json:"secondaryTargetAppIDs,omitempty"`
 	TargetAppId           json.RawMessage `json:"targetAppID,omitempty"`
-	Type                  string          `json:"type"`
+	Type                  json.RawMessage `json:"type,omitempty"`
 }
 
 // The keys endpoints take targetAppID / secondaryTargetAppIDs on the way in but
@@ -40,40 +39,24 @@ type KeysAPIOutputModel struct {
 
 func KeyToAPIInputModel(ctx context.Context, key *KeysModel) KeysAPIInputModel {
 	return KeysAPIInputModel{
-		Description:           key.Description.ValueString(),
-		Environments:          utils.StringSliceFromListValue(ctx, key.Environments),
-		Scopes:                utils.StringSliceFromListValue(ctx, key.Scopes),
-		SecondaryTargetAppIds: secondaryTargetAppIdsToAPIField(ctx, key.SecondaryTargetAppIds),
+		Description:           utils.StringAPIField(key.Description),
+		Environments:          utils.StringSliceAPIField(ctx, key.Environments),
+		Scopes:                utils.StringSliceAPIField(ctx, key.Scopes),
+		SecondaryTargetAppIds: utils.StringSliceAPIField(ctx, key.SecondaryTargetAppIds),
 		TargetAppId:           targetAppIdToAPIField(key.TargetAppId),
-		Type:                  key.Type.ValueString(),
+		Type:                  utils.StringAPIField(key.Type),
 	}
 }
 
-// The keys endpoints read the target app fields three ways: an absent field
-// leaves the current assignment alone, a null clears it, and a value sets it. An
-// empty string is not a clear. The API stores it as an identifier and writes a
-// reverse association keyed on it, so it must never be sent.
-//
-// A config that omits the attribute leaves the plan value unknown, which is the
-// absent case. An attribute set to "" is the clear.
+// target_app_id is the one attribute whose clear is not its own empty value. The
+// keys endpoints store an empty string as an identifier and write a reverse
+// association keyed on it, so "" must never be sent; the clear is a JSON null.
+// The absent and set states follow the shared rule in utils.APIField.
 func targetAppIdToAPIField(value types.String) json.RawMessage {
-	if value.IsUnknown() || value.IsNull() {
-		return nil
-	}
-	if value.ValueString() == "" {
+	if !value.IsUnknown() && !value.IsNull() && value.ValueString() == "" {
 		return json.RawMessage("null")
 	}
-	encoded, _ := json.Marshal(value.ValueString())
-	return encoded
-}
-
-// An empty array clears the assignment, so the list needs no null case.
-func secondaryTargetAppIdsToAPIField(ctx context.Context, value types.List) json.RawMessage {
-	if value.IsUnknown() || value.IsNull() {
-		return nil
-	}
-	encoded, _ := json.Marshal(utils.StringSliceFromListValue(ctx, value))
-	return encoded
+	return utils.StringAPIField(value)
 }
 
 func KeyFromAPIInputModel(ctx context.Context, diags diag.Diagnostics, key *KeysModel, res KeysAPIOutputModel) {

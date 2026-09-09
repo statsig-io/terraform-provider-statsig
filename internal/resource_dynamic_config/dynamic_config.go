@@ -33,24 +33,45 @@ type DynamicConfigAPIModel struct {
 	Team              string                 `json:"team,omitempty"`
 }
 
-func DynamicConfigToAPIModel(ctx context.Context, dynamicConfig *DynamicConfigModel) DynamicConfigAPIModel {
-	return DynamicConfigAPIModel{
-		Id:                utils.StringFromNilableValue(dynamicConfig.Id),
-		Name:              utils.StringFromNilableValue(dynamicConfig.Name),
-		IdType:            utils.StringFromNilableValue(dynamicConfig.IdType),
-		Description:       utils.StringFromNilableValue(dynamicConfig.Description),
-		IsEnabled:         utils.BoolFromBoolValue(dynamicConfig.IsEnabled),
-		IsTemplate:        utils.NilableBoolFromBoolValue(dynamicConfig.IsTemplate),
-		Rules:             RulesToAPIModel(ctx, dynamicConfig.Rules),
-		Schema:            utils.StringFromNilableValue(dynamicConfig.Schema),
-		SchemaJson5:       utils.StringFromNilableValue(dynamicConfig.SchemaJson5),
-		DefaultValue:      utils.MapFromMapValue(ctx, dynamicConfig.DefaultValue),
-		DefaultValueJson5: utils.StringFromNilableValue(dynamicConfig.DefaultValueJson5),
-		Tags:              utils.StringSliceFromListValue(ctx, dynamicConfig.Tags),
-		TargetApps:        utils.StringSliceFromListValue(ctx, dynamicConfig.TargetApps),
-		CreatorId:         utils.StringFromNilableValue(dynamicConfig.CreatorId),
-		CreatorEmail:      utils.StringFromNilableValue(dynamicConfig.CreatorEmail),
-		Team:              utils.StringFromNilableValue(dynamicConfig.Team),
+// Every field is raw JSON so the request can leave out an attribute the
+// configuration never mentioned. See utils.APIField.
+type DynamicConfigAPIInputModel struct {
+	Id                json.RawMessage `json:"id,omitempty"`
+	Name              json.RawMessage `json:"name,omitempty"`
+	IdType            json.RawMessage `json:"idType,omitempty"`
+	Description       json.RawMessage `json:"description,omitempty"`
+	IsEnabled         json.RawMessage `json:"isEnabled,omitempty"`
+	IsTemplate        json.RawMessage `json:"isTemplate,omitempty"`
+	Rules             json.RawMessage `json:"rules,omitempty"`
+	Schema            json.RawMessage `json:"schema,omitempty"`
+	SchemaJson5       json.RawMessage `json:"schemaJson5,omitempty"`
+	DefaultValue      json.RawMessage `json:"defaultValue,omitempty"`
+	DefaultValueJson5 json.RawMessage `json:"defaultValueJson5,omitempty"`
+	Tags              json.RawMessage `json:"tags,omitempty"`
+	TargetApps        json.RawMessage `json:"targetApps,omitempty"`
+	CreatorId         json.RawMessage `json:"creatorID,omitempty"`
+	CreatorEmail      json.RawMessage `json:"creatorEmail,omitempty"`
+	Team              json.RawMessage `json:"team,omitempty"`
+}
+
+func DynamicConfigToAPIInputModel(ctx context.Context, dynamicConfig *DynamicConfigModel) DynamicConfigAPIInputModel {
+	return DynamicConfigAPIInputModel{
+		Id:                utils.StringAPIField(dynamicConfig.Id),
+		Name:              utils.StringAPIField(dynamicConfig.Name),
+		IdType:            utils.StringAPIField(dynamicConfig.IdType),
+		Description:       utils.StringAPIField(dynamicConfig.Description),
+		IsEnabled:         utils.BoolAPIField(dynamicConfig.IsEnabled),
+		IsTemplate:        utils.BoolAPIField(dynamicConfig.IsTemplate),
+		Rules:             utils.APIField(dynamicConfig.Rules, RulesToAPIModel(ctx, dynamicConfig.Rules)),
+		Schema:            utils.StringAPIField(dynamicConfig.Schema),
+		SchemaJson5:       utils.StringAPIField(dynamicConfig.SchemaJson5),
+		DefaultValue:      utils.MapAPIField(ctx, dynamicConfig.DefaultValue),
+		DefaultValueJson5: utils.StringAPIField(dynamicConfig.DefaultValueJson5),
+		Tags:              utils.StringSliceAPIField(ctx, dynamicConfig.Tags),
+		TargetApps:        utils.StringSliceAPIField(ctx, dynamicConfig.TargetApps),
+		CreatorId:         utils.StringAPIField(dynamicConfig.CreatorId),
+		CreatorEmail:      utils.StringAPIField(dynamicConfig.CreatorEmail),
+		Team:              utils.StringAPIField(dynamicConfig.Team),
 	}
 }
 

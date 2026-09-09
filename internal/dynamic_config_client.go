@@ -36,7 +36,7 @@ func (c *dynamicConfigClient) read(ctx context.Context, dynamicConfig *resource_
 func (c *dynamicConfigClient) create(ctx context.Context, dynamicConfig *resource_dynamic_config.DynamicConfigModel) diag.Diagnostics {
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_dynamic_config.DynamicConfigAPIModel
-		res, err := c.transport.Post(c.endpoint, resource_dynamic_config.DynamicConfigToAPIModel(ctx, dynamicConfig), &data)
+		res, err := c.transport.Post(c.endpoint, resource_dynamic_config.DynamicConfigToAPIInputModel(ctx, dynamicConfig), &data)
 		resource_dynamic_config.DynamicConfigFromAPIModel(ctx, diags, dynamicConfig, data)
 		return res, err
 	})
@@ -49,7 +49,7 @@ func (c *dynamicConfigClient) update(ctx context.Context, dynamicConfig *resourc
 
 	return runWithDiagnostics(func(diags diag.Diagnostics) (*APIResponse, error) {
 		var data resource_dynamic_config.DynamicConfigAPIModel
-		res, err := c.transport.Patch(c.endpoint, dynamicConfig.Id.ValueString(), resource_dynamic_config.DynamicConfigToAPIModel(ctx, dynamicConfig), &data)
+		res, err := c.transport.Patch(c.endpoint, dynamicConfig.Id.ValueString(), resource_dynamic_config.DynamicConfigToAPIInputModel(ctx, dynamicConfig), &data)
 		resource_dynamic_config.DynamicConfigFromAPIModel(ctx, diags, dynamicConfig, data)
 		return res, err
 	})

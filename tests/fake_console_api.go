@@ -240,6 +240,22 @@ func (f *fakeConsoleAPI) record(r *http.Request) {
 	f.requests = append(f.requests, recordedRequest{method: r.Method, path: r.URL.Path, body: body})
 }
 
+// setRecordField stands in for a change made in the Statsig Console: a value on
+// a resource that the Terraform configuration never mentions.
+func (f *fakeConsoleAPI) setRecordField(collection string, id string, field string, value interface{}) {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+
+	f.records[collection][id][field] = value
+}
+
+func (f *fakeConsoleAPI) recordField(collection string, id string, field string) interface{} {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+
+	return f.records[collection][id][field]
+}
+
 func (f *fakeConsoleAPI) list(name string) []interface{} {
 	f.mu.Lock()
 	defer f.mu.Unlock()

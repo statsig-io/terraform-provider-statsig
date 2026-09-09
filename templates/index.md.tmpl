@@ -13,4 +13,13 @@ The provider synchronizes with Statsig via the [Console API](https://docs.statsi
 
 {{ tffile "examples/provider/provider.tf" }}
 
+## Optional attributes
+
+Most attributes are optional. If your configuration does not set one, the
+provider does not send it. Statsig keeps the current value. An edit to one
+attribute does not change the others.
+
+To clear an attribute, set it to an empty value. Use `""` for a string and `[]`
+for a list. The provider sends the empty value, and Statsig clears the field.
+
 {{ .SchemaMarkdown | trimspace }}

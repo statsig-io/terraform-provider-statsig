@@ -2,6 +2,7 @@ package resource_metric
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -35,29 +36,55 @@ type MetricAPIModel struct {
 	WarehouseNative        *WarehouseNativeAPIModel        `json:"warehouseNative,omitempty"`
 }
 
-func MetricToAPIModel(ctx context.Context, metric *MetricModel) MetricAPIModel {
-	return MetricAPIModel{
-		CustomRollUpEnd:        utils.NilableFloatFromFloatValue(metric.CustomRollUpEnd),
-		CustomRollUpStart:      utils.NilableFloatFromFloatValue(metric.CustomRollUpStart),
-		Description:            utils.StringFromNilableValue(metric.Description),
-		Directionality:         utils.StringFromNilableValue(metric.Directionality),
-		DryRun:                 utils.NilableBoolFromBoolValue(metric.DryRun),
-		FunnelCountDistinct:    utils.StringFromNilableValue(metric.FunnelCountDistinct),
-		FunnelEventList:        FunnelEventsToAPIModel(ctx, metric.FunnelEventList),
-		Id:                     utils.StringFromNilableValue(metric.Id),
-		IsPermanent:            utils.NilableBoolFromBoolValue(metric.IsPermanent),
-		IsReadOnly:             utils.NilableBoolFromBoolValue(metric.IsReadOnly),
-		IsVerified:             utils.NilableBoolFromBoolValue(metric.IsVerified),
-		MetricComponentMetrics: MetricComponentMetricsToAPIModel(ctx, metric.MetricComponentMetrics),
-		MetricEvents:           MetricEventsToAPIModel(ctx, metric.MetricEvents),
-		Name:                   utils.StringFromNilableValue(metric.Name),
-		RollupTimeWindow:       utils.StringFromNilableValue(metric.RollupTimeWindow),
-		Tags:                   utils.StringSliceFromListValue(ctx, metric.Tags),
-		Team:                   utils.StringFromNilableValue(metric.Team),
-		TeamId:                 utils.StringFromNilableValue(metric.TeamId),
-		Type:                   utils.StringFromNilableValue(metric.Type),
-		UnitTypes:              utils.StringSliceFromListValue(ctx, metric.UnitTypes),
-		WarehouseNative:        WarehouseNativeToAPIModel(ctx, metric.WarehouseNative),
+// Every field is raw JSON so the request can leave out an attribute the
+// configuration never mentioned. See utils.APIField.
+type MetricAPIInputModel struct {
+	CustomRollUpEnd        json.RawMessage `json:"customRollUpEnd,omitempty"`
+	CustomRollUpStart      json.RawMessage `json:"customRollUpStart,omitempty"`
+	Description            json.RawMessage `json:"description,omitempty"`
+	Directionality         json.RawMessage `json:"directionality,omitempty"`
+	DryRun                 json.RawMessage `json:"dryRun,omitempty"`
+	FunnelCountDistinct    json.RawMessage `json:"funnelCountDistinct,omitempty"`
+	FunnelEventList        json.RawMessage `json:"funnelEventList,omitempty"`
+	Id                     json.RawMessage `json:"id,omitempty"`
+	IsPermanent            json.RawMessage `json:"isPermanent,omitempty"`
+	IsReadOnly             json.RawMessage `json:"isReadOnly,omitempty"`
+	IsVerified             json.RawMessage `json:"isVerified,omitempty"`
+	MetricComponentMetrics json.RawMessage `json:"metricComponentMetrics,omitempty"`
+	MetricEvents           json.RawMessage `json:"metricEvents,omitempty"`
+	Name                   json.RawMessage `json:"name,omitempty"`
+	RollupTimeWindow       json.RawMessage `json:"rollupTimeWindow,omitempty"`
+	Tags                   json.RawMessage `json:"tags,omitempty"`
+	Team                   json.RawMessage `json:"team,omitempty"`
+	TeamId                 json.RawMessage `json:"teamID,omitempty"`
+	Type                   json.RawMessage `json:"type,omitempty"`
+	UnitTypes              json.RawMessage `json:"unitTypes,omitempty"`
+	WarehouseNative        json.RawMessage `json:"warehouseNative,omitempty"`
+}
+
+func MetricToAPIInputModel(ctx context.Context, metric *MetricModel) MetricAPIInputModel {
+	return MetricAPIInputModel{
+		CustomRollUpEnd:        utils.FloatAPIField(metric.CustomRollUpEnd),
+		CustomRollUpStart:      utils.FloatAPIField(metric.CustomRollUpStart),
+		Description:            utils.StringAPIField(metric.Description),
+		Directionality:         utils.StringAPIField(metric.Directionality),
+		DryRun:                 utils.BoolAPIField(metric.DryRun),
+		FunnelCountDistinct:    utils.StringAPIField(metric.FunnelCountDistinct),
+		FunnelEventList:        utils.APIField(metric.FunnelEventList, FunnelEventsToAPIModel(ctx, metric.FunnelEventList)),
+		Id:                     utils.StringAPIField(metric.Id),
+		IsPermanent:            utils.BoolAPIField(metric.IsPermanent),
+		IsReadOnly:             utils.BoolAPIField(metric.IsReadOnly),
+		IsVerified:             utils.BoolAPIField(metric.IsVerified),
+		MetricComponentMetrics: utils.APIField(metric.MetricComponentMetrics, MetricComponentMetricsToAPIModel(ctx, metric.MetricComponentMetrics)),
+		MetricEvents:           utils.APIField(metric.MetricEvents, MetricEventsToAPIModel(ctx, metric.MetricEvents)),
+		Name:                   utils.StringAPIField(metric.Name),
+		RollupTimeWindow:       utils.StringAPIField(metric.RollupTimeWindow),
+		Tags:                   utils.StringSliceAPIField(ctx, metric.Tags),
+		Team:                   utils.StringAPIField(metric.Team),
+		TeamId:                 utils.StringAPIField(metric.TeamId),
+		Type:                   utils.StringAPIField(metric.Type),
+		UnitTypes:              utils.StringSliceAPIField(ctx, metric.UnitTypes),
+		WarehouseNative:        utils.APIField(metric.WarehouseNative, WarehouseNativeToAPIModel(ctx, metric.WarehouseNative)),
 	}
 }
 

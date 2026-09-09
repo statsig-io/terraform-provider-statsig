@@ -38,29 +38,55 @@ type SegmentAPIModel struct {
 	Version           float64        `json:"version,omitempty"`
 }
 
-func SegmentToAPIModel(ctx context.Context, segment *SegmentModel) SegmentAPIModel {
-	return SegmentAPIModel{
-		Id:                segment.Id.ValueString(),
-		Name:              segment.Name.ValueString(),
-		IdType:            segment.IdType.ValueString(),
-		Description:       segment.Description.ValueString(),
-		IsEnabled:         segment.IsEnabled.ValueBool(),
-		Rules:             RulesToAPIModel(ctx, segment.Rules),
-		Type:              segment.Type.ValueString(),
-		CreatorId:         segment.CreatorId.ValueString(),
-		CreatorName:       segment.CreatorName.ValueString(),
-		CreatorEmail:      segment.CreatorEmail.ValueString(),
-		CreatedTime:       segment.CreatedTime.ValueFloat64(),
-		LastModifierId:    segment.LastModifierId.ValueString(),
-		LastModifierName:  segment.LastModifierName.ValueString(),
-		LastModifierEmail: segment.LastModifierEmail.ValueString(),
-		LastModifiedTime:  segment.LastModifiedTime.ValueFloat64(),
-		HoldoutIds:        utils.StringSliceFromListValue(ctx, segment.HoldoutIds),
-		Tags:              utils.StringSliceFromListValue(ctx, segment.Tags),
-		TargetApps:        utils.StringSliceFromListValue(ctx, segment.TargetApps),
-		Team:              segment.Team.ValueString(),
-		TeamId:            segment.TeamId.ValueString(),
-		Version:           segment.Version.ValueFloat64(),
+// Every field is raw JSON so the request can leave out an attribute the
+// configuration never mentioned. See utils.APIField.
+type SegmentAPIInputModel struct {
+	Id                json.RawMessage `json:"id,omitempty"`   // (Name)
+	Name              json.RawMessage `json:"name,omitempty"` // (Display name)
+	IdType            json.RawMessage `json:"idType,omitempty"`
+	Description       json.RawMessage `json:"description,omitempty"`
+	IsEnabled         json.RawMessage `json:"isEnabled,omitempty"`
+	Rules             json.RawMessage `json:"rules,omitempty"`
+	Type              json.RawMessage `json:"type,omitempty"`
+	CreatorId         json.RawMessage `json:"creatorID,omitempty"`
+	CreatorName       json.RawMessage `json:"creatorName,omitempty"`
+	CreatorEmail      json.RawMessage `json:"creatorEmail,omitempty"`
+	CreatedTime       json.RawMessage `json:"createdTime,omitempty"`
+	LastModifierId    json.RawMessage `json:"lastModifiedID,omitempty"`
+	LastModifierName  json.RawMessage `json:"lastModifiedName,omitempty"`
+	LastModifierEmail json.RawMessage `json:"lastModifiedEmail,omitempty"`
+	LastModifiedTime  json.RawMessage `json:"lastModifiedTime,omitempty"`
+	HoldoutIds        json.RawMessage `json:"holdoutIDs,omitempty"`
+	Tags              json.RawMessage `json:"tags,omitempty"`
+	TargetApps        json.RawMessage `json:"targetApps,omitempty"`
+	Team              json.RawMessage `json:"team,omitempty"`
+	TeamId            json.RawMessage `json:"teamID,omitempty"`
+	Version           json.RawMessage `json:"version,omitempty"`
+}
+
+func SegmentToAPIInputModel(ctx context.Context, segment *SegmentModel) SegmentAPIInputModel {
+	return SegmentAPIInputModel{
+		Id:                utils.StringAPIField(segment.Id),
+		Name:              utils.StringAPIField(segment.Name),
+		IdType:            utils.StringAPIField(segment.IdType),
+		Description:       utils.StringAPIField(segment.Description),
+		IsEnabled:         utils.BoolAPIField(segment.IsEnabled),
+		Rules:             utils.APIField(segment.Rules, RulesToAPIModel(ctx, segment.Rules)),
+		Type:              utils.StringAPIField(segment.Type),
+		CreatorId:         utils.StringAPIField(segment.CreatorId),
+		CreatorName:       utils.StringAPIField(segment.CreatorName),
+		CreatorEmail:      utils.StringAPIField(segment.CreatorEmail),
+		CreatedTime:       utils.FloatAPIField(segment.CreatedTime),
+		LastModifierId:    utils.StringAPIField(segment.LastModifierId),
+		LastModifierName:  utils.StringAPIField(segment.LastModifierName),
+		LastModifierEmail: utils.StringAPIField(segment.LastModifierEmail),
+		LastModifiedTime:  utils.FloatAPIField(segment.LastModifiedTime),
+		HoldoutIds:        utils.StringSliceAPIField(ctx, segment.HoldoutIds),
+		Tags:              utils.StringSliceAPIField(ctx, segment.Tags),
+		TargetApps:        utils.StringSliceAPIField(ctx, segment.TargetApps),
+		Team:              utils.StringAPIField(segment.Team),
+		TeamId:            utils.StringAPIField(segment.TeamId),
+		Version:           utils.FloatAPIField(segment.Version),
 	}
 }
 
@@ -88,13 +114,13 @@ func SegmentFromAPIModel(ctx context.Context, diags diag.Diagnostics, segment *S
 	segment.Version = utils.FloatToFloatValue(res.Version)
 }
 
-type SegmentRulesAPIModel struct {
-	Rules []RuleAPIModel `json:"rules"`
+type SegmentRulesAPIInputModel struct {
+	Rules json.RawMessage `json:"rules,omitempty"`
 }
 
-func SegmentToRulesAPIModel(ctx context.Context, segment *SegmentModel) SegmentRulesAPIModel {
-	return SegmentRulesAPIModel{
-		Rules: RulesToAPIModel(ctx, segment.Rules),
+func SegmentToRulesAPIInputModel(ctx context.Context, segment *SegmentModel) SegmentRulesAPIInputModel {
+	return SegmentRulesAPIInputModel{
+		Rules: utils.APIField(segment.Rules, RulesToAPIModel(ctx, segment.Rules)),
 	}
 }
 
