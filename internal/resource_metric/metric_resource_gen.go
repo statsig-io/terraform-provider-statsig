@@ -2567,6 +2567,14 @@ func (v CriteriaValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue
 
 	valuesVal, d := types.ListValue(types.StringType, v.Values.Elements())
 
+	if v.Values.IsNull() {
+		valuesVal = types.ListNull(types.StringType)
+	}
+
+	if v.Values.IsUnknown() {
+		valuesVal = types.ListUnknown(types.StringType)
+	}
+
 	diags.Append(d...)
 
 	if d.HasError() {
@@ -4416,6 +4424,14 @@ func (v WarehouseNativeValue) ToObjectValue(ctx context.Context) (basetypes.Obje
 
 	metricDimensionColumnsVal, d := types.ListValue(types.StringType, v.MetricDimensionColumns.Elements())
 
+	if v.MetricDimensionColumns.IsNull() {
+		metricDimensionColumnsVal = types.ListNull(types.StringType)
+	}
+
+	if v.MetricDimensionColumns.IsUnknown() {
+		metricDimensionColumnsVal = types.ListUnknown(types.StringType)
+	}
+
 	diags.Append(d...)
 
 	if d.HasError() {
@@ -5189,6 +5205,14 @@ func (v DenominatorCriteriaValue) ToObjectValue(ctx context.Context) (basetypes.
 	var diags diag.Diagnostics
 
 	valuesVal, d := types.ListValue(types.StringType, v.Values.Elements())
+
+	if v.Values.IsNull() {
+		valuesVal = types.ListNull(types.StringType)
+	}
+
+	if v.Values.IsUnknown() {
+		valuesVal = types.ListUnknown(types.StringType)
+	}
 
 	diags.Append(d...)
 

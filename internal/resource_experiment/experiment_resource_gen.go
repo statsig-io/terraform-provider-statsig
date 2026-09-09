@@ -1083,6 +1083,14 @@ func (v GroupsValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, 
 
 	parameterValuesVal, d := types.MapValue(types.StringType, v.ParameterValues.Elements())
 
+	if v.ParameterValues.IsNull() {
+		parameterValuesVal = types.MapNull(types.StringType)
+	}
+
+	if v.ParameterValues.IsUnknown() {
+		parameterValuesVal = types.MapUnknown(types.StringType)
+	}
+
 	diags.Append(d...)
 
 	if d.HasError() {

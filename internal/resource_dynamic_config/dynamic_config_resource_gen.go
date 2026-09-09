@@ -894,6 +894,14 @@ func (v RulesValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, d
 
 	environmentsVal, d := types.ListValue(types.StringType, v.Environments.Elements())
 
+	if v.Environments.IsNull() {
+		environmentsVal = types.ListNull(types.StringType)
+	}
+
+	if v.Environments.IsUnknown() {
+		environmentsVal = types.ListUnknown(types.StringType)
+	}
+
 	diags.Append(d...)
 
 	if d.HasError() {
@@ -916,6 +924,14 @@ func (v RulesValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, d
 	}
 
 	returnValueVal, d := types.MapValue(types.StringType, v.ReturnValue.Elements())
+
+	if v.ReturnValue.IsNull() {
+		returnValueVal = types.MapNull(types.StringType)
+	}
+
+	if v.ReturnValue.IsUnknown() {
+		returnValueVal = types.MapUnknown(types.StringType)
+	}
 
 	diags.Append(d...)
 
@@ -1508,6 +1524,14 @@ func (v ConditionsValue) ToObjectValue(ctx context.Context) (basetypes.ObjectVal
 	var diags diag.Diagnostics
 
 	targetValueVal, d := types.ListValue(types.StringType, v.TargetValue.Elements())
+
+	if v.TargetValue.IsNull() {
+		targetValueVal = types.ListNull(types.StringType)
+	}
+
+	if v.TargetValue.IsUnknown() {
+		targetValueVal = types.ListUnknown(types.StringType)
+	}
 
 	diags.Append(d...)
 
