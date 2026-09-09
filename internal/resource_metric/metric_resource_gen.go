@@ -2567,6 +2567,13 @@ func (v CriteriaValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue
 
 	valuesVal, d := types.ListValue(types.StringType, v.Values.Elements())
 
+	// Hand-applied guard, not emitted by the generator: types.ListValue over
+	// Elements() turns a null or unknown collection into a known empty list,
+	// which the request then carries and the Console API reads as an
+	// instruction to clear the value. The generator emits this guard for
+	// object-typed nested attributes but not for primitive-element
+	// collections. `make generate-resources` silently removes it; the
+	// acceptance tests are what catch that.
 	if v.Values.IsNull() {
 		valuesVal = types.ListNull(types.StringType)
 	}
@@ -4424,6 +4431,13 @@ func (v WarehouseNativeValue) ToObjectValue(ctx context.Context) (basetypes.Obje
 
 	metricDimensionColumnsVal, d := types.ListValue(types.StringType, v.MetricDimensionColumns.Elements())
 
+	// Hand-applied guard, not emitted by the generator: types.ListValue over
+	// Elements() turns a null or unknown collection into a known empty list,
+	// which the request then carries and the Console API reads as an
+	// instruction to clear the value. The generator emits this guard for
+	// object-typed nested attributes but not for primitive-element
+	// collections. `make generate-resources` silently removes it; the
+	// acceptance tests are what catch that.
 	if v.MetricDimensionColumns.IsNull() {
 		metricDimensionColumnsVal = types.ListNull(types.StringType)
 	}
@@ -5206,6 +5220,13 @@ func (v DenominatorCriteriaValue) ToObjectValue(ctx context.Context) (basetypes.
 
 	valuesVal, d := types.ListValue(types.StringType, v.Values.Elements())
 
+	// Hand-applied guard, not emitted by the generator: types.ListValue over
+	// Elements() turns a null or unknown collection into a known empty list,
+	// which the request then carries and the Console API reads as an
+	// instruction to clear the value. The generator emits this guard for
+	// object-typed nested attributes but not for primitive-element
+	// collections. `make generate-resources` silently removes it; the
+	// acceptance tests are what catch that.
 	if v.Values.IsNull() {
 		valuesVal = types.ListNull(types.StringType)
 	}

@@ -1083,6 +1083,13 @@ func (v GroupsValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, 
 
 	parameterValuesVal, d := types.MapValue(types.StringType, v.ParameterValues.Elements())
 
+	// Hand-applied guard, not emitted by the generator: types.MapValue over
+	// Elements() turns a null or unknown collection into a known empty map,
+	// which the request then carries and the Console API reads as an
+	// instruction to clear the value. The generator emits this guard for
+	// object-typed nested attributes but not for primitive-element
+	// collections. `make generate-resources` silently removes it; the
+	// acceptance tests are what catch that.
 	if v.ParameterValues.IsNull() {
 		parameterValuesVal = types.MapNull(types.StringType)
 	}

@@ -894,6 +894,13 @@ func (v RulesValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, d
 
 	environmentsVal, d := types.ListValue(types.StringType, v.Environments.Elements())
 
+	// Hand-applied guard, not emitted by the generator: types.ListValue over
+	// Elements() turns a null or unknown collection into a known empty list,
+	// which the request then carries and the Console API reads as an
+	// instruction to clear the value. The generator emits this guard for
+	// object-typed nested attributes but not for primitive-element
+	// collections. `make generate-resources` silently removes it; the
+	// acceptance tests are what catch that.
 	if v.Environments.IsNull() {
 		environmentsVal = types.ListNull(types.StringType)
 	}
@@ -925,6 +932,13 @@ func (v RulesValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, d
 
 	returnValueVal, d := types.MapValue(types.StringType, v.ReturnValue.Elements())
 
+	// Hand-applied guard, not emitted by the generator: types.MapValue over
+	// Elements() turns a null or unknown collection into a known empty map,
+	// which the request then carries and the Console API reads as an
+	// instruction to clear the value. The generator emits this guard for
+	// object-typed nested attributes but not for primitive-element
+	// collections. `make generate-resources` silently removes it; the
+	// acceptance tests are what catch that.
 	if v.ReturnValue.IsNull() {
 		returnValueVal = types.MapNull(types.StringType)
 	}
@@ -1525,6 +1539,13 @@ func (v ConditionsValue) ToObjectValue(ctx context.Context) (basetypes.ObjectVal
 
 	targetValueVal, d := types.ListValue(types.StringType, v.TargetValue.Elements())
 
+	// Hand-applied guard, not emitted by the generator: types.ListValue over
+	// Elements() turns a null or unknown collection into a known empty list,
+	// which the request then carries and the Console API reads as an
+	// instruction to clear the value. The generator emits this guard for
+	// object-typed nested attributes but not for primitive-element
+	// collections. `make generate-resources` silently removes it; the
+	// acceptance tests are what catch that.
 	if v.TargetValue.IsNull() {
 		targetValueVal = types.ListNull(types.StringType)
 	}

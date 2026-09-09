@@ -14,7 +14,7 @@ To learn more about segments, see [Segments Documentation](https://docs.statsig.
 
 To learn more about the API powering this resource, see [Segments API Documentation](https://docs.statsig.com/api-reference/segments)
 
--> Note: Only `rules` can be updated in place. The Console API writes segment rules through a separate endpoint, and the provider sends nothing else with them. Changing `name`, `description`, `id_type`, `is_enabled`, `tags`, `target_apps` or `team` on an existing segment fails the apply. Destroy and recreate the segment, or make the change in the Statsig Console.
+-> Note: Only `rules` can be updated in place. The Console API writes segment rules through a separate endpoint, and the provider sends nothing else with them. An edit to any other attribute you can set fails the apply: `creator_email`, `creator_id`, `description`, `id`, `id_type`, `name`, `tags`, `team`, `team_id` and `type`. Every remaining attribute is read-only. Destroy and recreate the segment, or make the change in the Statsig Console.
 
 ## Example Usage
 
