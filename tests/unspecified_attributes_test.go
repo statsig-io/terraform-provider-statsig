@@ -75,6 +75,24 @@ resource "statsig_gate" "regression" {
 `, description)
 }
 
+// gateWithEmptyRuleListsConfig states the empty lists that gateWithRuleConfig
+// omits, which is the difference between "leave this alone" and "clear this".
+func gateWithEmptyRuleListsConfig(description string) string {
+	return fmt.Sprintf(`
+resource "statsig_gate" "regression" {
+  name        = "regression_gate"
+  description = %q
+  id_type     = "userID"
+  rules = [{
+    name            = "everyone"
+    pass_percentage = 100
+    environments    = []
+    conditions      = [{ type = "public", target_value = [] }]
+  }]
+}
+`, description)
+}
+
 func TestAccUnrelatedEditKeepsConsoleSetValues(t *testing.T) {
 	t.Run("an enabled gate stays enabled", func(t *testing.T) {
 		api := startFakeConsoleAPI(t)
@@ -145,7 +163,7 @@ func TestAccUnrelatedEditOmitsUnspecifiedNestedAttributes(t *testing.T) {
 		}
 	})
 
-	t.Run("a gate rule leaves out the id the config omits", func(t *testing.T) {
+	t.Run("a gate rule leaves out the id and the lists the config omits", func(t *testing.T) {
 		api := startFakeConsoleAPI(t)
 
 		resource.Test(t, resource.TestCase{
@@ -156,15 +174,55 @@ func TestAccUnrelatedEditOmitsUnspecifiedNestedAttributes(t *testing.T) {
 			},
 		})
 
-		body := lastRequestBody(t, api, "PATCH /console/v1/gates/regression_gate")
+		rule, condition := gateRuleFromLastUpdate(t, api)
 
-		var rules []map[string]json.RawMessage
-		require.NoError(t, json.Unmarshal(body["rules"], &rules))
-		require.Len(t, rules, 1)
-
-		assert.NotContains(t, rules[0], "id",
+		assert.NotContains(t, rule, "id",
 			"an empty rule id renames the rule the Console API matches on")
+		assert.NotContains(t, rule, "environments",
+			"editing the description scoped the rule to no environments")
+		assert.NotContains(t, condition, "targetValue",
+			"editing the description cleared the condition's targeting values")
 	})
+}
+
+// The other half of the rule: an empty value the configuration does state is an
+// instruction to clear, so it still has to be sent. Without this the fix above
+// could be "never send a nested list", which would break a deliberate clear.
+func TestAccExplicitlyEmptyNestedAttributesAreStillSent(t *testing.T) {
+	api := startFakeConsoleAPI(t)
+
+	resource.Test(t, resource.TestCase{
+		ProtoV6ProviderFactories: testAccLocalProviders(),
+		Steps: []resource.TestStep{
+			{Config: gateWithEmptyRuleListsConfig("first")},
+			{Config: gateWithEmptyRuleListsConfig("second")},
+		},
+	})
+
+	rule, condition := gateRuleFromLastUpdate(t, api)
+
+	assert.JSONEq(t, `[]`, string(rule["environments"]),
+		"an empty environments list the config states was not sent, so it cannot clear")
+	assert.JSONEq(t, `[]`, string(condition["targetValue"]),
+		"an empty target_value list the config states was not sent, so it cannot clear")
+}
+
+// gateRuleFromLastUpdate returns the single rule and its single condition from
+// the last gate update, which is where a nested attribute is visible.
+func gateRuleFromLastUpdate(t *testing.T, api *fakeConsoleAPI) (rule, condition map[string]json.RawMessage) {
+	t.Helper()
+
+	body := lastRequestBody(t, api, "PATCH /console/v1/gates/regression_gate")
+
+	var rules []map[string]json.RawMessage
+	require.NoError(t, json.Unmarshal(body["rules"], &rules))
+	require.Len(t, rules, 1)
+
+	var conditions []map[string]json.RawMessage
+	require.NoError(t, json.Unmarshal(rules[0]["conditions"], &conditions))
+	require.Len(t, conditions, 1)
+
+	return rules[0], conditions[0]
 }
 
 // lastRequestBody decodes the body of the last request matching
