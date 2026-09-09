@@ -41,12 +41,34 @@ sweep:
 	@echo "WARNING: This will destroy infrastructure. Use only in development accounts."
 	TF_ACC=1 go test $(TEST) -v ./... -sweep=all
 
+# Overwrites internal/provider_code_spec.json, which carries six hand-added
+# stringplanmodifier.UseStateForUnknown() plan_modifiers blocks: on `id` for
+# dynamic_config, experiment, gate, metric and segment, and on `key` for keys.
+# Without them the resource id is unknown in the plan whenever the configuration
+# does not set it, so the provider sends an empty id and updates and deletes
+# address the collection endpoint instead of the resource. That is the reported
+# bug this provider fix exists to close. Neither internal/openapi_spec.json nor
+# internal/generator_config.yml can express a plan modifier, so
+# tfplugingen-openapi cannot re-emit them, and JSON accepts no comment, so the
+# spec file cannot carry this warning itself. Re-apply the six blocks by hand
+# after running this. TestAccUpdatePathAddressesTheResource and
+# TestAccMetricUpdateRefusesAnEmptyId catch the loss; without this note the
+# failure reads as unrelated codegen churn.
 generate-provider:
 	tfplugingen-openapi generate \
     --config internal/generator_config.yml \
     --output internal/provider_code_spec.json \
     internal/openapi_spec.json
 
+# Rewrites internal/*/*_resource_gen.go, which carry eleven hand-added IsNull
+# and IsUnknown guards in ToObjectValue. Without them a nested collection the
+# configuration never mentions becomes a known empty list, the request then
+# carries it, and the Console API reads a present field as an instruction to
+# clear the value. Each of the eleven sites carries its own comment in place,
+# unlike internal/provider_code_spec.json above.
+# TestAccUnrelatedEditOmitsUnspecifiedNestedAttributes and
+# TestAccExplicitlyEmptyNestedAttributesAreStillSent catch the loss; without
+# this note the failure reads as unrelated codegen churn.
 generate-resources:
 	tfplugingen-framework generate resources \
 		--input internal/provider_code_spec.json \
