@@ -34,9 +34,15 @@ resource "statsig_gate" "example_gate" {
 
 ## Optional attributes
 
-Most attributes are optional. If your configuration does not set one, the
-provider does not send it. Statsig keeps the current value. An edit to one
-attribute does not change the others.
+These resources omit what your configuration does not set: `statsig_gate`,
+`statsig_segment`, `statsig_keys`, `statsig_experiment`,
+`statsig_dynamic_config` and `statsig_metric`. If you do not set an optional
+attribute, the provider does not send it. Statsig keeps the current value. An
+edit to one attribute does not change the others.
+
+The other resources may send an unset optional attribute as an empty value. An
+edit to one attribute can then overwrite a value you set in the Statsig Console.
+For those resources, set every attribute you want to keep.
 
 To clear an attribute, set it to an empty value. Use `""` for a string and `[]`
 for a list. The provider sends the empty value. Not every field accepts a clear

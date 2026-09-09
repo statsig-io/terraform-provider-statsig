@@ -255,9 +255,12 @@ func TestRequestBodyOmitsUnspecifiedNestedAttributes(t *testing.T) {
 	})
 }
 
-// requestModels lists every type the provider marshals into a Console API
-// request body. TestRequestModelFieldsCanAllBeOmitted proves the nested part of
-// the list is complete rather than trusting it.
+// requestModels covers the six resources whose requests are built through
+// utils.APIField: statsig_gate, statsig_segment, statsig_keys,
+// statsig_experiment, statsig_dynamic_config and statsig_metric. The other
+// provider resources marshal plain Go types and are deliberately out of scope.
+// TestAPIFieldRequestModelFieldsCanAllBeOmitted proves the nested part of the
+// list is complete rather than trusting it.
 func requestModels() []any {
 	return []any{
 		resource_gate.GateAPIInputModel{},
@@ -308,7 +311,7 @@ func responseModels() []any {
 // request field can express "absent", which is what json.RawMessage plus
 // omitempty buys. A field added back as a plain string, bool or slice would
 // serialize its zero value again.
-func TestRequestModelFieldsCanAllBeOmitted(t *testing.T) {
+func TestAPIFieldRequestModelFieldsCanAllBeOmitted(t *testing.T) {
 	registry := map[string]reflect.Type{}
 	for _, model := range requestModels() {
 		modelType := reflect.TypeOf(model)
