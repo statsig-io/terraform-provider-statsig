@@ -132,22 +132,22 @@ func ExperimentToAPIInputModel(ctx context.Context, experiment *ExperimentModel)
 		Description:                    utils.StringAPIField(experiment.Description),
 		Duration:                       utils.Int64APIField(experiment.Duration),
 		FixedAnalysisDuration:          utils.Int64APIField(experiment.FixedAnalysisDuration),
-		Groups:                         utils.APIField(experiment.Groups, GroupsToAPIModel(ctx, experiment.Groups)),
+		Groups:                         utils.APIField(experiment.Groups, GroupsToAPIInputModel(ctx, experiment.Groups)),
 		Hypothesis:                     utils.StringAPIField(experiment.Hypothesis),
 		Id:                             utils.StringAPIField(experiment.Id),
 		IdType:                         utils.StringAPIField(experiment.IdType),
 		IsAnalysisOnly:                 utils.BoolAPIField(experiment.IsAnalysisOnly),
 		LaunchedGroupId:                utils.StringAPIField(experiment.LaunchedGroupId),
 		LayerId:                        utils.StringAPIField(experiment.LayerId),
-		Links:                          utils.APIField(experiment.Links, LinksToAPIModel(ctx, experiment.Links)),
+		Links:                          utils.APIField(experiment.Links, LinksToAPIInputModel(ctx, experiment.Links)),
 		Name:                           utils.StringAPIField(experiment.Name),
 		PrimaryMetricTags:              utils.StringSliceAPIField(ctx, experiment.PrimaryMetricTags),
-		PrimaryMetrics:                 utils.APIField(experiment.PrimaryMetrics, MetricsToAPIModel(ctx, experiment.PrimaryMetrics)),
+		PrimaryMetrics:                 utils.APIField(experiment.PrimaryMetrics, MetricsToAPIInputModel(ctx, experiment.PrimaryMetrics)),
 		ScheduledReloadHour:            utils.Int64APIField(experiment.ScheduledReloadHour),
 		ScheduledReloadType:            utils.StringAPIField(experiment.ScheduledReloadType),
 		SecondaryIdtype:                utils.StringAPIField(experiment.SecondaryIdtype),
 		SecondaryMetricTags:            utils.StringSliceAPIField(ctx, experiment.SecondaryMetricTags),
-		SecondaryMetrics:               utils.APIField(experiment.SecondaryMetrics, MetricsToAPIModel(ctx, experiment.SecondaryMetrics)),
+		SecondaryMetrics:               utils.APIField(experiment.SecondaryMetrics, MetricsToAPIInputModel(ctx, experiment.SecondaryMetrics)),
 		SequentialTesting:              utils.BoolAPIField(experiment.SequentialTesting),
 		Status:                         utils.StringAPIField(experiment.Status),
 		Tags:                           utils.StringSliceAPIField(ctx, experiment.Tags),
@@ -215,15 +215,27 @@ type GroupAPIModel struct {
 	ForeignGroupId  string                 `json:"foreignGroupID,omitempty"`
 }
 
-func GroupToAPIModel(ctx context.Context, group *GroupsValue) GroupAPIModel {
-	return GroupAPIModel{
-		Name:            utils.StringFromNilableValue(group.Name),
-		Id:              utils.StringFromNilableValue(group.Id),
-		Size:            utils.FloatFromFloatValue(group.Size),
-		ParameterValues: utils.MapFromMapValue(ctx, group.ParameterValues),
-		Disabled:        utils.BoolFromBoolValue(group.Disabled),
-		Description:     utils.StringFromNilableValue(group.Description),
-		ForeignGroupId:  utils.StringFromNilableValue(group.ForeignGroupId),
+// Every field is raw JSON so the request can leave out a nested attribute the
+// configuration never mentioned. See utils.APIField.
+type GroupAPIInputModel struct {
+	Name            json.RawMessage `json:"name,omitempty"`
+	Id              json.RawMessage `json:"id,omitempty"`
+	Size            json.RawMessage `json:"size,omitempty"`
+	ParameterValues json.RawMessage `json:"parameterValues,omitempty"`
+	Disabled        json.RawMessage `json:"disabled,omitempty"`
+	Description     json.RawMessage `json:"description,omitempty"`
+	ForeignGroupId  json.RawMessage `json:"foreignGroupID,omitempty"`
+}
+
+func GroupToAPIInputModel(ctx context.Context, group *GroupsValue) GroupAPIInputModel {
+	return GroupAPIInputModel{
+		Name:            utils.StringAPIField(group.Name),
+		Id:              utils.StringAPIField(group.Id),
+		Size:            utils.FloatAPIField(group.Size),
+		ParameterValues: utils.MapAPIField(ctx, group.ParameterValues),
+		Disabled:        utils.BoolAPIField(group.Disabled),
+		Description:     utils.StringAPIField(group.Description),
+		ForeignGroupId:  utils.StringAPIField(group.ForeignGroupId),
 	}
 }
 
@@ -237,19 +249,19 @@ func GroupFromAPIModel(ctx context.Context, diags diag.Diagnostics, group *Group
 	group.ForeignGroupId = utils.StringToNilableValue(res.ForeignGroupId)
 }
 
-func GroupsToAPIModel(ctx context.Context, list basetypes.ListValue) []GroupAPIModel {
-	var res []GroupAPIModel
+func GroupsToAPIInputModel(ctx context.Context, list basetypes.ListValue) []GroupAPIInputModel {
+	var res []GroupAPIInputModel
 	if list.IsNull() || list.IsUnknown() {
-		res = make([]GroupAPIModel, 0)
+		res = make([]GroupAPIInputModel, 0)
 	} else {
-		res = make([]GroupAPIModel, len(list.Elements()))
+		res = make([]GroupAPIInputModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
 			obj, ok := elem.(GroupsValue)
 			if !ok {
 				return nil
 			}
 
-			res[i] = GroupToAPIModel(ctx, &obj)
+			res[i] = GroupToAPIInputModel(ctx, &obj)
 		}
 	}
 	return res
@@ -286,21 +298,30 @@ type ExperimentMetricAPIModel struct {
 	HypothesizedValue float64 `json:"hypothesizedValue,omitempty"`
 }
 
-func PrimaryMetricToAPIModel(ctx context.Context, metric *PrimaryMetricsValue) ExperimentMetricAPIModel {
-	return ExperimentMetricAPIModel{
-		Name:              utils.StringFromNilableValue(metric.Name),
-		Type:              utils.StringFromNilableValue(metric.PrimaryMetricsType),
-		Direction:         utils.StringFromNilableValue(metric.Direction),
-		HypothesizedValue: utils.FloatFromFloatValue(metric.HypothesizedValue),
+// Every field is raw JSON so the request can leave out a nested attribute the
+// configuration never mentioned. See utils.APIField.
+type ExperimentMetricAPIInputModel struct {
+	Name              json.RawMessage `json:"name,omitempty"`
+	Type              json.RawMessage `json:"type,omitempty"`
+	Direction         json.RawMessage `json:"direction,omitempty"`
+	HypothesizedValue json.RawMessage `json:"hypothesizedValue,omitempty"`
+}
+
+func PrimaryMetricToAPIInputModel(ctx context.Context, metric *PrimaryMetricsValue) ExperimentMetricAPIInputModel {
+	return ExperimentMetricAPIInputModel{
+		Name:              utils.StringAPIField(metric.Name),
+		Type:              utils.StringAPIField(metric.PrimaryMetricsType),
+		Direction:         utils.StringAPIField(metric.Direction),
+		HypothesizedValue: utils.FloatAPIField(metric.HypothesizedValue),
 	}
 }
 
-func SecondaryMetricToAPIModel(ctx context.Context, metric *SecondaryMetricsValue) ExperimentMetricAPIModel {
-	return ExperimentMetricAPIModel{
-		Name:              utils.StringFromNilableValue(metric.Name),
-		Type:              utils.StringFromNilableValue(metric.SecondaryMetricsType),
-		Direction:         utils.StringFromNilableValue(metric.Direction),
-		HypothesizedValue: utils.FloatFromFloatValue(metric.HypothesizedValue),
+func SecondaryMetricToAPIInputModel(ctx context.Context, metric *SecondaryMetricsValue) ExperimentMetricAPIInputModel {
+	return ExperimentMetricAPIInputModel{
+		Name:              utils.StringAPIField(metric.Name),
+		Type:              utils.StringAPIField(metric.SecondaryMetricsType),
+		Direction:         utils.StringAPIField(metric.Direction),
+		HypothesizedValue: utils.FloatAPIField(metric.HypothesizedValue),
 	}
 }
 
@@ -318,22 +339,20 @@ func SecondaryMetricFromAPIModel(ctx context.Context, diags diag.Diagnostics, me
 	metric.HypothesizedValue = utils.FloatToFloatValue(res.HypothesizedValue)
 }
 
-func MetricsToAPIModel(ctx context.Context, list basetypes.ListValue) []ExperimentMetricAPIModel {
-	var res []ExperimentMetricAPIModel
+func MetricsToAPIInputModel(ctx context.Context, list basetypes.ListValue) []ExperimentMetricAPIInputModel {
+	var res []ExperimentMetricAPIInputModel
 	if list.IsNull() || list.IsUnknown() {
-		res = make([]ExperimentMetricAPIModel, 0)
+		res = make([]ExperimentMetricAPIInputModel, 0)
 	} else {
-		res = make([]ExperimentMetricAPIModel, len(list.Elements()))
-		list.ElementsAs(ctx, &res, false)
-
+		res = make([]ExperimentMetricAPIInputModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
 			obj, ok := elem.(PrimaryMetricsValue)
 			if ok {
-				res[i] = PrimaryMetricToAPIModel(ctx, &obj)
+				res[i] = PrimaryMetricToAPIInputModel(ctx, &obj)
 			} else {
 				obj, ok := elem.(SecondaryMetricsValue)
 				if ok {
-					res[i] = SecondaryMetricToAPIModel(ctx, &obj)
+					res[i] = SecondaryMetricToAPIInputModel(ctx, &obj)
 				}
 			}
 		}
@@ -394,10 +413,17 @@ type LinkAPIModel struct {
 	Title string `json:"title,omitempty"`
 }
 
-func LinkToAPIModel(ctx context.Context, link *LinksValue) LinkAPIModel {
-	return LinkAPIModel{
-		Url:   utils.StringFromNilableValue(link.Url),
-		Title: utils.StringFromNilableValue(link.Title),
+// Every field is raw JSON so the request can leave out a nested attribute the
+// configuration never mentioned. See utils.APIField.
+type LinkAPIInputModel struct {
+	Url   json.RawMessage `json:"url,omitempty"`
+	Title json.RawMessage `json:"title,omitempty"`
+}
+
+func LinkToAPIInputModel(ctx context.Context, link *LinksValue) LinkAPIInputModel {
+	return LinkAPIInputModel{
+		Url:   utils.StringAPIField(link.Url),
+		Title: utils.StringAPIField(link.Title),
 	}
 }
 
@@ -406,19 +432,19 @@ func LinkFromAPIModel(ctx context.Context, diags diag.Diagnostics, link *LinksVa
 	link.Title = utils.StringToNilableValue(res.Title)
 }
 
-func LinksToAPIModel(ctx context.Context, list basetypes.ListValue) []LinkAPIModel {
-	var res []LinkAPIModel
+func LinksToAPIInputModel(ctx context.Context, list basetypes.ListValue) []LinkAPIInputModel {
+	var res []LinkAPIInputModel
 	if list.IsNull() || list.IsUnknown() {
-		res = make([]LinkAPIModel, 0)
+		res = make([]LinkAPIInputModel, 0)
 	} else {
-		res = make([]LinkAPIModel, len(list.Elements()))
+		res = make([]LinkAPIInputModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
 			obj, ok := elem.(LinksValue)
 			if !ok {
 				return nil
 			}
 
-			res[i] = LinkToAPIModel(ctx, &obj)
+			res[i] = LinkToAPIInputModel(ctx, &obj)
 		}
 	}
 	return res

@@ -115,18 +115,43 @@ func TestKeyFromAPIInputModelKeepsConfiguredTargetApps(t *testing.T) {
 // has to be resolved before the value is written to state. secondary_target_app_ids
 // resolves to an empty list, not null: the API's empty secondaryTargetApps array
 // used to produce an empty list, and length() and for_each error on a null one.
-func TestKeyFromAPIInputModelResolvesUnknownTargetApps(t *testing.T) {
-	key := &KeysModel{
-		TargetAppId:           types.StringUnknown(),
-		SecondaryTargetAppIds: types.ListUnknown(types.StringType),
+//
+// terraform import leaves every attribute but key null rather than unknown, so
+// an unset list has to resolve the same way from either state. Otherwise
+// length() and for_each work after an apply and error after an import.
+func TestKeyFromAPIInputModelResolvesUnsetTargetApps(t *testing.T) {
+	cases := []struct {
+		name                  string
+		targetAppId           types.String
+		secondaryTargetAppIds types.List
+	}{
+		{
+			name:                  "the plan left them unknown",
+			targetAppId:           types.StringUnknown(),
+			secondaryTargetAppIds: types.ListUnknown(types.StringType),
+		},
+		{
+			name:                  "an import left them null",
+			targetAppId:           types.StringNull(),
+			secondaryTargetAppIds: types.ListNull(types.StringType),
+		},
 	}
 
-	KeyFromAPIInputModel(context.Background(), diag.Diagnostics{}, key, KeysAPIOutputModel{
-		Key:              "secret-abc",
-		PrimaryTargetApp: "My Edge App",
-	})
+	for _, testCase := range cases {
+		t.Run(testCase.name, func(t *testing.T) {
+			key := &KeysModel{
+				TargetAppId:           testCase.targetAppId,
+				SecondaryTargetAppIds: testCase.secondaryTargetAppIds,
+			}
 
-	assert.True(t, key.TargetAppId.IsNull())
-	assert.False(t, key.SecondaryTargetAppIds.IsNull(), "a null list breaks length() and for_each")
-	assert.Equal(t, types.ListValueMust(types.StringType, []attr.Value{}), key.SecondaryTargetAppIds)
+			KeyFromAPIInputModel(context.Background(), diag.Diagnostics{}, key, KeysAPIOutputModel{
+				Key:              "secret-abc",
+				PrimaryTargetApp: "My Edge App",
+			})
+
+			assert.True(t, key.TargetAppId.IsNull())
+			assert.False(t, key.SecondaryTargetAppIds.IsNull(), "a null list breaks length() and for_each")
+			assert.Equal(t, types.ListValueMust(types.StringType, []attr.Value{}), key.SecondaryTargetAppIds)
+		})
+	}
 }

@@ -61,8 +61,8 @@ func GateToAPIInputModel(ctx context.Context, gate *GateModel) GateAPIInputModel
 		IsEnabled:          utils.BoolAPIField(gate.IsEnabled),
 		IsTemplate:         utils.BoolAPIField(gate.IsTemplate),
 		MeasureMetricLifts: utils.BoolAPIField(gate.MeasureMetricLifts),
-		MonitoringMetrics:  utils.APIField(gate.MonitoringMetrics, MonitoringMetricsToAPIModel(ctx, gate.MonitoringMetrics)),
-		Rules:              utils.APIField(gate.Rules, RulesToAPIModel(ctx, gate.Rules)),
+		MonitoringMetrics:  utils.APIField(gate.MonitoringMetrics, MonitoringMetricsToAPIInputModel(ctx, gate.MonitoringMetrics)),
+		Rules:              utils.APIField(gate.Rules, RulesToAPIInputModel(ctx, gate.Rules)),
 		Tags:               utils.StringSliceAPIField(ctx, gate.Tags),
 		Type:               utils.StringAPIField(gate.Type),
 		TargetApps:         utils.StringSliceAPIField(ctx, gate.TargetApps),
@@ -95,10 +95,17 @@ type MonitoringMetricAPIModel struct {
 	Type string `json:"type"`
 }
 
-func MonitoringMetricToAPIModel(ctx context.Context, metric *MonitoringMetricsValue) MonitoringMetricAPIModel {
-	return MonitoringMetricAPIModel{
-		Name: utils.StringFromNilableValue(metric.Name),
-		Type: utils.StringFromNilableValue(metric.MonitoringMetricsType),
+// Every field is raw JSON so the request can leave out a nested attribute the
+// configuration never mentioned. See utils.APIField.
+type MonitoringMetricAPIInputModel struct {
+	Name json.RawMessage `json:"name,omitempty"`
+	Type json.RawMessage `json:"type,omitempty"`
+}
+
+func MonitoringMetricToAPIInputModel(ctx context.Context, metric *MonitoringMetricsValue) MonitoringMetricAPIInputModel {
+	return MonitoringMetricAPIInputModel{
+		Name: utils.StringAPIField(metric.Name),
+		Type: utils.StringAPIField(metric.MonitoringMetricsType),
 	}
 }
 
@@ -107,19 +114,19 @@ func MonitoringMetricFromAPIModel(ctx context.Context, diags diag.Diagnostics, m
 	metric.MonitoringMetricsType = utils.StringToNilableValue(res.Type)
 }
 
-func MonitoringMetricsToAPIModel(ctx context.Context, list basetypes.ListValue) []MonitoringMetricAPIModel {
-	var res []MonitoringMetricAPIModel
+func MonitoringMetricsToAPIInputModel(ctx context.Context, list basetypes.ListValue) []MonitoringMetricAPIInputModel {
+	var res []MonitoringMetricAPIInputModel
 	if list.IsNull() || list.IsUnknown() {
-		res = make([]MonitoringMetricAPIModel, 0)
+		res = make([]MonitoringMetricAPIInputModel, 0)
 	} else {
-		res = make([]MonitoringMetricAPIModel, len(list.Elements()))
+		res = make([]MonitoringMetricAPIInputModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
 			obj, ok := elem.(MonitoringMetricsValue)
 			if !ok {
 				return nil
 			}
 
-			res[i] = MonitoringMetricToAPIModel(ctx, &obj)
+			res[i] = MonitoringMetricToAPIInputModel(ctx, &obj)
 		}
 	}
 	return res
@@ -158,14 +165,25 @@ type RuleAPIModel struct {
 	Environments   []string            `json:"environments,omitempty"`
 }
 
-func RuleToAPIModel(ctx context.Context, rule *RulesValue) RuleAPIModel {
-	return RuleAPIModel{
-		Id:             utils.StringFromNilableValue(rule.Id),
-		BaseID:         utils.StringFromNilableValue(rule.BaseId),
-		Name:           utils.StringFromNilableValue(rule.Name),
-		PassPercentage: utils.IntFromNumberValue(rule.PassPercentage),
-		Conditions:     ConditionsToAPIModel(ctx, rule.Conditions),
-		Environments:   utils.StringSliceFromListValue(ctx, rule.Environments),
+// Every field is raw JSON so the request can leave out a nested attribute the
+// configuration never mentioned. See utils.APIField.
+type RuleAPIInputModel struct {
+	Id             json.RawMessage `json:"id,omitempty"`
+	BaseID         json.RawMessage `json:"baseID,omitempty"`
+	Name           json.RawMessage `json:"name,omitempty"`
+	PassPercentage json.RawMessage `json:"passPercentage,omitempty"`
+	Conditions     json.RawMessage `json:"conditions,omitempty"`
+	Environments   json.RawMessage `json:"environments,omitempty"`
+}
+
+func RuleToAPIInputModel(ctx context.Context, rule *RulesValue) RuleAPIInputModel {
+	return RuleAPIInputModel{
+		Id:             utils.StringAPIField(rule.Id),
+		BaseID:         utils.StringAPIField(rule.BaseId),
+		Name:           utils.StringAPIField(rule.Name),
+		PassPercentage: utils.NumberAPIField(rule.PassPercentage),
+		Conditions:     utils.APIField(rule.Conditions, ConditionsToAPIInputModel(ctx, rule.Conditions)),
+		Environments:   utils.StringSliceAPIField(ctx, rule.Environments),
 	}
 }
 
@@ -178,19 +196,19 @@ func RuleFromAPIModel(ctx context.Context, diags diag.Diagnostics, rule *RulesVa
 	rule.Environments = utils.StringSliceToListValue(ctx, diags, res.Environments)
 }
 
-func RulesToAPIModel(ctx context.Context, list basetypes.ListValue) []RuleAPIModel {
-	var res []RuleAPIModel
+func RulesToAPIInputModel(ctx context.Context, list basetypes.ListValue) []RuleAPIInputModel {
+	var res []RuleAPIInputModel
 	if list.IsNull() || list.IsUnknown() {
-		res = make([]RuleAPIModel, 0)
+		res = make([]RuleAPIInputModel, 0)
 	} else {
-		res = make([]RuleAPIModel, len(list.Elements()))
+		res = make([]RuleAPIInputModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
 			obj, ok := elem.(RulesValue)
 			if !ok {
 				return nil
 			}
 
-			res[i] = RuleToAPIModel(ctx, &obj)
+			res[i] = RuleToAPIInputModel(ctx, &obj)
 		}
 	}
 	return res
@@ -228,13 +246,23 @@ type ConditionAPIModel struct {
 	Type        string      `json:"type"`
 }
 
-func ConditionToAPIModel(ctx context.Context, condition *ConditionsValue) ConditionAPIModel {
-	return ConditionAPIModel{
-		TargetValue: utils.StringSliceFromListValue(ctx, condition.TargetValue),
-		Operator:    utils.StringFromNilableValue(condition.Operator),
-		Field:       utils.StringFromNilableValue(condition.Field),
-		CustomID:    utils.StringFromNilableValue(condition.CustomId),
-		Type:        utils.StringFromNilableValue(condition.ConditionsType),
+// Every field is raw JSON so the request can leave out a nested attribute the
+// configuration never mentioned. See utils.APIField.
+type ConditionAPIInputModel struct {
+	TargetValue json.RawMessage `json:"targetValue,omitempty"`
+	Operator    json.RawMessage `json:"operator,omitempty"`
+	Field       json.RawMessage `json:"field,omitempty"`
+	CustomID    json.RawMessage `json:"customID,omitempty"`
+	Type        json.RawMessage `json:"type,omitempty"`
+}
+
+func ConditionToAPIInputModel(ctx context.Context, condition *ConditionsValue) ConditionAPIInputModel {
+	return ConditionAPIInputModel{
+		TargetValue: utils.StringSliceAPIField(ctx, condition.TargetValue),
+		Operator:    utils.StringAPIField(condition.Operator),
+		Field:       utils.StringAPIField(condition.Field),
+		CustomID:    utils.StringAPIField(condition.CustomId),
+		Type:        utils.StringAPIField(condition.ConditionsType),
 	}
 }
 
@@ -246,19 +274,19 @@ func ConditionFromAPIModel(ctx context.Context, diags diag.Diagnostics, conditio
 	condition.ConditionsType = utils.StringToNilableValue(res.Type)
 }
 
-func ConditionsToAPIModel(ctx context.Context, list basetypes.ListValue) []ConditionAPIModel {
-	var res []ConditionAPIModel
+func ConditionsToAPIInputModel(ctx context.Context, list basetypes.ListValue) []ConditionAPIInputModel {
+	var res []ConditionAPIInputModel
 	if list.IsNull() || list.IsUnknown() {
-		res = make([]ConditionAPIModel, 0)
+		res = make([]ConditionAPIInputModel, 0)
 	} else {
-		res = make([]ConditionAPIModel, len(list.Elements()))
+		res = make([]ConditionAPIInputModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
 			obj, ok := elem.(ConditionsValue)
 			if !ok {
 				return nil
 			}
 
-			res[i] = ConditionToAPIModel(ctx, &obj)
+			res[i] = ConditionToAPIInputModel(ctx, &obj)
 		}
 	}
 	return res

@@ -1,12 +1,15 @@
 package tests
 
 import (
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
 	"github.com/hashicorp/terraform-plugin-testing/terraform"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // An Optional+Computed attribute the configuration never mentions is unknown in
@@ -34,6 +37,40 @@ resource "statsig_keys" "regression" {
   description  = %q
   type         = "SERVER"
   environments = ["production"]
+}
+`, description)
+}
+
+// metricWarehouseNativeConfig omits warehouse_native.metric_dimension_columns
+// and warehouse_native.denominator_criteria, the same as the example config in
+// test_resources/metric_warehouse_native.tf.
+func metricWarehouseNativeConfig(description string) string {
+	return fmt.Sprintf(`
+resource "statsig_metric" "regression" {
+  id          = "regression_wn_metric"
+  name        = "Regression Warehouse Native Metric"
+  description = %q
+  type        = "user_warehouse"
+  unit_types  = ["userID"]
+  warehouse_native = {
+    metric_source_name = "shoppy_events"
+    aggregation        = "count"
+  }
+}
+`, description)
+}
+
+func gateWithRuleConfig(description string) string {
+	return fmt.Sprintf(`
+resource "statsig_gate" "regression" {
+  name        = "regression_gate"
+  description = %q
+  id_type     = "userID"
+  rules = [{
+    name            = "everyone"
+    pass_percentage = 100
+    conditions      = [{ type = "public" }]
+  }]
 }
 `, description)
 }
@@ -77,6 +114,70 @@ func TestAccUnrelatedEditKeepsConsoleSetValues(t *testing.T) {
 			},
 		})
 	})
+}
+
+// The rule reaches nested attributes too, so the update request has to leave
+// out a nested attribute the configuration never mentions. These read the
+// request the provider built rather than the fake's records, because a nested
+// field is only visible in the body: the fake replaces a whole nested object
+// the way the Console API does.
+func TestAccUnrelatedEditOmitsUnspecifiedNestedAttributes(t *testing.T) {
+	t.Run("a warehouse native metric leaves out the columns the config omits", func(t *testing.T) {
+		api := startFakeConsoleAPI(t)
+
+		resource.Test(t, resource.TestCase{
+			ProtoV6ProviderFactories: testAccLocalProviders(),
+			Steps: []resource.TestStep{
+				{Config: metricWarehouseNativeConfig("first")},
+				{Config: metricWarehouseNativeConfig("second")},
+			},
+		})
+
+		body := lastRequestBody(t, api, "POST /console/v1/metrics/regression_wn_metric")
+
+		var warehouseNative map[string]json.RawMessage
+		require.NoError(t, json.Unmarshal(body["warehouseNative"], &warehouseNative))
+
+		assert.JSONEq(t, `"shoppy_events"`, string(warehouseNative["metricSourceName"]))
+		for _, field := range []string{"metricDimensionColumns", "denominatorCriteria"} {
+			assert.NotContains(t, warehouseNative, field,
+				"editing the description sent %s, which clears it in the Statsig Console", field)
+		}
+	})
+
+	t.Run("a gate rule leaves out the id the config omits", func(t *testing.T) {
+		api := startFakeConsoleAPI(t)
+
+		resource.Test(t, resource.TestCase{
+			ProtoV6ProviderFactories: testAccLocalProviders(),
+			Steps: []resource.TestStep{
+				{Config: gateWithRuleConfig("first")},
+				{Config: gateWithRuleConfig("second")},
+			},
+		})
+
+		body := lastRequestBody(t, api, "PATCH /console/v1/gates/regression_gate")
+
+		var rules []map[string]json.RawMessage
+		require.NoError(t, json.Unmarshal(body["rules"], &rules))
+		require.Len(t, rules, 1)
+
+		assert.NotContains(t, rules[0], "id",
+			"an empty rule id renames the rule the Console API matches on")
+	})
+}
+
+// lastRequestBody decodes the body of the last request matching
+// "METHOD /path", which in these tests is the update.
+func lastRequestBody(t *testing.T, api *fakeConsoleAPI, entry string) map[string]json.RawMessage {
+	t.Helper()
+
+	bodies := api.requestBodiesFor(entry)
+	require.NotEmpty(t, bodies, "%s was never requested", entry)
+
+	var body map[string]json.RawMessage
+	require.NoError(t, json.Unmarshal(bodies[len(bodies)-1], &body))
+	return body
 }
 
 // checkRecordField reads the fake Console API rather than Terraform state, so

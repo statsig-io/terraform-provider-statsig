@@ -42,6 +42,11 @@ resource "statsig_gate" "regression" {
 `, description)
 }
 
+// segmentConfig varies only the rule name because rules are the only thing a
+// segment update can change. The Console API writes them through
+// segments/<id>/conditional and the provider sends nothing else with them, so
+// editing any other attribute fails the apply. This config proves the rules
+// request reaches the resource URL, not that segment updates work in general.
 func segmentConfig(ruleName string) string {
 	return fmt.Sprintf(`
 resource "statsig_segment" "regression" {
@@ -116,7 +121,8 @@ func TestAccUpdatePathAddressesTheResource(t *testing.T) {
 			},
 		},
 		{
-			name:   "segment",
+			// Only the rules request is covered here. See segmentConfig.
+			name:   "segment rules",
 			create: segmentConfig("rule one"),
 			update: segmentConfig("rule one renamed"),
 			wants: []string{

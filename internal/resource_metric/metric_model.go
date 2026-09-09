@@ -70,13 +70,13 @@ func MetricToAPIInputModel(ctx context.Context, metric *MetricModel) MetricAPIIn
 		Directionality:         utils.StringAPIField(metric.Directionality),
 		DryRun:                 utils.BoolAPIField(metric.DryRun),
 		FunnelCountDistinct:    utils.StringAPIField(metric.FunnelCountDistinct),
-		FunnelEventList:        utils.APIField(metric.FunnelEventList, FunnelEventsToAPIModel(ctx, metric.FunnelEventList)),
+		FunnelEventList:        utils.APIField(metric.FunnelEventList, FunnelEventsToAPIInputModel(ctx, metric.FunnelEventList)),
 		Id:                     utils.StringAPIField(metric.Id),
 		IsPermanent:            utils.BoolAPIField(metric.IsPermanent),
 		IsReadOnly:             utils.BoolAPIField(metric.IsReadOnly),
 		IsVerified:             utils.BoolAPIField(metric.IsVerified),
-		MetricComponentMetrics: utils.APIField(metric.MetricComponentMetrics, MetricComponentMetricsToAPIModel(ctx, metric.MetricComponentMetrics)),
-		MetricEvents:           utils.APIField(metric.MetricEvents, MetricEventsToAPIModel(ctx, metric.MetricEvents)),
+		MetricComponentMetrics: utils.APIField(metric.MetricComponentMetrics, MetricComponentMetricsToAPIInputModel(ctx, metric.MetricComponentMetrics)),
+		MetricEvents:           utils.APIField(metric.MetricEvents, MetricEventsToAPIInputModel(ctx, metric.MetricEvents)),
 		Name:                   utils.StringAPIField(metric.Name),
 		RollupTimeWindow:       utils.StringAPIField(metric.RollupTimeWindow),
 		Tags:                   utils.StringSliceAPIField(ctx, metric.Tags),
@@ -84,7 +84,7 @@ func MetricToAPIInputModel(ctx context.Context, metric *MetricModel) MetricAPIIn
 		TeamId:                 utils.StringAPIField(metric.TeamId),
 		Type:                   utils.StringAPIField(metric.Type),
 		UnitTypes:              utils.StringSliceAPIField(ctx, metric.UnitTypes),
-		WarehouseNative:        utils.APIField(metric.WarehouseNative, WarehouseNativeToAPIModel(ctx, metric.WarehouseNative)),
+		WarehouseNative:        utils.APIField(metric.WarehouseNative, WarehouseNativeToAPIInputModel(ctx, metric.WarehouseNative)),
 	}
 }
 
@@ -145,41 +145,76 @@ type WarehouseNativeAPIModel struct {
 	WinsorizationLow                    *float64                             `json:"winsorizationLow,omitempty"`
 }
 
-func WarehouseNativeToAPIModel(ctx context.Context, warehouseNative WarehouseNativeValue) *WarehouseNativeAPIModel {
+// Every field is raw JSON so the request can leave out a nested attribute the
+// configuration never mentioned. See utils.APIField.
+type WarehouseNativeAPIInputModel struct {
+	Aggregation                         json.RawMessage `json:"aggregation,omitempty"`
+	AllowNullRatioDenominator           json.RawMessage `json:"allowNullRatioDenominator,omitempty"`
+	Cap                                 json.RawMessage `json:"cap,omitempty"`
+	Criteria                            json.RawMessage `json:"criteria,omitempty"`
+	CupedAttributionWindow              json.RawMessage `json:"cupedAttributionWindow,omitempty"`
+	CustomRollUpEnd                     json.RawMessage `json:"customRollUpEnd,omitempty"`
+	CustomRollUpStart                   json.RawMessage `json:"customRollUpStart,omitempty"`
+	DenominatorAggregation              json.RawMessage `json:"denominatorAggregation,omitempty"`
+	DenominatorCriteria                 json.RawMessage `json:"denominatorCriteria,omitempty"`
+	DenominatorCustomRollupEnd          json.RawMessage `json:"denominatorCustomRollupEnd,omitempty"`
+	DenominatorCustomRollupStart        json.RawMessage `json:"denominatorCustomRollupStart,omitempty"`
+	DenominatorMetricSourceName         json.RawMessage `json:"denominatorMetricSourceName,omitempty"`
+	DenominatorRollupTimeWindow         json.RawMessage `json:"denominatorRollupTimeWindow,omitempty"`
+	DenominatorValueColumn              json.RawMessage `json:"denominatorValueColumn,omitempty"`
+	FunnelCalculationWindow             json.RawMessage `json:"funnelCalculationWindow,omitempty"`
+	FunnelCountDistinct                 json.RawMessage `json:"funnelCountDistinct,omitempty"`
+	FunnelEvents                        json.RawMessage `json:"funnelEvents,omitempty"`
+	FunnelStartCriteria                 json.RawMessage `json:"funnelStartCriteria,omitempty"`
+	MetricBakeDays                      json.RawMessage `json:"metricBakeDays,omitempty"`
+	MetricDimensionColumns              json.RawMessage `json:"metricDimensionColumns,omitempty"`
+	MetricSourceName                    json.RawMessage `json:"metricSourceName,omitempty"`
+	NumeratorAggregation                json.RawMessage `json:"numeratorAggregation,omitempty"`
+	OnlyIncludeUsersWithConversionEvent json.RawMessage `json:"onlyIncludeUsersWithConversionEvent,omitempty"`
+	Percentile                          json.RawMessage `json:"percentile,omitempty"`
+	RollupTimeWindow                    json.RawMessage `json:"rollupTimeWindow,omitempty"`
+	ValueColumn                         json.RawMessage `json:"valueColumn,omitempty"`
+	ValueThreshold                      json.RawMessage `json:"valueThreshold,omitempty"`
+	WaitForCohortWindow                 json.RawMessage `json:"waitForCohortWindow,omitempty"`
+	WinsorizationHigh                   json.RawMessage `json:"winsorizationHigh,omitempty"`
+	WinsorizationLow                    json.RawMessage `json:"winsorizationLow,omitempty"`
+}
+
+func WarehouseNativeToAPIInputModel(ctx context.Context, warehouseNative WarehouseNativeValue) *WarehouseNativeAPIInputModel {
 	if warehouseNative.IsNull() {
 		return nil
 	}
-	return &WarehouseNativeAPIModel{
-		Aggregation:                         utils.StringFromNilableValue(warehouseNative.Aggregation),
-		AllowNullRatioDenominator:           utils.NilableBoolFromBoolValue(warehouseNative.AllowNullRatioDenominator),
-		Cap:                                 utils.NilableFloatFromFloatValue(warehouseNative.Cap),
-		Criteria:                            CriteriasToAPIModel(ctx, warehouseNative.Criteria),
-		CupedAttributionWindow:              utils.NilableFloatFromFloatValue(warehouseNative.CupedAttributionWindow),
-		CustomRollUpEnd:                     utils.NilableFloatFromFloatValue(warehouseNative.CustomRollUpEnd),
-		CustomRollUpStart:                   utils.NilableFloatFromFloatValue(warehouseNative.CustomRollUpStart),
-		DenominatorAggregation:              utils.StringFromNilableValue(warehouseNative.DenominatorAggregation),
-		DenominatorCriteria:                 CriteriasToAPIModel(ctx, warehouseNative.DenominatorCriteria),
-		DenominatorCustomRollupEnd:          utils.NilableFloatFromFloatValue(warehouseNative.DenominatorCustomRollupEnd),
-		DenominatorCustomRollupStart:        utils.NilableFloatFromFloatValue(warehouseNative.DenominatorCustomRollupStart),
-		DenominatorMetricSourceName:         utils.StringFromNilableValue(warehouseNative.DenominatorMetricSourceName),
-		DenominatorRollupTimeWindow:         utils.StringFromNilableValue(warehouseNative.DenominatorRollupTimeWindow),
-		DenominatorValueColumn:              utils.StringFromNilableValue(warehouseNative.DenominatorValueColumn),
-		FunnelCalculationWindow:             utils.NilableFloatFromFloatValue(warehouseNative.FunnelCalculationWindow),
-		FunnelCountDistinct:                 utils.StringFromNilableValue(warehouseNative.FunnelCountDistinct),
-		FunnelEvents:                        WarehouseNativeFunnelEventsToAPIModel(ctx, warehouseNative.FunnelEvents),
-		FunnelStartCriteria:                 utils.StringFromNilableValue(warehouseNative.FunnelStartCriteria),
-		MetricBakeDays:                      utils.NilableFloatFromFloatValue(warehouseNative.MetricBakeDays),
-		MetricDimensionColumns:              utils.StringSliceFromListValue(ctx, warehouseNative.MetricDimensionColumns),
-		MetricSourceName:                    utils.StringFromNilableValue(warehouseNative.MetricSourceName),
-		NumeratorAggregation:                utils.StringFromNilableValue(warehouseNative.NumeratorAggregation),
-		OnlyIncludeUsersWithConversionEvent: utils.NilableBoolFromBoolValue(warehouseNative.OnlyIncludeUsersWithConversionEvent),
-		Percentile:                          utils.NilableFloatFromFloatValue(warehouseNative.Percentile),
-		RollupTimeWindow:                    utils.StringFromNilableValue(warehouseNative.RollupTimeWindow),
-		ValueColumn:                         utils.StringFromNilableValue(warehouseNative.ValueColumn),
-		ValueThreshold:                      utils.NilableFloatFromFloatValue(warehouseNative.ValueThreshold),
-		WaitForCohortWindow:                 utils.NilableBoolFromBoolValue(warehouseNative.WaitForCohortWindow),
-		WinsorizationHigh:                   utils.NilableFloatFromFloatValue(warehouseNative.WinsorizationHigh),
-		WinsorizationLow:                    utils.NilableFloatFromFloatValue(warehouseNative.WinsorizationLow),
+	return &WarehouseNativeAPIInputModel{
+		Aggregation:                         utils.StringAPIField(warehouseNative.Aggregation),
+		AllowNullRatioDenominator:           utils.BoolAPIField(warehouseNative.AllowNullRatioDenominator),
+		Cap:                                 utils.FloatAPIField(warehouseNative.Cap),
+		Criteria:                            utils.APIField(warehouseNative.Criteria, CriteriasToAPIInputModel(ctx, warehouseNative.Criteria)),
+		CupedAttributionWindow:              utils.FloatAPIField(warehouseNative.CupedAttributionWindow),
+		CustomRollUpEnd:                     utils.FloatAPIField(warehouseNative.CustomRollUpEnd),
+		CustomRollUpStart:                   utils.FloatAPIField(warehouseNative.CustomRollUpStart),
+		DenominatorAggregation:              utils.StringAPIField(warehouseNative.DenominatorAggregation),
+		DenominatorCriteria:                 utils.APIField(warehouseNative.DenominatorCriteria, CriteriasToAPIInputModel(ctx, warehouseNative.DenominatorCriteria)),
+		DenominatorCustomRollupEnd:          utils.FloatAPIField(warehouseNative.DenominatorCustomRollupEnd),
+		DenominatorCustomRollupStart:        utils.FloatAPIField(warehouseNative.DenominatorCustomRollupStart),
+		DenominatorMetricSourceName:         utils.StringAPIField(warehouseNative.DenominatorMetricSourceName),
+		DenominatorRollupTimeWindow:         utils.StringAPIField(warehouseNative.DenominatorRollupTimeWindow),
+		DenominatorValueColumn:              utils.StringAPIField(warehouseNative.DenominatorValueColumn),
+		FunnelCalculationWindow:             utils.FloatAPIField(warehouseNative.FunnelCalculationWindow),
+		FunnelCountDistinct:                 utils.StringAPIField(warehouseNative.FunnelCountDistinct),
+		FunnelEvents:                        utils.APIField(warehouseNative.FunnelEvents, WarehouseNativeFunnelEventsToAPIInputModel(ctx, warehouseNative.FunnelEvents)),
+		FunnelStartCriteria:                 utils.StringAPIField(warehouseNative.FunnelStartCriteria),
+		MetricBakeDays:                      utils.FloatAPIField(warehouseNative.MetricBakeDays),
+		MetricDimensionColumns:              utils.StringSliceAPIField(ctx, warehouseNative.MetricDimensionColumns),
+		MetricSourceName:                    utils.StringAPIField(warehouseNative.MetricSourceName),
+		NumeratorAggregation:                utils.StringAPIField(warehouseNative.NumeratorAggregation),
+		OnlyIncludeUsersWithConversionEvent: utils.BoolAPIField(warehouseNative.OnlyIncludeUsersWithConversionEvent),
+		Percentile:                          utils.FloatAPIField(warehouseNative.Percentile),
+		RollupTimeWindow:                    utils.StringAPIField(warehouseNative.RollupTimeWindow),
+		ValueColumn:                         utils.StringAPIField(warehouseNative.ValueColumn),
+		ValueThreshold:                      utils.FloatAPIField(warehouseNative.ValueThreshold),
+		WaitForCohortWindow:                 utils.BoolAPIField(warehouseNative.WaitForCohortWindow),
+		WinsorizationHigh:                   utils.FloatAPIField(warehouseNative.WinsorizationHigh),
+		WinsorizationLow:                    utils.FloatAPIField(warehouseNative.WinsorizationLow),
 	}
 }
 
@@ -234,12 +269,21 @@ type MetricEventAPIModel struct {
 	Type        string             `json:"type,omitempty"`
 }
 
-func MetricEventToAPIModel(ctx context.Context, metricEvent *MetricEventsValue) MetricEventAPIModel {
-	return MetricEventAPIModel{
-		Criteria:    CriteriasToAPIModel(ctx, metricEvent.Criteria),
-		MetadataKey: utils.StringFromNilableValue(metricEvent.MetadataKey),
-		Name:        utils.StringFromNilableValue(metricEvent.Name),
-		Type:        utils.StringFromNilableValue(metricEvent.MetricEventsType),
+// Every field is raw JSON so the request can leave out a nested attribute the
+// configuration never mentioned. See utils.APIField.
+type MetricEventAPIInputModel struct {
+	Criteria    json.RawMessage `json:"criteria,omitempty"`
+	MetadataKey json.RawMessage `json:"metadataKey,omitempty"`
+	Name        json.RawMessage `json:"name,omitempty"`
+	Type        json.RawMessage `json:"type,omitempty"`
+}
+
+func MetricEventToAPIInputModel(ctx context.Context, metricEvent *MetricEventsValue) MetricEventAPIInputModel {
+	return MetricEventAPIInputModel{
+		Criteria:    utils.APIField(metricEvent.Criteria, CriteriasToAPIInputModel(ctx, metricEvent.Criteria)),
+		MetadataKey: utils.StringAPIField(metricEvent.MetadataKey),
+		Name:        utils.StringAPIField(metricEvent.Name),
+		Type:        utils.StringAPIField(metricEvent.MetricEventsType),
 	}
 }
 
@@ -250,19 +294,19 @@ func MetricEventFromAPIModel(ctx context.Context, diags diag.Diagnostics, metric
 	metricEvents.MetricEventsType = utils.StringToNilableValue(res.Type)
 }
 
-func MetricEventsToAPIModel(ctx context.Context, list basetypes.ListValue) []MetricEventAPIModel {
-	var res []MetricEventAPIModel
+func MetricEventsToAPIInputModel(ctx context.Context, list basetypes.ListValue) []MetricEventAPIInputModel {
+	var res []MetricEventAPIInputModel
 	if list.IsNull() || list.IsUnknown() {
-		res = make([]MetricEventAPIModel, 0)
+		res = make([]MetricEventAPIInputModel, 0)
 	} else {
-		res = make([]MetricEventAPIModel, len(list.Elements()))
+		res = make([]MetricEventAPIInputModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
 			obj, ok := elem.(MetricEventsValue)
 			if !ok {
 				return nil
 			}
 
-			res[i] = MetricEventToAPIModel(ctx, &obj)
+			res[i] = MetricEventToAPIInputModel(ctx, &obj)
 		}
 	}
 	return res
@@ -300,13 +344,23 @@ type CriteriaAPIModel struct {
 	Values              []string `json:"values"`
 }
 
-func CriteriaToAPIModel(ctx context.Context, criteria *CriteriaValue) CriteriaAPIModel {
-	return CriteriaAPIModel{
-		Column:              utils.StringFromNilableValue(criteria.Column),
-		Condition:           utils.StringFromNilableValue(criteria.Condition),
-		NullVacuousOverride: utils.NilableBoolFromBoolValue(criteria.NullVacuousOverride),
-		Type:                utils.StringFromNilableValue(criteria.CriteriaType),
-		Values:              utils.StringSliceFromListValue(ctx, criteria.Values),
+// Every field is raw JSON so the request can leave out a nested attribute the
+// configuration never mentioned. See utils.APIField.
+type CriteriaAPIInputModel struct {
+	Column              json.RawMessage `json:"column,omitempty"`
+	Condition           json.RawMessage `json:"condition,omitempty"`
+	NullVacuousOverride json.RawMessage `json:"nullVacuousOverride,omitempty"`
+	Type                json.RawMessage `json:"type,omitempty"`
+	Values              json.RawMessage `json:"values,omitempty"`
+}
+
+func CriteriaToAPIInputModel(ctx context.Context, criteria *CriteriaValue) CriteriaAPIInputModel {
+	return CriteriaAPIInputModel{
+		Column:              utils.StringAPIField(criteria.Column),
+		Condition:           utils.StringAPIField(criteria.Condition),
+		NullVacuousOverride: utils.BoolAPIField(criteria.NullVacuousOverride),
+		Type:                utils.StringAPIField(criteria.CriteriaType),
+		Values:              utils.StringSliceAPIField(ctx, criteria.Values),
 	}
 }
 
@@ -318,19 +372,19 @@ func CriteriaFromAPIModel(ctx context.Context, diags diag.Diagnostics, criteria 
 	criteria.Values = utils.StringSliceToListValue(ctx, diags, res.Values)
 }
 
-func CriteriasToAPIModel(ctx context.Context, list basetypes.ListValue) []CriteriaAPIModel {
-	var res []CriteriaAPIModel
+func CriteriasToAPIInputModel(ctx context.Context, list basetypes.ListValue) []CriteriaAPIInputModel {
+	var res []CriteriaAPIInputModel
 	if list.IsNull() || list.IsUnknown() {
-		res = make([]CriteriaAPIModel, 0)
+		res = make([]CriteriaAPIInputModel, 0)
 	} else {
-		res = make([]CriteriaAPIModel, len(list.Elements()))
+		res = make([]CriteriaAPIInputModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
 			obj, ok := elem.(CriteriaValue)
 			if !ok {
 				return nil
 			}
 
-			res[i] = CriteriaToAPIModel(ctx, &obj)
+			res[i] = CriteriaToAPIInputModel(ctx, &obj)
 		}
 	}
 	return res
@@ -365,10 +419,17 @@ type MetricComponentMetricAPIModel struct {
 	Type string `json:"type"`
 }
 
-func MetricComponentMetricToAPIModel(ctx context.Context, metricComponentMetrics *MetricComponentMetricsValue) MetricComponentMetricAPIModel {
-	return MetricComponentMetricAPIModel{
-		Name: utils.StringFromNilableValue(metricComponentMetrics.Name),
-		Type: utils.StringFromNilableValue(metricComponentMetrics.MetricComponentMetricsType),
+// Every field is raw JSON so the request can leave out a nested attribute the
+// configuration never mentioned. See utils.APIField.
+type MetricComponentMetricAPIInputModel struct {
+	Name json.RawMessage `json:"name,omitempty"`
+	Type json.RawMessage `json:"type,omitempty"`
+}
+
+func MetricComponentMetricToAPIInputModel(ctx context.Context, metricComponentMetrics *MetricComponentMetricsValue) MetricComponentMetricAPIInputModel {
+	return MetricComponentMetricAPIInputModel{
+		Name: utils.StringAPIField(metricComponentMetrics.Name),
+		Type: utils.StringAPIField(metricComponentMetrics.MetricComponentMetricsType),
 	}
 }
 
@@ -377,19 +438,19 @@ func MetricComponentMetricFromAPIModel(ctx context.Context, diags diag.Diagnosti
 	metricComponentMetrics.MetricComponentMetricsType = utils.StringToNilableValue(res.Type)
 }
 
-func MetricComponentMetricsToAPIModel(ctx context.Context, list basetypes.ListValue) []MetricComponentMetricAPIModel {
-	var res []MetricComponentMetricAPIModel
+func MetricComponentMetricsToAPIInputModel(ctx context.Context, list basetypes.ListValue) []MetricComponentMetricAPIInputModel {
+	var res []MetricComponentMetricAPIInputModel
 	if list.IsNull() || list.IsUnknown() {
-		res = make([]MetricComponentMetricAPIModel, 0)
+		res = make([]MetricComponentMetricAPIInputModel, 0)
 	} else {
-		res = make([]MetricComponentMetricAPIModel, len(list.Elements()))
+		res = make([]MetricComponentMetricAPIInputModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
 			obj, ok := elem.(MetricComponentMetricsValue)
 			if !ok {
 				return nil
 			}
 
-			res[i] = MetricComponentMetricToAPIModel(ctx, &obj)
+			res[i] = MetricComponentMetricToAPIInputModel(ctx, &obj)
 		}
 	}
 	return res
@@ -424,10 +485,17 @@ type FunnelEventAPIModel struct {
 	Type string `json:"type"`
 }
 
-func FunnelEventToAPIModel(ctx context.Context, event *FunnelEventListValue) FunnelEventAPIModel {
-	return FunnelEventAPIModel{
-		Name: utils.StringFromNilableValue(event.Name),
-		Type: utils.StringFromNilableValue(event.FunnelEventListType),
+// Every field is raw JSON so the request can leave out a nested attribute the
+// configuration never mentioned. See utils.APIField.
+type FunnelEventAPIInputModel struct {
+	Name json.RawMessage `json:"name,omitempty"`
+	Type json.RawMessage `json:"type,omitempty"`
+}
+
+func FunnelEventToAPIInputModel(ctx context.Context, event *FunnelEventListValue) FunnelEventAPIInputModel {
+	return FunnelEventAPIInputModel{
+		Name: utils.StringAPIField(event.Name),
+		Type: utils.StringAPIField(event.FunnelEventListType),
 	}
 }
 
@@ -436,19 +504,19 @@ func FunnelEventFromAPIModel(ctx context.Context, diags diag.Diagnostics, event 
 	event.FunnelEventListType = utils.StringToNilableValue(res.Type)
 }
 
-func FunnelEventsToAPIModel(ctx context.Context, list basetypes.ListValue) []FunnelEventAPIModel {
-	var res []FunnelEventAPIModel
+func FunnelEventsToAPIInputModel(ctx context.Context, list basetypes.ListValue) []FunnelEventAPIInputModel {
+	var res []FunnelEventAPIInputModel
 	if list.IsNull() || list.IsUnknown() {
-		res = make([]FunnelEventAPIModel, 0)
+		res = make([]FunnelEventAPIInputModel, 0)
 	} else {
-		res = make([]FunnelEventAPIModel, len(list.Elements()))
+		res = make([]FunnelEventAPIInputModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
 			obj, ok := elem.(FunnelEventListValue)
 			if !ok {
 				return nil
 			}
 
-			res[i] = FunnelEventToAPIModel(ctx, &obj)
+			res[i] = FunnelEventToAPIInputModel(ctx, &obj)
 		}
 	}
 	return res
@@ -485,12 +553,21 @@ type WarehouseNativeFunnelEventAPIModel struct {
 	SessionIdentifierField string             `json:"sessionIdentifierField,omitempty"`
 }
 
-func WarehouseNativeFunnelEventToAPIModel(ctx context.Context, funnelEvent *FunnelEventsValue) WarehouseNativeFunnelEventAPIModel {
-	return WarehouseNativeFunnelEventAPIModel{
-		Criteria:               CriteriasToAPIModel(ctx, funnelEvent.Criteria),
-		MetricSourceName:       utils.StringFromNilableValue(funnelEvent.MetricSourceName),
-		Name:                   utils.StringFromNilableValue(funnelEvent.Name),
-		SessionIdentifierField: utils.StringFromNilableValue(funnelEvent.SessionIdentifierField),
+// Every field is raw JSON so the request can leave out a nested attribute the
+// configuration never mentioned. See utils.APIField.
+type WarehouseNativeFunnelEventAPIInputModel struct {
+	Criteria               json.RawMessage `json:"criteria,omitempty"`
+	MetricSourceName       json.RawMessage `json:"metricSourceName,omitempty"`
+	Name                   json.RawMessage `json:"name,omitempty"`
+	SessionIdentifierField json.RawMessage `json:"sessionIdentifierField,omitempty"`
+}
+
+func WarehouseNativeFunnelEventToAPIInputModel(ctx context.Context, funnelEvent *FunnelEventsValue) WarehouseNativeFunnelEventAPIInputModel {
+	return WarehouseNativeFunnelEventAPIInputModel{
+		Criteria:               utils.APIField(funnelEvent.Criteria, CriteriasToAPIInputModel(ctx, funnelEvent.Criteria)),
+		MetricSourceName:       utils.StringAPIField(funnelEvent.MetricSourceName),
+		Name:                   utils.StringAPIField(funnelEvent.Name),
+		SessionIdentifierField: utils.StringAPIField(funnelEvent.SessionIdentifierField),
 	}
 }
 
@@ -501,19 +578,19 @@ func WarehouseNativeFunnelEventFromAPIModel(ctx context.Context, diags diag.Diag
 	event.SessionIdentifierField = utils.StringToNilableValue(res.SessionIdentifierField)
 }
 
-func WarehouseNativeFunnelEventsToAPIModel(ctx context.Context, list basetypes.ListValue) []WarehouseNativeFunnelEventAPIModel {
-	var res []WarehouseNativeFunnelEventAPIModel
+func WarehouseNativeFunnelEventsToAPIInputModel(ctx context.Context, list basetypes.ListValue) []WarehouseNativeFunnelEventAPIInputModel {
+	var res []WarehouseNativeFunnelEventAPIInputModel
 	if list.IsNull() || list.IsUnknown() {
-		res = make([]WarehouseNativeFunnelEventAPIModel, 0)
+		res = make([]WarehouseNativeFunnelEventAPIInputModel, 0)
 	} else {
-		res = make([]WarehouseNativeFunnelEventAPIModel, len(list.Elements()))
+		res = make([]WarehouseNativeFunnelEventAPIInputModel, len(list.Elements()))
 		for i, elem := range list.Elements() {
 			obj, ok := elem.(FunnelEventsValue)
 			if !ok {
 				return nil
 			}
 
-			res[i] = WarehouseNativeFunnelEventToAPIModel(ctx, &obj)
+			res[i] = WarehouseNativeFunnelEventToAPIInputModel(ctx, &obj)
 		}
 	}
 	return res

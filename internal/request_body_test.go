@@ -4,12 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"math/big"
+	"path"
 	"reflect"
+	"sort"
 	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-go/tftypes"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
@@ -71,7 +74,7 @@ func TestRequestBodyOmitsUnspecifiedAttributes(t *testing.T) {
 				Name:        types.StringValue("My Gate"),
 				Description: types.StringValue("who sees the new checkout"),
 				IsEnabled:   types.BoolValue(true),
-				Rules:       gateRules(ctx),
+				Rules:       gateRules(ctx, types.StringValue("rule_1")),
 			}),
 			want: map[string]string{
 				"name":        `"My Gate"`,
@@ -197,11 +200,7 @@ func TestRequestBodyOmitsUnspecifiedAttributes(t *testing.T) {
 
 	for _, testCase := range cases {
 		t.Run(testCase.name, func(t *testing.T) {
-			encoded, err := json.Marshal(testCase.body)
-			require.NoError(t, err)
-
-			var body map[string]json.RawMessage
-			require.NoError(t, json.Unmarshal(encoded, &body))
+			body := requestBody(t, testCase.body)
 
 			for field, want := range testCase.want {
 				raw, present := body[field]
@@ -218,35 +217,219 @@ func TestRequestBodyOmitsUnspecifiedAttributes(t *testing.T) {
 	}
 }
 
+// The rule reaches inside a nested attribute too. Terraform marks a nested
+// Optional+Computed attribute unknown when the configuration does not mention
+// it, exactly as it does a top-level one, so a rule id or a warehouse native
+// column the config never wrote used to go out as a Go zero value and clear
+// whatever the Statsig Console held.
+func TestRequestBodyOmitsUnspecifiedNestedAttributes(t *testing.T) {
+	ctx := context.Background()
+
+	t.Run("a gate rule leaves out the id the config omits", func(t *testing.T) {
+		body := requestBody(t, resource_gate.GateToAPIInputModel(ctx, &resource_gate.GateModel{
+			Rules: gateRules(ctx, types.StringUnknown()),
+		}))
+
+		assert.JSONEq(t, `[{"name":"everyone","passPercentage":100,"conditions":[]}]`,
+			string(body["rules"]),
+			"an empty rule id renames the rule the Console API matches on")
+	})
+
+	t.Run("warehouse native leaves out the columns the config omits", func(t *testing.T) {
+		body := requestBody(t, resource_metric.MetricToAPIInputModel(ctx, &resource_metric.MetricModel{
+			WarehouseNative: warehouseNative(t, ctx, map[string]attr.Value{
+				"metric_source_name": types.StringValue("shoppy_events"),
+				"aggregation":        types.StringValue("count"),
+			}),
+		}))
+
+		var warehouseNativeBody map[string]json.RawMessage
+		require.NoError(t, json.Unmarshal(body["warehouseNative"], &warehouseNativeBody))
+
+		assert.JSONEq(t, `"shoppy_events"`, string(warehouseNativeBody["metricSourceName"]))
+		assert.JSONEq(t, `"count"`, string(warehouseNativeBody["aggregation"]))
+		for _, field := range []string{"metricDimensionColumns", "criteria", "denominatorCriteria"} {
+			assert.NotContains(t, warehouseNativeBody, field,
+				"%s must be absent so the Console API keeps the current value", field)
+		}
+	})
+}
+
+// requestModels lists every type the provider marshals into a Console API
+// request body. TestRequestModelFieldsCanAllBeOmitted proves the nested part of
+// the list is complete rather than trusting it.
+func requestModels() []any {
+	return []any{
+		resource_gate.GateAPIInputModel{},
+		resource_gate.MonitoringMetricAPIInputModel{},
+		resource_gate.RuleAPIInputModel{},
+		resource_gate.ConditionAPIInputModel{},
+		resource_segment.SegmentAPIInputModel{},
+		resource_segment.SegmentRulesAPIInputModel{},
+		resource_segment.RuleAPIInputModel{},
+		resource_segment.ConditionAPIInputModel{},
+		resource_keys.KeysAPIInputModel{},
+		resource_experiment.ExperimentAPIInputModel{},
+		resource_experiment.GroupAPIInputModel{},
+		resource_experiment.ExperimentMetricAPIInputModel{},
+		resource_experiment.LinkAPIInputModel{},
+		resource_dynamic_config.DynamicConfigAPIInputModel{},
+		resource_dynamic_config.RuleAPIInputModel{},
+		resource_dynamic_config.ConditionAPIInputModel{},
+		resource_metric.MetricAPIInputModel{},
+		resource_metric.WarehouseNativeAPIInputModel{},
+		resource_metric.MetricEventAPIInputModel{},
+		resource_metric.CriteriaAPIInputModel{},
+		resource_metric.MetricComponentMetricAPIInputModel{},
+		resource_metric.FunnelEventAPIInputModel{},
+		resource_metric.WarehouseNativeFunnelEventAPIInputModel{},
+	}
+}
+
+// responseModels are the models a Console API response decodes into. Each one
+// mirrors a request model field for field, in real Go types, which is what
+// makes them the map of the request shape: a request model's json.RawMessage
+// erases the nested types, so nothing can be reached through one.
+//
+// statsig_keys is left out on purpose. Its response carries display names where
+// the request carries IDs, so the two models do not mirror each other. See
+// resource_keys.KeysAPIOutputModel.
+func responseModels() []any {
+	return []any{
+		resource_gate.GateAPIModel{},
+		resource_segment.SegmentAPIModel{},
+		resource_experiment.ExperimentAPIModel{},
+		resource_dynamic_config.DynamicConfigAPIModel{},
+		resource_metric.MetricAPIModel{},
+	}
+}
+
 // The rule holds for attributes nobody has written a case for only while every
 // request field can express "absent", which is what json.RawMessage plus
 // omitempty buys. A field added back as a plain string, bool or slice would
 // serialize its zero value again.
 func TestRequestModelFieldsCanAllBeOmitted(t *testing.T) {
-	models := []any{
-		resource_gate.GateAPIInputModel{},
-		resource_segment.SegmentAPIInputModel{},
-		resource_segment.SegmentRulesAPIInputModel{},
-		resource_keys.KeysAPIInputModel{},
-		resource_experiment.ExperimentAPIInputModel{},
-		resource_dynamic_config.DynamicConfigAPIInputModel{},
-		resource_metric.MetricAPIInputModel{},
+	registry := map[string]reflect.Type{}
+	for _, model := range requestModels() {
+		modelType := reflect.TypeOf(model)
+		registry[typeKey(modelType)] = modelType
 	}
 
-	rawMessage := reflect.TypeOf(json.RawMessage{})
-
-	for _, model := range models {
+	for _, model := range requestModels() {
 		modelType := reflect.TypeOf(model)
-		t.Run(modelType.Name(), func(t *testing.T) {
-			for i := 0; i < modelType.NumField(); i++ {
-				field := modelType.Field(i)
-				assert.Equal(t, rawMessage, field.Type,
-					"%s must be json.RawMessage so an unspecified attribute can be left out", field.Name)
-				assert.True(t, strings.HasSuffix(field.Tag.Get("json"), ",omitempty"),
-					"%s must be tagged omitempty so a nil value is left out", field.Name)
-			}
+		t.Run(typeKey(modelType), func(t *testing.T) {
+			assertOmittable(t, modelType, typeKey(modelType))
 		})
 	}
+
+	t.Run("every model a request body reaches is registered", func(t *testing.T) {
+		for _, model := range responseModels() {
+			for _, response := range structsReachableFrom(reflect.TypeOf(model)) {
+				request, found := registry[requestKey(response)]
+				if !assert.True(t, found,
+					"%s is part of a request body, so it needs a %s whose fields go through utils.APIField",
+					typeKey(response), requestName(response)) {
+					continue
+				}
+
+				assert.Equal(t, jsonFieldNames(response), jsonFieldNames(request),
+					"%s must carry the same fields as %s", typeKey(request), typeKey(response))
+			}
+		}
+	})
+}
+
+var rawMessage = reflect.TypeOf(json.RawMessage{})
+
+// assertOmittable fails unless every field the encoder can reach is a
+// json.RawMessage tagged omitempty. It fails on a shape it cannot traverse
+// rather than skipping it, so a field of some new kind is a failure here and
+// not a field nobody is checking.
+func assertOmittable(t *testing.T, modelType reflect.Type, path string) {
+	t.Helper()
+
+	if modelType == rawMessage {
+		return
+	}
+
+	switch modelType.Kind() {
+	case reflect.Pointer, reflect.Slice, reflect.Array, reflect.Map:
+		assertOmittable(t, modelType.Elem(), path+"[]")
+	case reflect.Struct:
+		for i := 0; i < modelType.NumField(); i++ {
+			field := modelType.Field(i)
+			fieldPath := path + "." + field.Name
+
+			if !assert.Equal(t, rawMessage, field.Type,
+				"%s must be json.RawMessage so an unspecified attribute can be left out", fieldPath) {
+				continue
+			}
+			assert.True(t, strings.HasSuffix(field.Tag.Get("json"), ",omitempty"),
+				"%s must be tagged omitempty so a nil value is left out", fieldPath)
+		}
+	default:
+		t.Fatalf("%s is a %s, a shape this test cannot traverse: teach it the shape rather than leaving the field unchecked",
+			path, modelType.Kind())
+	}
+}
+
+// structsReachableFrom returns the root and every struct type the encoder can
+// reach from it, following pointers, slices, arrays and maps.
+func structsReachableFrom(root reflect.Type) []reflect.Type {
+	var found []reflect.Type
+	seen := map[reflect.Type]bool{}
+
+	var walk func(reflect.Type)
+	walk = func(modelType reflect.Type) {
+		switch modelType.Kind() {
+		case reflect.Pointer, reflect.Slice, reflect.Array, reflect.Map:
+			walk(modelType.Elem())
+		case reflect.Struct:
+			if seen[modelType] {
+				return
+			}
+			seen[modelType] = true
+			found = append(found, modelType)
+			for i := 0; i < modelType.NumField(); i++ {
+				walk(modelType.Field(i).Type)
+			}
+		}
+	}
+
+	walk(root)
+	return found
+}
+
+func typeKey(modelType reflect.Type) string {
+	return path.Base(modelType.PkgPath()) + "." + modelType.Name()
+}
+
+func requestName(response reflect.Type) string {
+	return strings.TrimSuffix(response.Name(), "APIModel") + "APIInputModel"
+}
+
+func requestKey(response reflect.Type) string {
+	return path.Base(response.PkgPath()) + "." + requestName(response)
+}
+
+func jsonFieldNames(modelType reflect.Type) []string {
+	names := make([]string, 0, modelType.NumField())
+	for i := 0; i < modelType.NumField(); i++ {
+		names = append(names, strings.Split(modelType.Field(i).Tag.Get("json"), ",")[0])
+	}
+	sort.Strings(names)
+	return names
+}
+
+func requestBody(t *testing.T, model any) map[string]json.RawMessage {
+	t.Helper()
+
+	encoded, err := json.Marshal(model)
+	require.NoError(t, err)
+
+	var body map[string]json.RawMessage
+	require.NoError(t, json.Unmarshal(encoded, &body))
+	return body
 }
 
 func stringList(values ...string) types.List {
@@ -257,19 +440,41 @@ func stringList(values ...string) types.List {
 	return types.ListValueMust(types.StringType, elements)
 }
 
-// gateRules builds the smallest list a gate can carry, so the configured-value
-// case has something to send.
-func gateRules(ctx context.Context) types.List {
+// gateRules builds the smallest list a gate can carry. The caller supplies the
+// rule id so a case can set it or leave it unspecified.
+func gateRules(ctx context.Context, id types.String) types.List {
 	attributeTypes := resource_gate.RulesValue{}.AttributeTypes(ctx)
 	rule := resource_gate.NewRulesValueMust(attributeTypes, map[string]attr.Value{
 		"base_id":         types.StringNull(),
 		"conditions":      types.ListValueMust(resource_gate.ConditionsValue{}.Type(ctx), []attr.Value{}),
 		"environments":    types.ListNull(types.StringType),
-		"id":              types.StringValue("rule_1"),
+		"id":              id,
 		"name":            types.StringValue("everyone"),
 		"pass_percentage": types.NumberValue(big.NewFloat(100)),
 		"return_value":    types.ObjectNull(resource_gate.ReturnValueValue{}.AttributeTypes(ctx)),
 	})
 
 	return types.ListValueMust(resource_gate.RulesValue{}.Type(ctx), []attr.Value{rule})
+}
+
+// warehouseNative builds a warehouse native block where only the named
+// attributes are set. Everything else is unknown, the state Terraform leaves an
+// Optional+Computed attribute the configuration never mentions.
+func warehouseNative(t *testing.T, ctx context.Context, set map[string]attr.Value) resource_metric.WarehouseNativeValue {
+	t.Helper()
+
+	attributeTypes := resource_metric.WarehouseNativeValue{}.AttributeTypes(ctx)
+	attributes := make(map[string]attr.Value, len(attributeTypes))
+	for name, attributeType := range attributeTypes {
+		value, ok := set[name]
+		if !ok {
+			var err error
+			value, err = attributeType.ValueFromTerraform(ctx,
+				tftypes.NewValue(attributeType.TerraformType(ctx), tftypes.UnknownValue))
+			require.NoError(t, err)
+		}
+		attributes[name] = value
+	}
+
+	return resource_metric.NewWarehouseNativeValueMust(attributeTypes, attributes)
 }

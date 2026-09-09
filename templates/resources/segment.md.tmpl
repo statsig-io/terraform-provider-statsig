@@ -1,0 +1,23 @@
+---
+page_title: "{{.Name}} {{.Type}} - {{.ProviderName}}"
+subcategory: ""
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{.Name}} ({{.Type}})
+
+This resource allows you to configure segments for your Statsig project.
+(Currently only supports rule based Segments).
+
+To learn more about segments, see [Segments Documentation](https://docs.statsig.com/segments/overview)
+
+To learn more about the API powering this resource, see [Segments API Documentation](https://docs.statsig.com/api-reference/segments)
+
+-> Note: Only `rules` can be updated in place. The Console API writes segment rules through a separate endpoint, and the provider sends nothing else with them. Changing `name`, `description`, `id_type`, `is_enabled`, `tags`, `target_apps` or `team` on an existing segment fails the apply. Destroy and recreate the segment, or make the change in the Statsig Console.
+
+## Example Usage
+
+{{ tffile (printf "examples/resources/%s/resource.tf" .Name)}}
+
+{{ .SchemaMarkdown | trimspace }}
