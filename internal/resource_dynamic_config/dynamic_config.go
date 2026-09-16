@@ -44,7 +44,7 @@ func DynamicConfigToAPIModel(ctx context.Context, dynamicConfig *DynamicConfigMo
 		Rules:             RulesToAPIModel(ctx, dynamicConfig.Rules),
 		Schema:            utils.StringFromNilableValue(dynamicConfig.Schema),
 		SchemaJson5:       utils.StringFromNilableValue(dynamicConfig.SchemaJson5),
-		DefaultValue:      utils.MapFromMapValue(ctx, dynamicConfig.DefaultValue),
+		DefaultValue:      utils.MapFromJsonStringValue(dynamicConfig.DefaultValue),
 		DefaultValueJson5: utils.StringFromNilableValue(dynamicConfig.DefaultValueJson5),
 		Tags:              utils.StringSliceFromListValue(ctx, dynamicConfig.Tags),
 		TargetApps:        utils.StringSliceFromListValue(ctx, dynamicConfig.TargetApps),
@@ -64,7 +64,7 @@ func DynamicConfigFromAPIModel(ctx context.Context, diags diag.Diagnostics, dyna
 	dynamicConfig.Rules = RulesFromAPIModel(ctx, diags, res.Rules)
 	dynamicConfig.Schema = utils.StringToStringValue(res.Schema)
 	dynamicConfig.SchemaJson5 = utils.StringToStringValue(res.SchemaJson5)
-	dynamicConfig.DefaultValue = utils.MapToMapValue(ctx, diags, res.DefaultValue)
+	dynamicConfig.DefaultValue = utils.MapToJsonStringValue(res.DefaultValue)
 	dynamicConfig.DefaultValueJson5 = utils.StringToStringValue(res.DefaultValueJson5)
 	dynamicConfig.Tags = utils.StringSliceToListValue(ctx, diags, res.Tags)
 	dynamicConfig.TargetApps = utils.StringSliceToListValue(ctx, diags, res.TargetApps)
@@ -92,7 +92,7 @@ func RuleToAPIModel(ctx context.Context, rule *RulesValue) RuleAPIModel {
 		PassPercentage:   utils.IntFromNumberValue(rule.PassPercentage),
 		Conditions:       ConditionsToAPIModel(ctx, rule.Conditions),
 		Environments:     utils.StringSliceFromListValue(ctx, rule.Environments),
-		ReturnValue:      utils.MapFromMapValue(ctx, rule.ReturnValue),
+		ReturnValue:      utils.MapFromJsonStringValue(rule.ReturnValue),
 		ReturnValueJson5: utils.StringFromNilableValue(rule.ReturnValueJson5),
 	}
 }
@@ -104,7 +104,7 @@ func RuleFromAPIModel(ctx context.Context, diags diag.Diagnostics, rule *RulesVa
 	rule.PassPercentage = utils.IntToNumberValue(res.PassPercentage)
 	rule.Conditions = ConditionsFromAPIModel(ctx, diags, res.Conditions)
 	rule.Environments = utils.StringSliceToListValue(ctx, diags, res.Environments)
-	rule.ReturnValue = utils.MapToMapValue(ctx, diags, res.ReturnValue)
+	rule.ReturnValue = utils.MapToJsonStringValue(res.ReturnValue)
 	rule.ReturnValueJson5 = utils.StringToStringValue(res.ReturnValueJson5)
 }
 

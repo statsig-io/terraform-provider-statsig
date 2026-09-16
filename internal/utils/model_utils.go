@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"encoding/json"
 	"math/big"
 	"reflect"
 
@@ -208,4 +209,34 @@ func InterfaceFromValue(ctx context.Context, value attr.Value) interface{} {
 	} else {
 		return nil
 	}
+}
+
+// MapToJsonStringValue converts a map[string]interface{} to a JSON-encoded types.String.
+// Supports arbitrary nesting (nested maps, slices, primitives).
+func MapToJsonStringValue(value map[string]interface{}) basetypes.StringValue {
+	if value == nil {
+		return types.StringNull()
+	}
+	jsonBytes, err := json.Marshal(value)
+	if err != nil {
+		return types.StringNull()
+	}
+	return types.StringValue(string(jsonBytes))
+}
+
+// MapFromJsonStringValue converts a JSON-encoded types.String to a map[string]interface{}.
+// Supports arbitrary nesting (nested maps, slices, primitives).
+func MapFromJsonStringValue(value basetypes.StringValue) map[string]interface{} {
+	if value.IsNull() || value.IsUnknown() {
+		return nil
+	}
+	str := value.ValueString()
+	if str == "" {
+		return nil
+	}
+	var result map[string]interface{}
+	if err := json.Unmarshal([]byte(str), &result); err != nil {
+		return nil
+	}
+	return result
 }

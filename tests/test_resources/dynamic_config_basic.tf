@@ -5,6 +5,6 @@ resource "statsig_dynamic_config" "example" {
   description           = "A test dynamic config"
   is_enabled            = true
   rules                 = []
-  default_value         = {}
-  default_value_json5   = "{}"
+  default_value         = jsonencode({})
+  default_value_json5   = jsonencode({})
 }

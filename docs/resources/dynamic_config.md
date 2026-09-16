@@ -15,6 +15,87 @@ To learn more about the API powering this resource, see [Dynamic Configs API Doc
 
 ## Example Usage
 
+### Basic
+
+```terraform
+resource "statsig_dynamic_config" "basic" {
+  id          = "my_dynamic_config"
+  name        = "my_dynamic_config"
+  description = "A short description of what this Dynamic Config is used for."
+  is_enabled  = true
+  id_type     = "userID"
+  rules       = []
+  default_value       = jsonencode({ my_field = "My Value" })
+  default_value_json5 = jsonencode({ my_field = "My Value" })
+}
+```
+
+### With Nested Objects
+
+`default_value` and `return_value` accept any valid JSON via `jsonencode()`, including deeply nested objects.
+
+```terraform
+locals {
+  premium_config = {
+    ui = {
+      theme = {
+        primary   = "#6200EE"
+        secondary = "#03DAC5"
+      }
+      layout = "grid"
+    }
+    limits = {
+      max_projects = 50
+      max_members  = 200
+    }
+    features = ["analytics", "export", "api_access"]
+  }
+
+  free_config = {
+    ui = {
+      theme = {
+        primary   = "#333333"
+        secondary = "#666666"
+      }
+      layout = "list"
+    }
+    limits = {
+      max_projects = 3
+      max_members  = 5
+    }
+    features = ["analytics"]
+  }
+}
+
+resource "statsig_dynamic_config" "app_config" {
+  id          = "app-config"
+  name        = "App Config"
+  description = "Application configuration per user tier."
+  is_enabled  = true
+  id_type     = "userID"
+  rules = [
+    {
+      name            = "Premium Users"
+      pass_percentage = 100
+      conditions = [
+        {
+          type         = "custom_field"
+          field        = "plan"
+          target_value = ["premium"]
+          operator     = "any"
+        }
+      ]
+      return_value       = jsonencode(local.premium_config)
+      return_value_json5 = jsonencode(local.premium_config)
+    },
+  ]
+  default_value       = jsonencode(local.free_config)
+  default_value_json5 = jsonencode(local.free_config)
+}
+```
+
+### Full Example
+
 ```terraform
 terraform {
   required_providers {
@@ -122,11 +203,8 @@ resource "statsig_dynamic_config" "full" {
           operator     = "any"
         }
       ]
-      return_value = {
-        extra_field = 12
-        my_field    = "My Other Value"
-      }
-      return_value_json5 = "{extra_field: \"12\",\n  my_field: \"My Other Value\"}"
+      return_value       = jsonencode({ extra_field = 12, my_field = "My Other Value" })
+      return_value_json5 = jsonencode({ extra_field = 12, my_field = "My Other Value" })
     },
     {
       name            = "Development Conditions"
@@ -138,16 +216,12 @@ resource "statsig_dynamic_config" "full" {
           target_value = []
         }
       ]
-      return_value = {
-        my_field = "My Other Value"
-      }
-      return_value_json5 = "{\"my_field\":\"My Other Value\"}"
+      return_value       = jsonencode({ my_field = "My Other Value" })
+      return_value_json5 = jsonencode({ my_field = "My Other Value" })
     }
   ]
-  default_value = {
-    my_field = "My Value"
-  }
-  default_value_json5 = "{\"my_field\":\"My Value\"}"
+  default_value       = jsonencode({ my_field = "My Value" })
+  default_value_json5 = jsonencode({ my_field = "My Value" })
 }
 ```
 
@@ -162,7 +236,7 @@ resource "statsig_dynamic_config" "full" {
 
 - `creator_email` (String)
 - `creator_id` (String)
-- `default_value` (Map of String) The fallback JSON object when no rules are triggered
+- `default_value` (String) The fallback JSON object when no rules are triggered. Use `jsonencode()` to pass a value. Supports arbitrary nested objects.
 - `default_value_json5` (String) Can include comments. If provided with defaultValue, must parse to the same JSON
 - `description` (String)
 - `id` (String) The dynamic config name ID
@@ -190,7 +264,7 @@ Optional:
 - `base_id` (String) The base ID of this rule, i.e. without any added metadata. Will remain the exact same throughout
 - `environments` (List of String)
 - `id` (String) The Statsig ID of this rule.
-- `return_value` (Map of String)
+- `return_value` (String) The return value JSON object for this rule. Use `jsonencode()` to pass a value. Supports arbitrary nested objects.
 - `return_value_json5` (String)
 
 <a id="nestedatt--rules--conditions"></a>

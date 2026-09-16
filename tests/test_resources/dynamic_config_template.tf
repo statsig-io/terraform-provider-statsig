@@ -6,6 +6,6 @@ resource "statsig_dynamic_config" "example_template" {
   is_enabled            = true
   is_template           = true
   rules                 = []
-  default_value         = {}
-  default_value_json5   = "{}"
+  default_value         = jsonencode({})
+  default_value_json5   = jsonencode({})
 }

@@ -1,3 +1,18 @@
+locals {
+  nested_return_value = {
+    settings = {
+      theme = {
+        primary   = "#FF5733"
+        secondary = "#33FF57"
+      }
+    }
+    features = {
+      max_items = 100
+      enabled   = true
+    }
+  }
+}
+
 resource "statsig_dynamic_config" "my_dynamic_config" {
   id          = "my_dynamic_config"
   name        = "my_dynamic_config"
@@ -94,30 +109,23 @@ resource "statsig_dynamic_config" "my_dynamic_config" {
           operator     = "any"
         }
       ]
-      return_value = {
-        extra_field = 12
-        my_field    = "My Other Value"
-      }
-      return_value_json5 = "{extra_field: \"12\",\n  my_field: \"My Other Value\"}"
+      return_value       = jsonencode(local.nested_return_value)
+      return_value_json5 = jsonencode(local.nested_return_value)
     },
     {
       name            = "Development Conditions"
       pass_percentage = 10
-      environments = ["development"]
+      environments    = ["development"]
       conditions = [
         {
           type         = "public"
           target_value = []
         }
       ]
-      return_value = {
-        my_field = "My Other Value"
-      }
-      return_value_json5 = "{\"my_field\":\"My Other Value\"}"
+      return_value       = jsonencode({ my_field = "My Other Value" })
+      return_value_json5 = jsonencode({ my_field = "My Other Value" })
     }
   ]
-  default_value = {
-    my_field = "My Value"
-  }
-  default_value_json5 = "{\"my_field\":\"My Value\"}"
+  default_value       = jsonencode({ my_field = "My Value" })
+  default_value_json5 = jsonencode({ my_field = "My Value" })
 }

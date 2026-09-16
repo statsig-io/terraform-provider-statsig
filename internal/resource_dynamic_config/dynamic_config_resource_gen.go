@@ -5,6 +5,9 @@ package resource_dynamic_config
 import (
 	"context"
 	"fmt"
+	"regexp"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -13,8 +16,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/hashicorp/terraform-plugin-go/tftypes"
-	"regexp"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 )
@@ -30,12 +31,11 @@ func DynamicConfigResourceSchema(ctx context.Context) schema.Schema {
 				Optional: true,
 				Computed: true,
 			},
-			"default_value": schema.MapAttribute{
-				ElementType:         types.StringType,
+			"default_value": schema.StringAttribute{
 				Optional:            true,
 				Computed:            true,
-				Description:         "The fallback JSON object when no rules are triggered",
-				MarkdownDescription: "The fallback JSON object when no rules are triggered",
+				Description:         "The fallback JSON object when no rules are triggered. Use jsonencode() to pass a value.",
+				MarkdownDescription: "The fallback JSON object when no rules are triggered. Use `jsonencode()` to pass a value.",
 			},
 			"default_value_json5": schema.StringAttribute{
 				Optional:            true,
@@ -177,10 +177,11 @@ func DynamicConfigResourceSchema(ctx context.Context) schema.Schema {
 							Description:         "Of the users that meet the conditions of this rule, what percent should return true.",
 							MarkdownDescription: "Of the users that meet the conditions of this rule, what percent should return true.",
 						},
-						"return_value": schema.MapAttribute{
-							ElementType: types.StringType,
-							Optional:    true,
-							Computed:    true,
+						"return_value": schema.StringAttribute{
+							Optional:            true,
+							Computed:            true,
+							Description:         "The return value JSON object for this rule. Use jsonencode() to pass a value.",
+							MarkdownDescription: "The return value JSON object for this rule. Use `jsonencode()` to pass a value.",
 						},
 						"return_value_json5": schema.StringAttribute{
 							Optional: true,
@@ -233,7 +234,7 @@ func DynamicConfigResourceSchema(ctx context.Context) schema.Schema {
 type DynamicConfigModel struct {
 	CreatorEmail      types.String `tfsdk:"creator_email"`
 	CreatorId         types.String `tfsdk:"creator_id"`
-	DefaultValue      types.Map    `tfsdk:"default_value"`
+	DefaultValue      types.String  `tfsdk:"default_value"`
 	DefaultValueJson5 types.String `tfsdk:"default_value_json5"`
 	Description       types.String `tfsdk:"description"`
 	Id                types.String `tfsdk:"id"`
@@ -392,12 +393,12 @@ func (t RulesType) ValueFromObject(ctx context.Context, in basetypes.ObjectValue
 		return nil, diags
 	}
 
-	returnValueVal, ok := returnValueAttribute.(basetypes.MapValue)
+	returnValueVal, ok := returnValueAttribute.(basetypes.StringValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`return_value expected to be basetypes.MapValue, was: %T`, returnValueAttribute))
+			fmt.Sprintf(`return_value expected to be basetypes.StringValue, was: %T`, returnValueAttribute))
 	}
 
 	returnValueJson5Attribute, ok := attributes["return_value_json5"]
@@ -616,12 +617,12 @@ func NewRulesValue(attributeTypes map[string]attr.Type, attributes map[string]at
 		return NewRulesValueUnknown(), diags
 	}
 
-	returnValueVal, ok := returnValueAttribute.(basetypes.MapValue)
+	returnValueVal, ok := returnValueAttribute.(basetypes.StringValue)
 
 	if !ok {
 		diags.AddError(
 			"Attribute Wrong Type",
-			fmt.Sprintf(`return_value expected to be basetypes.MapValue, was: %T`, returnValueAttribute))
+			fmt.Sprintf(`return_value expected to be basetypes.StringValue, was: %T`, returnValueAttribute))
 	}
 
 	returnValueJson5Attribute, ok := attributes["return_value_json5"]
@@ -733,7 +734,7 @@ type RulesValue struct {
 	Id               basetypes.StringValue `tfsdk:"id"`
 	Name             basetypes.StringValue `tfsdk:"name"`
 	PassPercentage   basetypes.NumberValue `tfsdk:"pass_percentage"`
-	ReturnValue      basetypes.MapValue    `tfsdk:"return_value"`
+	ReturnValue      basetypes.StringValue `tfsdk:"return_value"`
 	ReturnValueJson5 basetypes.StringValue `tfsdk:"return_value_json5"`
 	state            attr.ValueState
 }
@@ -754,9 +755,7 @@ func (v RulesValue) ToTerraformValue(ctx context.Context) (tftypes.Value, error)
 	attrTypes["id"] = basetypes.StringType{}.TerraformType(ctx)
 	attrTypes["name"] = basetypes.StringType{}.TerraformType(ctx)
 	attrTypes["pass_percentage"] = basetypes.NumberType{}.TerraformType(ctx)
-	attrTypes["return_value"] = basetypes.MapType{
-		ElemType: types.StringType,
-	}.TerraformType(ctx)
+	attrTypes["return_value"] = basetypes.StringType{}.TerraformType(ctx)
 	attrTypes["return_value_json5"] = basetypes.StringType{}.TerraformType(ctx)
 
 	objectType := tftypes.Object{AttributeTypes: attrTypes}
@@ -900,35 +899,10 @@ func (v RulesValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, d
 			"environments": basetypes.ListType{
 				ElemType: types.StringType,
 			},
-			"id":              basetypes.StringType{},
-			"name":            basetypes.StringType{},
-			"pass_percentage": basetypes.NumberType{},
-			"return_value": basetypes.MapType{
-				ElemType: types.StringType,
-			},
-			"return_value_json5": basetypes.StringType{},
-		}), diags
-	}
-
-	returnValueVal, d := types.MapValue(types.StringType, v.ReturnValue.Elements())
-
-	diags.Append(d...)
-
-	if d.HasError() {
-		return types.ObjectUnknown(map[string]attr.Type{
-			"base_id": basetypes.StringType{},
-			"conditions": basetypes.ListType{
-				ElemType: ConditionsValue{}.Type(ctx),
-			},
-			"environments": basetypes.ListType{
-				ElemType: types.StringType,
-			},
-			"id":              basetypes.StringType{},
-			"name":            basetypes.StringType{},
-			"pass_percentage": basetypes.NumberType{},
-			"return_value": basetypes.MapType{
-				ElemType: types.StringType,
-			},
+			"id":                 basetypes.StringType{},
+			"name":               basetypes.StringType{},
+			"pass_percentage":    basetypes.NumberType{},
+			"return_value":       basetypes.StringType{},
 			"return_value_json5": basetypes.StringType{},
 		}), diags
 	}
@@ -942,12 +916,10 @@ func (v RulesValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, d
 			"environments": basetypes.ListType{
 				ElemType: types.StringType,
 			},
-			"id":              basetypes.StringType{},
-			"name":            basetypes.StringType{},
-			"pass_percentage": basetypes.NumberType{},
-			"return_value": basetypes.MapType{
-				ElemType: types.StringType,
-			},
+			"id":                 basetypes.StringType{},
+			"name":               basetypes.StringType{},
+			"pass_percentage":    basetypes.NumberType{},
+			"return_value":       basetypes.StringType{},
 			"return_value_json5": basetypes.StringType{},
 		},
 		map[string]attr.Value{
@@ -957,7 +929,7 @@ func (v RulesValue) ToObjectValue(ctx context.Context) (basetypes.ObjectValue, d
 			"id":                 v.Id,
 			"name":               v.Name,
 			"pass_percentage":    v.PassPercentage,
-			"return_value":       returnValueVal,
+			"return_value":       v.ReturnValue,
 			"return_value_json5": v.ReturnValueJson5,
 		})
 
@@ -1031,12 +1003,10 @@ func (v RulesValue) AttributeTypes(ctx context.Context) map[string]attr.Type {
 		"environments": basetypes.ListType{
 			ElemType: types.StringType,
 		},
-		"id":              basetypes.StringType{},
-		"name":            basetypes.StringType{},
-		"pass_percentage": basetypes.NumberType{},
-		"return_value": basetypes.MapType{
-			ElemType: types.StringType,
-		},
+		"id":                 basetypes.StringType{},
+		"name":               basetypes.StringType{},
+		"pass_percentage":    basetypes.NumberType{},
+		"return_value":       basetypes.StringType{},
 		"return_value_json5": basetypes.StringType{},
 	}
 }
