@@ -1,4 +1,5 @@
 resource "statsig_segment" "rule_based_segment" {
+  id          = "rule_based_segment"
   name        = "Rule Based Segment"
   description = "A short description of this rule based segment"
   type        = "rule_based"
