@@ -88,18 +88,12 @@ func SegmentFromAPIModel(ctx context.Context, diags diag.Diagnostics, segment *S
 	segment.Version = utils.FloatToFloatValue(res.Version)
 }
 
-type SegmentRulesAPIModel struct {
-	Rules []RuleAPIModel `json:"rules"`
-}
-
-func SegmentToRulesAPIModel(ctx context.Context, segment *SegmentModel) SegmentRulesAPIModel {
-	return SegmentRulesAPIModel{
-		Rules: RulesToAPIModel(ctx, segment.Rules),
-	}
+func SegmentToRulesAPIModel(ctx context.Context, segment *SegmentModel) []RuleAPIModel {
+	return RulesToAPIModel(ctx, segment.Rules)
 }
 
 type RuleAPIModel struct {
-	Id             string              `json:"id"`
+	Id             string              `json:"id,omitempty"`
 	BaseID         string              `json:"baseID,omitempty"`
 	Name           string              `json:"name"`
 	PassPercentage int                 `json:"passPercentage"`

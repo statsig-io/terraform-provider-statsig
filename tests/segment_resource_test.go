@@ -30,6 +30,29 @@ func TestAccSegmentRuleBased(t *testing.T) {
 					},
 				},
 			},
+			{
+				ConfigFile: config.StaticFile("test_resources/segment_rule_based_patch.tf"),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectResourceAction("statsig_segment.rule_based_segment", plancheck.ResourceActionUpdate),
+					},
+				},
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr("statsig_segment.rule_based_segment", "id", "rule_based_segment"),
+					resource.TestCheckResourceAttr("statsig_segment.rule_based_segment", "rules.0.pass_percentage", "20"),
+					resource.TestCheckResourceAttr("statsig_segment.rule_based_segment", "rules.0.conditions.0.target_value.#", "3"),
+					resource.TestCheckResourceAttr("statsig_segment.rule_based_segment", "rules.0.conditions.0.target_value.2", "3"),
+				),
+			},
+			{
+				ConfigFile: config.StaticFile("test_resources/segment_rule_based_patch.tf"),
+				ConfigPlanChecks: resource.ConfigPlanChecks{
+					PreApply: []plancheck.PlanCheck{
+						plancheck.ExpectEmptyPlan(),
+					},
+				},
+			},
+			RefreshNoopPlanCheck(),
 		},
 	})
 }
